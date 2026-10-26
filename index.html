@@ -144,11 +144,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 32px 80px;
+      padding: 32px var(--gutter);
+      flex-wrap: wrap;
+      gap: 16px;
       border-bottom: 1px solid #EAEAEA;
     ">
       <span style="font-size: 16px; font-weight: 400; color: #000;">Yelyzaveta Konovalova</span>
-      <div style="display: flex; gap: 40px; align-items: center;">
+      <div style="display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: center;">
         <span style="display:inline-flex;align-items:center;gap:6px;">
           <a href="mailto:bet.konovalova@gmail.com" style="font-size: 15px; color: #000; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.3s;" onmouseover="this.style.borderColor='#000'" onmouseout="this.style.borderColor='transparent'">bet.konovalova@gmail.com</a>
           <button onclick="navigator.clipboard.writeText('bet.konovalova@gmail.com');const o=this.innerHTML;this.textContent='✓';setTimeout(()=>{this.innerHTML=o;},1500)" title="Copy email" aria-label="Copy email address" style="background:none;border:none;cursor:pointer;padding:0;display:inline-flex;align-items:center;color:#000;line-height:1;">
@@ -165,7 +167,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 80px;
+      padding: 20px var(--gutter);
+      flex-wrap: wrap;
+      gap: 8px;
     ">
       <span style="font-size: 13px; color: #000; font-weight: 300;">© 2026 All rights reserved.</span>
       <span style="font-size: 13px; color: #000; font-weight: 300;">This portfolio was made with vibe coding</span>
