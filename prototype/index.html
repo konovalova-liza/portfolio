@@ -208,9 +208,8 @@ header.top.dark .menu-btn{color:#fff}
 .band{display:flex;flex-direction:column;gap:.75rem;padding-block:2.5rem}
 @media (min-width:640px){.band{flex-direction:row;gap:1rem}}
 .band li{flex:1;--y:28px}
-.bt{display:grid;place-items:center;height:6rem;border-radius:9999px;font-size:1.875rem;font-weight:500;transition:transform .35s var(--ease-hover)}
+.bt{display:grid;place-items:center;height:6rem;border-radius:9999px;font-size:1.875rem;font-weight:500;cursor:default}
 @media (min-width:640px){.bt{height:10rem;font-size:2.25rem}}
-@media (hover:hover){.bt:hover{transform:scale(1.03)}}
 .bt.l{background:var(--surface)}
 .bt.h{background:linear-gradient(135deg,var(--holo-1),var(--holo-2) 55%,var(--holo-3));color:#111}
 .bt.d{background:var(--ink);color:#fff}.bt.d .ico{font-size:2.25rem}
@@ -506,10 +505,10 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 
   <section aria-label="Principle">
     <ul class="shell band">
-      <li class="rv" style="--d:0ms"><div class="bt l" data-holo="md">I</div></li>
-      <li class="rv" style="--d:120ms"><div class="bt h" data-holo="md">Design</div></li>
-      <li class="rv" style="--d:240ms"><div class="bt d" data-holo="md"><svg class="ico"><use href="#i-r"/></svg></div></li>
-      <li class="rv" style="--d:360ms"><div class="bt g" data-holo="md">Ship</div></li>
+      <li class="rv" style="--d:0ms"><div class="bt l">I</div></li>
+      <li class="rv" style="--d:120ms"><div class="bt h">Design</div></li>
+      <li class="rv" style="--d:240ms"><div class="bt d"><svg class="ico"><use href="#i-r"/></svg></div></li>
+      <li class="rv" style="--d:360ms"><div class="bt g">Ship</div></li>
     </ul>
   </section>
 
