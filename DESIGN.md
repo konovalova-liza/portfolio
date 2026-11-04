@@ -625,7 +625,7 @@ const FX = {
 - No droplet, no lens, no brush (D3).
 - Every hover rule is inside `@media (hover:hover)`, so no hover state sticks on touch (T9).
 
-### 5.6 Digest scope
+### 5.7 Digest scope
 Values introduced by the Design Digest case page (`cases/design-digest/`, added 2026-11-04). They are custom properties on `.digest` and are used **only** inside it (`digest.css`, read by `digest.js`). Board geometry is in Figma px (1:1 with `board.json`), so these values are px, not rem.
 
 | Token | Value | Where / why |
