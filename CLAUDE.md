@@ -2,7 +2,7 @@
 
 ## Design system
 
-The design system lives in [DESIGN.md](DESIGN.md) (currently DRAFT v0, extracted from `prototype/index.html`).
+The design system lives in [DESIGN.md](DESIGN.md) (currently v1, extracted from `prototype/index.html`).
 
 - **Before any UI change** (HTML, CSS, JS that affects visuals or motion), read `DESIGN.md`.
 - **Use only its tokens**: colors, type scale, spacing, radii, shadows, blur, easing, durations and effect parameters, plus the component specs and effect rules it defines.

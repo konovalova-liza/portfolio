@@ -567,6 +567,50 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 - Grid 2 columns, 3 at ≥640, column-gap `1rem`, row-gap `.75rem`.
 - Hover `translateY(-2px)` only if the items become links; otherwise the list is static.
 
+### 4.15 Project card (small) `.pc`
+"Other projects" block in `#works`, below the Selected work `.cards`. Smaller sibling of the case card (§4.4). (v1, 2026-11-04)
+
+- **Layout:**
+  - Block heading `h3` "Other projects", centred, h3 (card) scale `1.5rem` → `1.875rem` (640), 500, `-.01em`, `margin-bottom:2rem`. Block `margin-top:5rem` after `.cards`.
+  - Grid `.pcards`: 1 column → 2 (640) → 3 (1024), gap `1.5rem`. Six cards = 3×2 on desktop.
+- **Spec:**
+  - `<a class="pc" href="…">` (currently `#`), flex column, `min-height:14rem`, `height:100%` so cards in a row match
+  - `--ink`, `--r-card-sm`, padding `1.5rem`, ring `0 0 0 1px var(--line-on-ink)`
+  - Content, in order: title `h4` `1.5rem`/500/`-.01em` in `--on-ink`; one-sentence description `.875rem` in `--on-ink-2` (`margin-top:.5rem`); exactly one tag (§4.3, `--line-on-ink` border, `--on-ink-2`) pushed to the bottom (`margin-top:auto`, `padding-top:1.25rem`)
+  - No wordmark, no holo gradient text, no meta row, no badge (these stay case-card only)
+- **States:**
+
+  | State | Behaviour |
+  |---|---|
+  | Hover / focus | `translateY(-8px) scale(1.012)`, `--dur-surface`, `--ease-hover` (same as §4.4) |
+  | Focus ring | `--ring-light`: the ring sits on the light page outside the card |
+  | Active | Hover visual |
+
+- **Droplet:** `data-holo="lg"` (radius 72, magnet), same as case cards.
+- **Motion:** `.rv` entrance, `--y:24px`, stagger `--stagger-list` (0–400ms).
+- **Placeholders:** unknown copy is written as "Description TBD" / "Tag" and marked `<!-- TBD -->` in the markup (Appmatrix, 2026-11-04).
+
+### 4.16 Accordion row `.acc` / `.srow`
+"What I do best" list. Replaces the link rows of §4.5: each row is a disclosure button. (v1, 2026-11-04)
+
+- **Markup:** `ul.acc > li > h3 > button.srow[aria-expanded][aria-controls]` + `div.sp[role=region][aria-labelledby]`. The button holds the index `.ix`, the title `.st` and the `+` badge `.ar` (`aria-hidden`). Title sizes as §4.5 h3 (`1.5rem` → `1.875rem` → `2.25rem`).
+- **Panel content:** two lines of text (`1rem`, `--text-2`, `max-width:30rem`) and one case link `.cl` ("<Case> case study →", `.875rem`/500, `--accent`, D1). Indented to the title column: `padding-left:4.25rem` → `5.5rem` (640) = row padding + index width + gap; bottom `2rem`.
+- **Behaviour:**
+  - Click, `Enter` or `Space` toggles the row (native button)
+  - **One open at a time:** opening a row closes the others; activating the open row closes it. All rows start closed
+  - A closed panel is `visibility:hidden`, so its link is out of the tab order
+- **States:**
+
+  | State | Behaviour |
+  |---|---|
+  | Hover / focus | Row `--surface` bg + padding shift (`--dur-surface`); `.ar` `scale(1.08)` (`--dur-micro`) |
+  | Focus ring | `--ring-light` |
+  | Expanded | `+` icon `rotate(45deg)` → ×, `--dur-micro`, `--ease-hover` |
+  | Link hover / focus | Arrow `translateX(3px)`, `--dur-micro` |
+
+- **Motion:** The panel opens and closes by `grid-template-rows` `0fr ↔ 1fr`, `--dur-overlay` (400ms), `--ease-spring`; `visibility` flips at the end of the close. Under reduced motion every transition is off (§5.4), so the panel switches instantly.
+- **Droplet:** `data-holo="md"` on the button.
+
 ---
 
 ## 5. Effects rules

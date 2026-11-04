@@ -3,9 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Konovalova Portfolio Demo</title>
+<title>Liza Konovalova · Middle+ UX/UI Designer</title>
+<meta name="description" content="Liza Konovalova, Middle+ UX/UI designer and UI design engineer for enterprise B2B products. Based in Kyiv.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Liza Konovalova · Middle+ UX/UI Designer">
+<meta property="og:description" content="Middle+ UX/UI designer and UI design engineer for enterprise B2B products. Based in Kyiv.">
+<meta name="twitter:card" content="summary">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%230a0a0a' d='M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap">
@@ -25,7 +31,8 @@
   --text:var(--foreground); --text-2:rgba(17,17,17,.7); --text-3:rgba(17,17,17,.5);
   --border-ctl:rgba(17,17,17,.5); --surface-soft:rgba(241,240,238,.5);
   --error:#b42318; --ring-light:var(--accent);
-  --dur-micro:300ms; --dur-overlay:400ms;
+  --dur-micro:300ms; --dur-overlay:400ms; --dur-surface:450ms;
+  --on-ink:#ffffff; --on-ink-2:rgba(255,255,255,.7); --line-on-ink:rgba(255,255,255,.1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-font-smoothing:antialiased}
@@ -115,8 +122,6 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .lr img,.lr canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .lr canvas{pointer-events:none}
 .vig{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent,rgba(255,255,255,.35))}
-.wm{pointer-events:none;user-select:none;position:absolute;inset-inline:0;bottom:7rem;z-index:1;text-align:center;font-weight:700;line-height:1;font-size:min(13rem,16vw);letter-spacing:-.03em;color:rgba(255,255,255,1);--y:20px}
-.wm.in{opacity:.4}
 .hgrid{position:relative;z-index:20;display:flex;flex-direction:column;gap:2rem;padding-top:7rem;padding-bottom:5rem}
 @media (min-width:1024px){.hgrid{display:grid;min-height:100lvh;grid-template-columns:repeat(12,1fr);gap:2.5rem;padding-top:9rem;padding-bottom:7rem}}
 .hl{display:flex;flex-direction:column;gap:1.75rem}
@@ -166,7 +171,6 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 #home.dark .item small{color:rgba(255,255,255,.55)}
 #home.dark .dots i{background:rgba(255,255,255,.3)}#home.dark .dots i.on{background:#fff}
 #home.dark .status{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.7)}
-#home.dark .wm.in{opacity:.18}
 header.top.dark{color:#fff}
 header.top.dark .logo .ico{color:var(--holo-2)}
 header.top.dark .chip,header.top.dark .menu-btn{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:rgba(255,255,255,.75)}
@@ -175,14 +179,17 @@ header.top.dark .menu-btn{color:#fff}
 @media (hover:hover){header.top.dark .menu-btn:hover{background:rgba(255,255,255,.2)}}
 
 /* about */
-.about{display:grid;grid-template-columns:1fr;align-items:center;gap:3rem;padding-block:5rem}
+.about{display:grid;grid-template-columns:1fr;align-items:start;gap:3rem;padding-block:5rem}
 @media (min-width:1024px){.about{grid-template-columns:1fr 1fr;padding-block:7rem}}
-.globe{position:relative;min-height:14rem;display:flex;flex-direction:column;justify-content:space-between}
-@media (min-width:1024px){.globe{min-height:20rem}}
-.globe .big{position:absolute;left:-1rem;top:50%;transform:translateY(-50%);font-size:12rem;color:rgba(17,17,17,.1)}
+/* left column in normal flow: eyebrow, globe, caption never overlap */
+.globe{display:flex;flex-direction:column;align-items:flex-start;gap:1.5rem}
+.globe .big{margin-left:-1rem;font-size:12rem;color:rgba(17,17,17,.1)}
 @media (min-width:640px){.globe .big{font-size:16rem}}
-@media (min-width:1024px){.globe .big{left:-1.5rem;font-size:20rem}}
-.globe .eyebrow,.globe .note{position:relative}
+@media (min-width:1024px){.globe .big{margin-left:-1.5rem;font-size:20rem}}
+/* eyebrow cap line = cap line of the statement's first line. Onest metrics: ascent .97, descent .3, cap .707 em;
+   cap top in a line box of height L = ((L + .97 - .3)/2 - .707) em → h2 (L 1.35) .303em, eyebrow (L normal) .263em */
+.globe .eyebrow{padding-top:calc(.303 * 1.5rem - .263 * .875rem)}
+@media (min-width:640px){.globe .eyebrow{padding-top:calc(.303 * 1.875rem - .263 * .875rem)}}
 .globe .note{display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:rgba(17,17,17,.7);--y:12px}
 .globe .note .ico{font-size:1.5rem;color:#111}
 .globe .note span{max-width:14rem}
@@ -214,7 +221,7 @@ header.top.dark .menu-btn{color:#fff}
 .bt.h{background:linear-gradient(135deg,var(--holo-1),var(--holo-2) 55%,var(--holo-3));color:#111}
 .bt.d{background:var(--ink);color:#fff}.bt.d .ico{font-size:2.25rem}
 @media (min-width:640px){.bt.d .ico{font-size:3rem}}
-.bt.g{background:rgba(241,240,238,.6);color:rgba(17,17,17,.35)}
+.bt.g{background:var(--surface-soft);color:var(--accent)}
 
 /* work */
 .sec{padding-block:2.5rem 5rem}
@@ -242,22 +249,53 @@ header.top.dark .menu-btn{color:#fff}
 .tags span{display:inline-flex;border:1px solid rgba(255,255,255,.25);border-radius:9999px;padding:.5rem 1rem;font-size:.875rem}
 @media (hover:hover){.wc:hover{transform:translateY(-8px) scale(1.012)}.wc:hover .badge{transform:rotate(45deg) scale(1.08)}}
 
+/* other projects: small project card (DESIGN.md §4.15) */
+.op{margin-top:5rem}
+.op h3{margin-bottom:2rem;text-align:center;font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
+@media (min-width:640px){.op h3{font-size:1.875rem}}
+.pcards{display:grid;grid-template-columns:1fr;gap:1.5rem}
+@media (min-width:640px){.pcards{grid-template-columns:1fr 1fr}}
+@media (min-width:1024px){.pcards{grid-template-columns:repeat(3,1fr)}}
+.pcards li{--y:24px}
+.pc{display:flex;flex-direction:column;height:100%;min-height:14rem;border-radius:var(--r-card-sm);background:var(--ink);padding:1.5rem;color:var(--on-ink);box-shadow:0 0 0 1px var(--line-on-ink);transition:transform var(--dur-surface) var(--ease-hover)}
+.pc h4{font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
+.pc p{margin-top:.5rem;font-size:.875rem;color:var(--on-ink-2)}
+.pc .tags{margin-top:auto;padding-top:1.25rem}
+.pc .tags span{border-color:var(--line-on-ink);color:var(--on-ink-2)}
+@media (hover:hover){.pc:hover{transform:translateY(-8px) scale(1.012)}}
+.pc:focus-visible{transform:translateY(-8px) scale(1.012)}
+.pc:active{transform:translateY(-8px) scale(1.012)}
+
 /* services */
 .svc h2{margin:1.25rem 0 3rem;max-width:16ch}
 .svc li{border-top:1px solid var(--line);--y:24px}
 .svc li:first-child{border-top:0}
-.srow{display:flex;align-items:center;gap:1rem;border-radius:var(--r-card-sm);padding:1.5rem;transition:background .45s var(--ease-spring),padding .45s var(--ease-spring)}
+/* accordion row (DESIGN.md §4.16): one open at a time */
+.srow{width:100%;display:flex;align-items:center;gap:1rem;border-radius:var(--r-card-sm);padding:1.5rem;text-align:left;transition:background var(--dur-surface) var(--ease-spring),padding var(--dur-surface) var(--ease-spring)}
 @media (min-width:640px){.srow{gap:1.5rem;padding-block:2rem}}
-.srow .ix{width:1.75rem;font-size:.875rem;font-weight:500;color:rgba(17,17,17,.4)}
+.srow .ix{width:1.75rem;flex:none;font-size:.875rem;font-weight:500;color:var(--text-2)}
 @media (min-width:640px){.srow .ix{width:2.5rem}}
-.srow h3{flex:1;font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
-@media (min-width:640px){.srow h3{font-size:1.875rem}}
-@media (min-width:768px){.srow h3{font-size:2.25rem}}
-.srow p{display:none;max-width:20rem;font-size:.875rem;color:rgba(17,17,17,.55)}
-@media (min-width:1024px){.srow p{display:block}}
-.srow .ar{width:2.5rem;height:2.5rem;display:grid;place-items:center;border-radius:9999px;background:var(--ink);color:#fff;font-size:1rem;transition:transform .35s var(--ease-hover)}
+.srow .st{flex:1;font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
+@media (min-width:640px){.srow .st{font-size:1.875rem}}
+@media (min-width:768px){.srow .st{font-size:2.25rem}}
+.srow .ar{width:2.5rem;height:2.5rem;flex:none;display:grid;place-items:center;border-radius:9999px;background:var(--ink);color:var(--on-ink);font-size:1rem;transition:transform var(--dur-micro) var(--ease-hover)}
+.srow .ar .ico{transition:transform var(--dur-micro) var(--ease-hover)}
 @media (min-width:640px){.srow .ar{width:3rem;height:3rem}}
-@media (hover:hover){.srow:hover{background:var(--surface);padding-left:2rem;padding-right:1.25rem}.srow:hover .ar{transform:translateX(5px)}}
+.srow[aria-expanded="true"] .ar .ico{transform:rotate(45deg)}
+@media (hover:hover){.srow:hover{background:var(--surface);padding-left:2rem;padding-right:1.25rem}.srow:hover .ar{transform:scale(1.08)}}
+.srow:focus-visible{background:var(--surface);padding-left:2rem;padding-right:1.25rem}
+.srow:focus-visible .ar{transform:scale(1.08)}
+.sp{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows var(--dur-overlay) var(--ease-spring),visibility 0s var(--dur-overlay)}
+.svc li.open .sp{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows var(--dur-overlay) var(--ease-spring)}
+.sp>div{min-height:0;overflow:hidden}
+.acc h3{font-size:1rem;font-weight:400}
+.sp .spi{display:flex;flex-direction:column;align-items:flex-start;gap:1rem;padding:0 1.5rem 2rem 4.25rem}
+@media (min-width:640px){.sp .spi{padding-left:5.5rem}}
+.sp p{max-width:30rem;font-size:1rem;color:var(--text-2)}
+.cl{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:var(--accent)}
+.cl .ico{transition:transform var(--dur-micro) var(--ease-hover)}
+@media (hover:hover){.cl:hover .ico{transform:translateX(3px)}}
+.cl:focus-visible .ico{transform:translateX(3px)}
 
 /* stats */
 .stats{border-radius:var(--r-card);background:var(--ink);padding:3rem 1.5rem;color:#fff;--y:40px;--s:.99}
@@ -278,13 +316,13 @@ footer{position:relative;overflow:hidden;border-radius:2rem 2rem 0 0;background:
 footer .shell{position:relative;z-index:10;padding-top:5rem;padding-bottom:2.5rem}
 @media (min-width:1024px){footer .shell{padding-top:6rem}}
 .fcta{display:flex;flex-direction:column;gap:2rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:4rem}
-@media (min-width:1024px){.fcta{flex-direction:row;align-items:flex-end;justify-content:space-between}}
+@media (min-width:1024px){.fcta{flex-direction:row;align-items:center;justify-content:space-between}}
 .fcta h2{max-width:16ch;font-size:2.25rem;font-weight:600;letter-spacing:-.02em;line-height:1.02}
 @media (min-width:640px){.fcta h2{font-size:3rem}}
 @media (min-width:768px){.fcta h2{font-size:3.75rem}}
 .fcols{display:grid;grid-template-columns:1fr;gap:3rem;padding-block:4rem}
 @media (min-width:768px){.fcols{grid-template-columns:1fr 1fr}}
-@media (min-width:1024px){.fcols{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:1024px){.fcols{grid-template-columns:repeat(3,1fr)}}
 .fcols .b{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600}
 .fcols .b .ico{font-size:1.25rem;color:var(--holo-2)}
 .fcols .tg{margin-top:1rem;max-width:20rem;font-size:.875rem;color:rgba(255,255,255,.55)}
@@ -387,6 +425,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
   <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9.25"/><path d="M12 2.75c2.6 2.3 4 5.8 4 9.25s-1.4 6.95-4 9.25c-2.6-2.3-4-5.8-4-9.25s1.4-6.95 4-9.25zM2.75 12h18.5"/></g></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 4l16 16M20 4 4 20"/></symbol>
   <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-menu" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></symbol>
 </svg>
 
@@ -428,7 +467,6 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
       <canvas id="lrc" aria-hidden="true"></canvas>
     </div>
     <div class="vig"></div>
-    <div class="wm rv" data-hero style="--d:300ms" aria-hidden="true">KONOVALOVA</div>
 
     <div class="shell hgrid">
       <div class="hl">
@@ -472,12 +510,12 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
   <section id="about">
     <div class="shell about">
       <div class="globe">
-        <svg class="ico big" aria-hidden="true"><use href="#i-globe"/></svg>
         <span class="eyebrow">About</span>
+        <svg class="ico big" aria-hidden="true"><use href="#i-globe"/></svg>
         <div class="note rv"><svg class="ico"><use href="#i-globe"/></svg><span>Based in Kyiv, working with teams across time zones.</span></div>
       </div>
       <div class="stmt">
-        <h2 class="words" data-words>I design enterprise B2B products where data is dense and decisions are expensive. <span class="g">From discovery and usability tests to design systems and prototypes that run in code.</span></h2>
+        <h2 class="words" data-words>I design enterprise B2B products where data is complex and decisions are expensive. <span class="g">From discovery and usability tests to design systems and prototypes that run in code.</span></h2>
         <div class="toolkit rv">
           <p>Toolkit</p>
           <ul>
@@ -505,7 +543,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 
   <section aria-label="Principle">
     <ul class="shell band">
-      <li class="rv" style="--d:0ms"><div class="bt l">I</div></li>
+      <li class="rv" style="--d:0ms"><div class="bt l">Research</div></li>
       <li class="rv" style="--d:120ms"><div class="bt h">Design</div></li>
       <li class="rv" style="--d:240ms"><div class="bt d"><svg class="ico"><use href="#i-r"/></svg></div></li>
       <li class="rv" style="--d:360ms"><div class="bt g">Ship</div></li>
@@ -540,6 +578,17 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
           <div class="bot"><h3>Design Digest</h3><p>An illustrated, freely scrollable team canvas, rebuilt as a live page in code.</p><div class="tags"><span>Illustration</span><span>Motion</span><span>Front-end</span></div></div>
         </a></li>
       </ul>
+      <div class="op">
+        <h3 class="rv">Other projects</h3>
+        <ul class="pcards">
+        <li class="rv" style="--d:0ms"><a class="pc" href="#" data-holo="lg"><h4>TAX Pulse</h4><p>Enterprise tax platform: dashboards, flows and a design system, taken through to client presentation.</p><div class="tags"><span>Enterprise dashboard</span></div></a></li>
+        <li class="rv" style="--d:80ms"><a class="pc" href="#" data-holo="lg"><h4>DataOps Performance Suite</h4><p>UX audit and dashboard redesign for a data operations suite, within tight system constraints.</p><div class="tags"><span>Dashboard redesign</span></div></a></li>
+        <li class="rv" style="--d:160ms"><a class="pc" href="#" data-holo="lg"><h4>Cloud Spend Dashboard</h4><p>Accessible redesign of a cloud cost dashboard, built within Power BI&#39;s limits.</p><div class="tags"><span>Power BI</span></div></a></li>
+        <li class="rv" style="--d:240ms"><a class="pc" href="#" data-holo="lg"><h4>Recruiting platform</h4><p>Hiring platform shaped by in-depth interviews and journey mapping, through to adaptive UI.</p><div class="tags"><span>Research-led</span></div></a></li>
+        <li class="rv" style="--d:320ms"><a class="pc" href="#" data-holo="lg"><h4>TrashOut</h4><p>Mobile app that helps people sort household waste, built on a full double-diamond process.</p><div class="tags"><span>Mobile app</span></div></a></li>
+        <li class="rv" style="--d:400ms"><a class="pc" href="#" data-holo="lg"><h4>Appmatrix</h4><p>Description TBD</p><div class="tags"><span>Tag</span></div></a> <!-- TBD: Appmatrix description and tag --></li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -547,11 +596,23 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
     <div class="shell sec svc">
       <span class="eyebrow rv">Approach</span>
       <h2 class="h2 lines"><span class="ln"><span style="--d:120ms">What I do best</span></span></h2>
-      <ul>
-        <li class="rv" style="--d:0ms"><a class="srow" href="#services" data-holo="md"><span class="ix">01</span><h3>Product &amp; UX design</h3><p>Discovery, flows and interfaces for complex B2B tools.</p><span class="ar"><svg class="ico"><use href="#i-ur"/></svg></span></a></li>
-        <li class="rv" style="--d:80ms"><a class="srow" href="#services" data-holo="md"><span class="ix">02</span><h3>Data-heavy interfaces</h3><p>Dashboards, tables and reporting that stay readable.</p><span class="ar"><svg class="ico"><use href="#i-ur"/></svg></span></a></li>
-        <li class="rv" style="--d:160ms"><a class="srow" href="#services" data-holo="md"><span class="ix">03</span><h3>Design systems</h3><p>Components, variants and variables in Figma.</p><span class="ar"><svg class="ico"><use href="#i-ur"/></svg></span></a></li>
-        <li class="rv" style="--d:240ms"><a class="srow" href="#services" data-holo="md"><span class="ix">04</span><h3>Design engineering</h3><p>AI-accelerated prototypes and front-end built with Claude Code.</p><span class="ar"><svg class="ico"><use href="#i-ur"/></svg></span></a></li>
+      <ul class="acc">
+        <li class="rv" style="--d:0ms">
+          <h3><button class="srow" id="sv1" aria-expanded="false" aria-controls="sv1-p" data-holo="md"><span class="ix">01</span><span class="st">Product &amp; UX design</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
+          <div class="sp" id="sv1-p" role="region" aria-labelledby="sv1"><div><div class="spi"><p>Research, flows and interfaces for complex products, from first interview to tested UI.</p><a class="cl" href="#works">Romper case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
+        </li>
+        <li class="rv" style="--d:80ms">
+          <h3><button class="srow" id="sv2" aria-expanded="false" aria-controls="sv2-p" data-holo="md"><span class="ix">02</span><span class="st">Data-heavy interfaces</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
+          <div class="sp" id="sv2-p" role="region" aria-labelledby="sv2"><div><div class="spi"><p>Tables, dashboards and reporting that stay readable when the data gets big.</p><a class="cl" href="#works">GAAPT case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
+        </li>
+        <li class="rv" style="--d:160ms">
+          <h3><button class="srow" id="sv3" aria-expanded="false" aria-controls="sv3-p" data-holo="md"><span class="ix">03</span><span class="st">Design systems</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
+          <div class="sp" id="sv3-p" role="region" aria-labelledby="sv3"><div><div class="spi"><p>Components, tokens and rules that keep large products consistent.</p><a class="cl" href="#works">Next Experience Platform case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
+        </li>
+        <li class="rv" style="--d:240ms">
+          <h3><button class="srow" id="sv4" aria-expanded="false" aria-controls="sv4-p" data-holo="md"><span class="ix">04</span><span class="st">Design engineering</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
+          <div class="sp" id="sv4-p" role="region" aria-labelledby="sv4"><div><div class="spi"><p>Prototypes and interfaces built in code, so ideas get tested in the real medium.</p><a class="cl" href="#works">Design Digest case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
+        </li>
       </ul>
     </div>
   </section>
@@ -563,9 +624,9 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
         <h2 class="lines"><span class="ln"><span style="--d:120ms">Proof in the work,</span></span><span class="ln"><span style="--d:220ms">not the words.</span></span></h2>
         <ul class="sg">
           <li class="rv" style="--d:0ms"><div class="n" data-count="5" data-suf="+">0</div><p>Years in UI/UX design</p></li>
-          <li class="rv" style="--d:90ms"><div class="n" data-count="6">0</div><p>Enterprise B2B products led</p></li>
+          <li class="rv" style="--d:90ms"><div class="n" data-count="10" data-suf="+">0</div><p>Products designed</p></li>
           <li class="rv" style="--d:180ms"><div class="n" data-count="12">0</div><p>Usability sessions run</p></li>
-          <li class="rv" style="--d:270ms"><div class="n" data-count="8" data-suf="×">0</div><p>Faster concept to prototype, 2 months to 1 week</p></li>
+          <li class="rv" style="--d:270ms"><div class="n" data-count="8" data-suf="×">0</div><p>Faster concept to prototype</p></li>
         </ul>
       </div>
     </div>
@@ -575,13 +636,12 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 <footer>
   <div class="shell">
     <div class="fcta">
-      <h2 class="lines"><span class="ln"><span style="--d:0ms">Have a dense product?</span></span><span class="ln"><span style="--d:100ms">Let's make it clear.</span></span></h2>
+      <h2 class="lines"><span class="ln"><span style="--d:0ms">Hiring a designer?</span></span><span class="ln"><span style="--d:100ms">My DMs are open.</span></span></h2>
       <button class="pill light arrow" data-contact data-holo="md">Start a conversation<span class="bd"><svg class="ico ur"><use href="#i-ur"/></svg></span></button>
     </div>
     <div class="fcols">
       <div><div class="b"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div><p class="tg">Middle+ UX/UI designer and UI design engineer for enterprise B2B products.</p></div>
       <div><h4>Work</h4><ul><li><a class="al" href="#works"><span>Romper</span></a></li><li><a class="al" href="#works"><span>GAAPT</span></a></li><li><a class="al" href="#works"><span>Next Experience</span></a></li><li><a class="al" href="#works"><span>Design Digest</span></a></li></ul></div>
-      <div><h4>Approach</h4><ul><li><a class="al" href="#services"><span>Product &amp; UX</span></a></li><li><a class="al" href="#services"><span>Data-heavy UI</span></a></li><li><a class="al" href="#services"><span>Design systems</span></a></li><li><a class="al" href="#services"><span>Design engineering</span></a></li></ul></div>
       <div><h4>Contact</h4><ul><li><a class="al" href="https://www.linkedin.com/in/liza-konovalova-35927a20b"><span>LinkedIn</span></a></li><li><a class="al" href="https://t.me/nvrfrgtlz"><span>Telegram @nvrfrgtlz</span></a></li><li><a class="al" href="https://konovalova.store"><span>konovalova.store</span></a></li></ul></div>
     </div>
     <div class="legal"><span>© 2026 Liza Konovalova. Demo build.</span><span>Kyiv, Ukraine</span></div>
@@ -766,6 +826,11 @@ $$('[data-contact]').forEach(b=>b.addEventListener('click',()=>{if(nav.classList
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 $('#closeModal').addEventListener('click',closeModal);$('#okClose').addEventListener('click',closeModal);
 addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(modal.classList.contains('open'))closeModal();else if(nav.classList.contains('open'))closeNav();});
+
+/* ---------- services accordion: one row open at a time ---------- */
+const accRows=$$('.acc .srow');
+accRows.forEach(b=>b.addEventListener('click',()=>{const open=b.getAttribute('aria-expanded')!=='true';
+  accRows.forEach(o=>{const on=o===b&&open;o.setAttribute('aria-expanded',String(on));o.closest('li').classList.toggle('open',on);});}));
 
 /* ---------- contact modal: states idle | invalid | sending | success | error ---------- */
 const form=$('#form'),send=$('#send'),live=$('#mlive'),panel=$('#panel');
