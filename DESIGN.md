@@ -639,25 +639,57 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dg-key-step` | `120px` | Arrow-key pan step while the board has focus |
 | `--dg-ref-opacity` | `.3` | Dev-only overlay of `assets/ref/board.png` (git-ignored), toggled with `G` on localhost / `file:` / `?dev` |
 | `--dg-outline-w` | `2px` | Width inside `--dg-outline`; the `.dg-art` layer insets by it so art aligns to the section's border box |
-| `--dg-font` | `"Shantell Sans", var(--font)` | Handwritten Digest text (quiz now; hero titles, stickers and labels later). Never used in the portfolio shell |
+| `--dg-font` | `"Shantell Sans", var(--font)` | Handwritten Digest text (quiz, hero title and subtitle; labels later). Never used in the portfolio shell |
+| `--dg-quiz-correct` | `#2b8a3e` | Quiz check mark. 4.37:1 on `--background` (graphic, ≥3:1) |
+| `--dg-quiz-wrong` | `#d6332a` | Quiz sad face. 4.81:1 on `--background` |
+| `--dg-quiz-box` | `32px` | Sketchy checkbox size (board box 30 × 33) |
+| `--dg-intro-in` | `var(--dur-micro)` (300ms) | Each hero intro step: title, subtitle, every sticker |
+| `--dg-intro-gap` | `150ms` | Subtitle start after the title start |
+| `--dg-intro-stagger` | `var(--stagger-line)` (120ms) | Between stickers |
+| `--dg-intro-draw` | `1200ms` | Loop line draw |
+| `--dg-intro-y` | `14px` | Title/subtitle rise (smallest v0 reveal offset) |
+| `--dg-intro-scale` | `.92` | Sticker start scale |
+| `--dg-ease-draw` | `cubic-bezier(.65,0,.35,1)` | Ease-in-out, **only** the loop draw. The one Digest exception to "every transition names one of the four §2.5 easings" |
 
-**Font.** Shantell Sans (SIL OFL 1.1), self-hosted at `assets/fonts/shantell-sans-latin-wght.woff2` with `OFL.txt` beside it. One variable file, `wght 400–600`, latin subset, `font-display:swap`. Weights used: 400 (options), 600 (quiz title, questions, score). Figma Hand, used in the Figma file, is free only inside Figma products and **not** licensed for web. Glyphs outside latin (the quiz marks ✓ ☹) fall back to the system font. Sizes come from the §2.2 scale: `1.5rem` title, `1rem` question, `.875rem` options and score.
+**Font.** Shantell Sans (SIL OFL 1.1), self-hosted at `assets/fonts/shantell-sans-latin-wght.woff2` with `OFL.txt` beside it. One variable file, `wght 400–600`, latin subset, `font-display:swap`. Weights used: 400 (options, hero subtitle), 600 (quiz title, questions, score, hero title). Figma Hand, used in the Figma file, is free only inside Figma products and **not** licensed for web. Text inside the board uses **board px** fitted to `board.png`, not the §2.2 rem scale (rem grows with the viewport, the board doesn't): quiz title `24px`, questions and options `18px` (line `24px`); hero title `60px`, subtitle `30px`, both scaled with the section via `cqw` so the mobile stack keeps the layout. Score and "Try again" stay `.875rem`.
+
+**Colors.** The D1/D7 rule that reserves `--accent` and `--error` applies to the **portfolio shell only**. Inside `.digest` the canvas keeps its own palette, so the quiz uses Digest-scope `--dg-quiz-correct` (green check) and `--dg-quiz-wrong` (red sad face). They never leave `.digest`.
 
 **Quiz states** (`.dg-quiz`, one `fieldset` + `legend` radio group per question):
 
 | State | Visual | Behaviour |
 |---|---|---|
-| Idle | Square box `1.25rem`, `1.5px` `--text` border, radius `.25rem`, `--background` fill | Arrow keys move focus only; Space or a click answers |
-| Hover (`hover:hover`, unlocked) | Box fill `--surface-2` | — |
-| Focus-visible | `2px --ring-light` ring, offset `2px` (§3) | — |
-| Chosen | Box fill `--ink` | The first pick locks the question |
-| Revealed | `✓` after the correct option, `☹` after the others; wrong options' text and marks in `--text-2` | Hidden text "(correct answer)" / "(your answer)" for screen readers; result in the form's `aria-live` region; score "N of 3 right" once all three are answered |
+| Idle | Hand-drawn box `assets/quiz/checkbox.svg#cb-empty`, `--dg-quiz-box`, `2px --text` stroke, round caps. The real radio sits transparent on top of it | Arrow keys move focus only; Space or a click answers |
+| Hover (`hover:hover`, unlocked) | Box fill `--surface-2` (`--dg-cb-fill`, inherited into the symbol) | — |
+| Focus-visible | `2px --ring-light` ring, offset `2px` (§3), on the radio over the box | — |
+| Chosen | — (shown by the Revealed marks) | The first pick locks the question |
+| Revealed | Right option → `#cb-check` (`--dg-quiz-correct`); a wrong pick → `#cb-sad` (`--dg-quiz-wrong`); other options stay empty, unpicked wrong text in `--text-2` | Hidden text "(correct answer)" / "(your answer)" for screen readers; result in the form's `aria-live` region; score "N of 3 right" once all three are answered |
 | Locked | `cursor:default`, no hover | Clicks and Space are ignored until "Try again" |
 | Try again | `.dg-reset`: `1px --border-ctl`, `--r-pill`, `.5rem 1rem`, hover/focus `--surface-2` + `scale(1.04)`, active `scale(.98)` | Appears after the first answer; clears every question and focuses Q1 |
 
-Marks are monochrome on purpose: `--accent` and `--error` are reserved (D1, D7), so there is no green/red until the sketchy quiz assets land.
+**Quiz frame.** `board.json` quiz = `x 2733, y 146, 572 × 835`: the ink bounding box in `board.png` at 1:1 (no visible inset, so frame = content). The section is "filled" (`<template data-filled>`): no placeholder outline, meta hidden, `h3` visually hidden. On desktop the fieldsets sit at the measured rows (`top` 69 / 342 / 637px, options every 55px); score, "Try again" and Next sit bottom-right in the empty corner. The mobile stack keeps normal flow.
 
-**Asset rule.** Traced illustrations (auto-traced SVGs, MBs of path data) → **WebP 2x** at the board display size, quality ~85, transparent background, cropped to content. Line art (paws, loop line, icons, simple doodles) → **SVG**, optimized. Sources stay in `assets/ref/src/` (git-ignored). Hero stickers: `assets/hero/sticker-{design,dig,jam,guide}-default@2x.webp`, placed in hero px (`--sx/--sy/--sw`) measured from `board.png`.
+**Hero stickers.** Each sticker is a `<button>` with `aria-label` = its bubble text ("Design with purpose", "Dig into challenges", "Jam as a team", "Guide the vision"). Default and hover frames are stacked; the hover frame is offset by `--hx/--hy/--hw` so both squares line up.
+
+| Trigger | Result | Timing |
+|---|---|---|
+| Hover (`hover:hover`), keyboard `:focus-visible` | Crossfade default → hover frame (opacity) | `--dur-micro` 300ms, `--ease-hover` (the ease-out token) |
+| Touch tap | Toggles the hover frame (`.is-on`); a tap anywhere else resets | Same |
+| Before the intro ends | No swap: every hover/focus/tap rule is gated on `[data-intro="done"]` | — |
+
+**Hero intro** (plays once, the first time the hero is ≥35% in view; camera returns don't replay it). Entrances use `--ease-spring`.
+
+| Step | Start | Duration | Motion |
+|---|---|---|---|
+| Title | 0ms | 300ms | opacity 0→1, `translateY(14px)`→0 |
+| Subtitle | 150ms | 300ms | same |
+| Design / Dig / Jam / Guide | 450 / 570 / 690 / 810ms | 300ms each | opacity 0→1, `scale(.92)`→1 |
+| Loop line | 1110ms | 1200ms, `--dg-ease-draw` | `stroke-dashoffset` 1→0 (`pathLength="1"`, one subpath) |
+| Hovers on | 2310ms | — | `data-intro="done"` |
+
+Reduced motion: `data-intro="done"` at once, so the final state shows instantly and hovers work straight away.
+
+**Asset rule.** Traced illustrations (auto-traced SVGs, MBs of path data) → **WebP 2x** at the board display size, quality ~85, transparent background, cropped to content. Line art (paws, loop line, icons, simple doodles) → **SVG**, optimized. Sources stay in `assets/ref/src/` (git-ignored). Hero stickers: `assets/hero/sticker-{design,dig,jam,guide}-{default,hover}@2x.webp`, placed in hero px (`--sx/--sy/--sw`) measured from `board.png`. Loop line: `assets/hero/loop.svg#loop`, one hand-traced path (2px, round caps), drawn under the stickers. Guide's frames have the dragon's neck baked in outside the square, so a CSS `mask-image` hides everything right of the square (and, on the hover frame, below the bubble) and `loop.svg` draws the neck instead. Quiz checkbox: `assets/quiz/checkbox.svg` (`#cb-empty`, `#cb-check`, `#cb-sad`). Hero weight: 8 WebP 198.1 KB (defaults 77.2 + hovers 120.9) + loop 3.0 KB = **≈201 KB**.
 
 Layout-only values in the mobile stack (<768px): placeholder `min-height:16rem`, playlist `padding-bottom:10rem` (room for the cat-finale slot). Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
 

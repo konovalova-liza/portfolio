@@ -223,19 +223,36 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
     </div>
     <p class="sr" id="dgLive" role="status" aria-live="polite"></p>
 
-    <!-- Hero stickers: default frames, positions in hero px measured from assets/ref/board.png (square top-left minus the image's square offset) -->
+    <!-- Hero: positions in hero px measured from assets/ref/board.png. Stickers sit at the default frame (square top-left minus the image's
+         square offset); --hx/--hy/--hw place the hover frame relative to it so both squares line up. The loop sits under the stickers. -->
     <template id="tpl-hero">
-      <div class="dg-art">
-        <img class="dg-sticker" src="assets/hero/sticker-design-default@2x.webp" width="235" height="259" alt="Design sticker" style="--sx:320;--sy:299;--sw:235" decoding="async">
-        <img class="dg-sticker" src="assets/hero/sticker-dig-default@2x.webp" width="235" height="239" alt="Dig sticker" style="--sx:530;--sy:379.5;--sw:235" decoding="async">
-        <img class="dg-sticker" src="assets/hero/sticker-jam-default@2x.webp" width="262" height="276" alt="Jam sticker" style="--sx:715.5;--sy:298;--sw:261.5" decoding="async">
-        <img class="dg-sticker" src="assets/hero/sticker-guide-default@2x.webp" width="297" height="240" alt="Guide sticker" style="--sx:948;--sy:377.5;--sw:296.5" decoding="async">
+      <div class="dg-art dg-hero">
+        <p class="dg-hero-title" style="--sx:353;--sy:139;--sw:800">Hey, we’re DX:Enterprise!</p>
+        <p class="dg-hero-sub" style="--sx:552;--sy:229;--sw:400">The ones who typically</p>
+        <svg class="dg-loop" viewBox="0 0 1016 280" style="--sx:236;--sy:336;--sw:1016" aria-hidden="true" focusable="false"><use href="assets/hero/loop.svg#loop"/></svg>
+        <button class="dg-sticker" type="button" aria-label="Design with purpose" style="--i:0;--sx:320;--sy:299;--sw:235;--hx:-27.5;--hy:-10;--hw:262.5">
+          <img class="dg-st-def" src="assets/hero/sticker-design-default@2x.webp" width="235" height="259" alt="" decoding="async">
+          <img class="dg-st-hov" src="assets/hero/sticker-design-hover@2x.webp" width="263" height="286" alt="" decoding="async">
+        </button>
+        <button class="dg-sticker" type="button" aria-label="Dig into challenges" style="--i:1;--sx:530;--sy:379.5;--sw:235;--hx:-6.5;--hy:-14.5;--hw:239.5">
+          <img class="dg-st-def" src="assets/hero/sticker-dig-default@2x.webp" width="235" height="239" alt="" decoding="async">
+          <img class="dg-st-hov" src="assets/hero/sticker-dig-hover@2x.webp" width="240" height="296" alt="" decoding="async">
+        </button>
+        <button class="dg-sticker" type="button" aria-label="Jam as a team" style="--i:2;--sx:715.5;--sy:298;--sw:261.5;--hx:.5;--hy:-12.5;--hw:261">
+          <img class="dg-st-def" src="assets/hero/sticker-jam-default@2x.webp" width="262" height="276" alt="" decoding="async">
+          <img class="dg-st-hov" src="assets/hero/sticker-jam-hover@2x.webp" width="261" height="285" alt="" decoding="async">
+        </button>
+        <!-- Guide: both frames have the dragon's neck baked in outside the square; a CSS mask hides it so loop.svg isn't doubled -->
+        <button class="dg-sticker dg-st-guide" type="button" aria-label="Guide the vision" style="--i:3;--sx:948;--sy:377.5;--sw:296.5;--hx:-5.5;--hy:.5;--hw:357.5">
+          <img class="dg-st-def" src="assets/hero/sticker-guide-default@2x.webp" width="297" height="240" alt="" decoding="async">
+          <img class="dg-st-hov" src="assets/hero/sticker-guide-hover@2x.webp" width="358" height="239" alt="" decoding="async">
+        </button>
       </div>
     </template>
 
-    <template id="tpl-quiz">
+    <template id="tpl-quiz" data-filled>
       <form class="dg-quiz" id="dgQuiz" novalidate>
-        <h4 class="dg-quiz-title">Quick design test?</h4>
+        <h4 class="dg-quiz-title"><span aria-hidden="true">🤓</span> Quick design test?</h4>
         <fieldset data-answer="lego">
           <legend>1. Which logo has never been redesigned since 1962?</legend>
           <label><input type="radio" name="q1" value="lego"><span>LEGO</span></label>

@@ -20,6 +20,8 @@ Why this case matters: it is the strongest proof of the "UI design engineer" pos
 - **Scope of the rebuild:** only the DX:Enterprise page is rebuilt. The other tabs are inactive decoration, styled after a Figma canvas.
 - **NDA:** "DX:Enterprise" and the Recipe numbers are OK to show publicly.
 - **Font:** Figma Hand is **not** licensed for web (free only inside Figma products), so the page uses **Shantell Sans** (SIL OFL 1.1), self-hosted.
+- **Fidelity:** pixel-perfect copies are not required. Keep the idea and feel of each drawing and animation; simplify when it saves weight or effort.
+- **Colors:** the DESIGN.md accent/error restriction applies to the portfolio shell only. Inside `.digest` the canvas uses its own Digest-scope colors (quiz: green check, red sad face; DESIGN.md §5.7).
 
 ## Page structure
 1. Portfolio header + "← All work" back link.

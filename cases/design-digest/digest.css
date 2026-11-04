@@ -14,6 +14,16 @@
   --dg-cam-pad:48px;             /* camera inset when a section is larger than the viewport */
   --dg-key-step:120px;           /* arrow-key pan step */
   --dg-ref-opacity:.3;           /* dev-only board.png overlay ("G") */
+  --dg-quiz-correct:#2b8a3e;     /* quiz check mark (Digest only; --accent/--error stay reserved for the shell) */
+  --dg-quiz-wrong:#d6332a;       /* quiz sad face */
+  --dg-quiz-box:32px;            /* sketchy checkbox (board: 30 × 33) */
+  --dg-intro-in:var(--dur-micro);     /* each hero intro step: title, subtitle, every sticker */
+  --dg-intro-gap:150ms;               /* subtitle starts this long after the title */
+  --dg-intro-stagger:var(--stagger-line); /* between stickers (120ms) */
+  --dg-intro-draw:1200ms;             /* loop line draw */
+  --dg-intro-y:14px;                  /* title/subtitle rise (smallest v0 reveal offset) */
+  --dg-intro-scale:.92;               /* sticker start scale */
+  --dg-ease-draw:cubic-bezier(.65,0,.35,1); /* ease-in-out, only the loop draw */
   position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--background);color:var(--text)
 }
 
@@ -57,25 +67,72 @@
 
 /* art layer: covers the section's border box, so --sx/--sy/--sw (section px, from board.png) map 1:1 on desktop
    and scale with the section in the mobile stack */
-.digest .dg-art{position:absolute;inset:calc(-1 * var(--dg-outline-w));pointer-events:none}
-.digest .dg-sticker{position:absolute;left:calc(var(--sx) / var(--aw) * 100%);top:calc(var(--sy) / var(--ah) * 100%);width:calc(var(--sw) / var(--aw) * 100%);height:auto;max-width:none;user-select:none;-webkit-user-drag:none}
+.digest .dg-art{position:absolute;inset:calc(-1 * var(--dg-outline-w));pointer-events:none;container-type:inline-size}
+.digest .dg-art > *{position:absolute;left:calc(var(--sx) / var(--aw) * 100%);top:calc(var(--sy) / var(--ah) * 100%);width:calc(var(--sw) / var(--aw) * 100%);max-width:none}
 
-/* quiz: functional states only; the sketchy look arrives with the SVG assets */
-.digest .dg-quiz{display:flex;flex-direction:column;gap:1.25rem;font-family:var(--dg-font);color:var(--text)}
-.digest .dg-quiz-title{font-size:1.5rem;font-weight:600}
-.digest .dg-quiz fieldset{border:0;display:flex;flex-direction:column;gap:.5rem}
-.digest .dg-quiz legend{margin-bottom:.5rem;font-size:1rem;font-weight:600}
-.digest .dg-quiz label{display:inline-flex;align-items:center;gap:.75rem;width:fit-content;font-size:.875rem;cursor:pointer}
-.digest .dg-quiz input{appearance:none;-webkit-appearance:none;flex:none;width:1.25rem;height:1.25rem;margin:0;border:1.5px solid var(--text);border-radius:.25rem;background:var(--background);cursor:pointer;
-  transition:background var(--dur-micro) var(--ease-hover)}
+/* hero text: board px sizes, scaled with the section (cqw) so the mobile stack keeps the layout */
+.digest .dg-hero-title,.digest .dg-hero-sub{font-family:var(--dg-font);line-height:1.25;text-align:center;white-space:nowrap;color:var(--text)}
+.digest .dg-hero-title{font-size:calc(60 / var(--aw) * 100cqw);font-weight:600}
+.digest .dg-hero-sub{font-size:calc(30 / var(--aw) * 100cqw);font-weight:400}
+.digest .dg-loop{height:auto;overflow:visible;color:var(--text)}
+.digest .dg-loop use{stroke-dasharray:1 1}
+
+/* stickers: one button per sticker, default + hover frames stacked; margin % resolves against width, so the offsets scale too */
+.digest .dg-sticker{display:block;padding:0;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.digest .dg-sticker img{display:block;height:auto;max-width:none;user-select:none;-webkit-user-drag:none;transition:opacity var(--dur-micro) var(--ease-hover)}
+.digest .dg-st-def{width:100%}
+.digest .dg-st-hov{position:absolute;left:calc(var(--hx) / var(--sw) * 100%);top:0;margin-top:calc(var(--hy) / var(--sw) * 100%);width:calc(var(--hw) / var(--sw) * 100%);opacity:0}
+.digest .dg-st-guide .dg-st-def{-webkit-mask-image:linear-gradient(90deg,#000 80.5%,transparent 0);mask-image:linear-gradient(90deg,#000 80.5%,transparent 0)}
+.digest .dg-st-guide .dg-st-hov{-webkit-mask-image:linear-gradient(90deg,#000 68.3%,transparent 0),linear-gradient(#000 48%,transparent 0);mask-image:linear-gradient(90deg,#000 68.3%,transparent 0),linear-gradient(#000 48%,transparent 0)}
+.digest .dg-sticker:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
+/* hover/focus/tap swap only once the intro is done */
+.digest [data-intro="done"] .dg-sticker:is(:focus-visible,.is-on) .dg-st-def{opacity:0}
+.digest [data-intro="done"] .dg-sticker:is(:focus-visible,.is-on) .dg-st-hov{opacity:1}
+@media (hover:hover){
+  .digest [data-intro="done"] .dg-sticker:hover .dg-st-def{opacity:0}
+  .digest [data-intro="done"] .dg-sticker:hover .dg-st-hov{opacity:1}
+}
+
+/* hero intro: pending = hidden start state, play = staggered transitions, done = hovers on. Timeline in DESIGN.md §5.7 */
+.digest [data-intro="pending"] :is(.dg-hero-title,.dg-hero-sub){opacity:0;transform:translateY(var(--dg-intro-y))}
+.digest [data-intro="pending"] .dg-sticker{opacity:0;transform:scale(var(--dg-intro-scale))}
+.digest [data-intro="pending"] .dg-loop{visibility:hidden}
+.digest [data-intro="pending"] .dg-loop use{stroke-dashoffset:1}
+.digest [data-intro="play"] :is(.dg-hero-title,.dg-hero-sub,.dg-sticker){transition:opacity var(--dg-intro-in) var(--ease-spring) var(--d),transform var(--dg-intro-in) var(--ease-spring) var(--d)}
+.digest [data-intro="play"] .dg-hero-title{--d:0ms}
+.digest [data-intro="play"] .dg-hero-sub{--d:var(--dg-intro-gap)}
+.digest [data-intro="play"] .dg-sticker{--d:calc(var(--dg-intro-gap) + var(--dg-intro-in) + var(--i) * var(--dg-intro-stagger))}
+.digest [data-intro="play"] .dg-loop{transition:visibility 0s linear var(--d);--d:calc(var(--dg-intro-gap) + 2 * var(--dg-intro-in) + 3 * var(--dg-intro-stagger))}
+.digest [data-intro="play"] .dg-loop use{transition:stroke-dashoffset var(--dg-intro-draw) var(--dg-ease-draw) var(--d)}
+
+/* filled sections (real content, template has data-filled): no placeholder chrome, the heading stays for screen readers */
+.digest .dg-sec.is-filled{border-color:transparent;background:none;padding:0}
+.digest .dg-sec.is-filled > .dg-meta,.digest .dg-sec.is-filled > .dg-approx{display:none}
+.digest .dg-sec.is-filled > h3{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* quiz: board px, laid out on the rows measured from board.png (frame 572 × 835) */
+.digest .dg-quiz{position:relative;display:flex;flex-direction:column;gap:40px;width:100%;font-family:var(--dg-font);color:var(--text);
+  --dg-cb-ink:var(--text)}
+.digest .dg-quiz-title{font-size:24px;line-height:32px;font-weight:600}
+.digest .dg-quiz-title span{margin-left:7px;margin-right:12px}
+.digest .dg-quiz fieldset{border:0;display:flex;flex-direction:column;gap:23px;min-width:0}
+.digest .dg-quiz legend{margin-bottom:28px;font-size:18px;line-height:24px;font-weight:600}
+.digest .dg-quiz label{position:relative;display:inline-flex;align-items:center;gap:24px;width:fit-content;padding-left:7px;font-size:18px;line-height:24px;cursor:pointer}
+.digest .dg-quiz input{position:absolute;left:7px;top:0;appearance:none;-webkit-appearance:none;width:var(--dg-quiz-box);height:var(--dg-quiz-box);margin:0;border:0;background:none;cursor:pointer}
+.digest .dg-cb{flex:none;width:var(--dg-quiz-box);height:var(--dg-quiz-box);--dg-cb-fill:none}
 .digest .dg-quiz input:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
-@media (hover:hover){.digest .dg-quiz fieldset:not([data-locked]) label:hover input{background:var(--surface-2)}}
-.digest .dg-quiz .is-chosen input{background:var(--ink)}
+@media (hover:hover){.digest .dg-quiz fieldset:not([data-locked]) label:hover .dg-cb{--dg-cb-fill:var(--surface-2)}}
 .digest .dg-quiz [data-locked] label,.digest .dg-quiz [data-locked] input{cursor:default}
 .digest .dg-quiz .is-wrong:not(.is-chosen) > span{color:var(--text-2)}
-.digest .dg-mark{font-style:normal;font-size:1rem;line-height:1}
-.digest .dg-quiz .is-wrong .dg-mark{color:var(--text-2)}
 .digest .dg-quiz-foot{display:flex;align-items:center;gap:1rem;min-height:2.25rem}
+@media (min-width:768px){
+  .digest .dg-sec.is-filled .dg-quiz{height:100%}
+  .digest .dg-quiz fieldset{position:absolute;left:0;right:0;top:var(--qy)}
+  .digest .dg-quiz fieldset:nth-of-type(1){--qy:69px}
+  .digest .dg-quiz fieldset:nth-of-type(2){--qy:342px}
+  .digest .dg-quiz fieldset:nth-of-type(3){--qy:637px}
+  .digest .dg-quiz-foot{position:absolute;right:0;bottom:0;flex-wrap:wrap;justify-content:flex-end;max-width:340px}
+}
 .digest .dg-quiz-foot .dg-next{margin:0 0 0 auto;font-family:var(--font)}
 .digest .dg-quiz-score{font-size:.875rem;font-weight:600}
 .digest .dg-reset{border:1px solid var(--border-ctl);border-radius:var(--r-pill);padding:.5rem 1rem;font-family:var(--dg-font);font-size:.875rem;transition:transform var(--dur-micro) var(--ease-hover),background var(--dur-micro) var(--ease-hover)}

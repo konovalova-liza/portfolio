@@ -49,7 +49,8 @@ function build(data){
       `<span class="dg-meta">${s.w} × ${s.h} · x ${s.x} · y ${s.y}</span>${approxTag(s)}`;
     // section content from <template id="tpl-{id}">; art layers go first so labels stay on top
     const tpl=document.getElementById('tpl-'+id);
-    if(tpl){const n=tpl.content.cloneNode(true);n.firstElementChild.classList.contains('dg-art')?el.prepend(n):el.append(n);}
+    if(tpl){const n=tpl.content.cloneNode(true);n.firstElementChild.classList.contains('dg-art')?el.prepend(n):el.append(n);
+      if(tpl.hasAttribute('data-filled'))el.classList.add('is-filled');}
     const slot=el.querySelector('[data-next-slot]');(slot||el).append(nextBtn(id));world.append(el);});
   data.slots.forEach(s=>{const host=world.querySelector(`[data-section="${s.parent}"]`);if(!host)return;
     const el=document.createElement('div');el.className='dg-slot';el.dataset.section=s.id;el.tabIndex=-1;
@@ -58,19 +59,24 @@ function build(data){
     el.append(nextBtn(s.id));host.append(el);});
   if(DEV)world.append(refImg);
   const quiz=world.querySelector('.dg-quiz');if(quiz)initQuiz(quiz);
+  const hero=world.querySelector('.dg-hero');if(hero)initHero(hero);
   readTokens();setMode();goTo(cam.order[0],{instant:true,focus:false});
 }
 
-/* quiz: one radio group per question. The first pick locks the question and reveals ✓ / ☹.
-   Arrow keys only move focus (no accidental answer); Space or a click answers. */
+/* quiz: one radio group per question. The first pick locks the question: the right option's box gets a check,
+   a wrong pick gets a sad face (assets/quiz/checkbox.svg). Arrow keys only move focus; Space or a click answers. */
+const CB='assets/quiz/checkbox.svg#cb-';
 function initQuiz(form){
   const sets=[...form.querySelectorAll('fieldset')],status=form.querySelector('[role="status"]'),
     score=form.querySelector('.dg-quiz-score'),reset=form.querySelector('.dg-reset');
   const labelOf=r=>r.closest('label').querySelector('span').textContent;
+  const box=r=>r.nextElementSibling.firstElementChild;
+  form.querySelectorAll('input').forEach(r=>r.insertAdjacentHTML('afterend',`<svg class="dg-cb" aria-hidden="true" focusable="false"><use href="${CB}empty"/></svg>`));
   function lock(fs,pick){const ans=fs.dataset.answer;fs.dataset.locked='';
     fs.querySelectorAll('input').forEach(r=>{const l=r.closest('label'),ok=r.value===ans;
       r.checked=r===pick;l.classList.toggle('is-chosen',r===pick);l.classList.add(ok?'is-right':'is-wrong');
-      l.insertAdjacentHTML('beforeend',`<i class="dg-mark" aria-hidden="true">${ok?'✓':'☹'}</i><span class="sr">${ok?' (correct answer)':''}${r===pick?' (your answer)':''}</span>`);});
+      box(r).setAttribute('href',CB+(ok?'check':r===pick?'sad':'empty'));
+      if(ok||r===pick)l.insertAdjacentHTML('beforeend',`<span class="sr">${ok?' (correct answer)':''}${r===pick?' (your answer)':''}</span>`);});
     const right=pick.value===ans,done=sets.filter(f=>'locked' in f.dataset),n=done.filter(f=>f.querySelector('.is-chosen.is-right')).length;
     let msg=right?`Correct: ${labelOf(pick)}.`:`Not quite. The answer is ${labelOf(fs.querySelector(`input[value="${ans}"]`))}.`;
     if(done.length===sets.length){score.textContent=`${n} of ${sets.length} right`;msg+=` You got ${n} of ${sets.length}.`;}
@@ -81,9 +87,30 @@ function initQuiz(form){
     const d={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];if(!d)return;
     e.preventDefault();e.stopPropagation();const g=[...r.closest('fieldset').querySelectorAll('input')];g[(g.indexOf(r)+d+g.length)%g.length].focus({preventScroll:true});});
   reset.addEventListener('click',()=>{sets.forEach(fs=>{delete fs.dataset.locked;
-      fs.querySelectorAll('label').forEach(l=>{l.classList.remove('is-chosen','is-right','is-wrong');l.querySelectorAll('.dg-mark,.sr').forEach(n=>n.remove());});
-      fs.querySelectorAll('input').forEach(r=>r.checked=false);});
+      fs.querySelectorAll('label').forEach(l=>{l.classList.remove('is-chosen','is-right','is-wrong');l.querySelectorAll('.sr').forEach(n=>n.remove());});
+      fs.querySelectorAll('input').forEach(r=>{r.checked=false;box(r).setAttribute('href',CB+'empty');});});
     score.textContent='';reset.hidden=true;status.textContent='Quiz reset.';sets[0].querySelector('input').focus({preventScroll:true});});
+}
+
+/* hero: the intro plays once, the first time the hero is at least a third in view (never on camera returns).
+   Reduced motion → final state at once. Stickers swap to their hover frame on hover/focus (CSS) once the intro is done;
+   on touch a tap toggles a sticker and a tap anywhere else resets it. */
+function initHero(art){
+  const sec=art.closest('.dg-sec'),stickers=[...art.querySelectorAll('.dg-sticker')];
+  const done=()=>{sec.dataset.intro='done';};
+  if(reduceMQ.matches||!('IntersectionObserver' in window))done();
+  else{sec.dataset.intro='pending';
+    const io=new IntersectionObserver(es=>{if(!es.some(e=>e.isIntersecting&&e.intersectionRatio>=.35))return;io.disconnect();
+      sec.dataset.intro='play';
+      const t=['--dg-intro-gap','--dg-intro-in','--dg-intro-stagger','--dg-intro-draw'].map(n=>ms(tok(n)));
+      // timeline: gap + subtitle + 3 staggers + last sticker + loop draw (DESIGN.md §5.7)
+      setTimeout(done,reduceMQ.matches?0:t[0]+2*t[1]+3*t[2]+t[3]);},{threshold:.35});
+    io.observe(sec);}
+  let touch=false;
+  art.addEventListener('pointerdown',e=>{touch=e.pointerType!=='mouse';});
+  art.addEventListener('click',e=>{const b=e.target.closest('.dg-sticker');if(!b||!touch||sec.dataset.intro!=='done')return;
+    const on=!b.classList.contains('is-on');stickers.forEach(s=>s.classList.toggle('is-on',s===b&&on));});
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('.dg-sticker'))stickers.forEach(s=>s.classList.remove('is-on'));},{passive:true});
 }
 
 /* dev only: "G" toggles assets/ref/board.png (git-ignored) over the world, loaded on first use */

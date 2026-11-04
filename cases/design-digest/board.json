@@ -4,7 +4,7 @@
     "figmaNode": "377:104997",
     "note": "Measured by hand in Figma, relative to the board frame \"Home\". Origin = top-left of the team/recipe column. get_metadata does not expand component children, so these numbers come from the designer, not the API. Replace every \"approx\": true entry once measured.",
     "date": "2026-11-04",
-    "reference": "assets/ref/board.png (3428 × 3554, 1:1 with board px, git-ignored). Hero x checked against it: logo left 1097 and close (×) right 2356 sit 89/91px inside a 1438 frame → x 1008."
+    "reference": "assets/ref/board.png (3428 × 3554, 1:1 with board px, git-ignored). Hero x checked against it: logo left 1097 and close (×) right 2356 sit 89/91px inside a 1438 frame → x 1008. Quiz = ink bounding box at 1:1 (luminance < 110 plus the emoji): x 2733–3304, y 146–980; the frame has no visible inset, so frame = content box."
   },
   "units": "px",
   "board": { "w": 3430, "h": 3555, "approx": true },
@@ -13,7 +13,7 @@
     { "id": "hero",       "label": "Hero",       "figmaName": "Home page", "x": 1008, "y": 0,    "w": 1438, "h": 941 },
     { "id": "team",       "label": "Team",       "figmaName": "Frame",     "x": 4,    "y": 675,  "w": 1249, "h": 1747 },
     { "id": "what-we-do", "label": "What we do", "figmaName": "Frame",     "x": 1692, "y": 932,  "w": 1736, "h": 1049 },
-    { "id": "quiz",       "label": "Quiz",       "figmaName": "Frame",     "x": 2450, "y": 300,  "w": 980,  "h": 620,  "approx": true, "approxFields": ["x", "y", "w", "h"] },
+    { "id": "quiz",       "label": "Quiz",       "figmaName": "Frame",     "x": 2733, "y": 146,  "w": 572,  "h": 835 },
     { "id": "values",     "label": "Values",     "figmaName": "Frame",     "x": 1587, "y": 1819, "w": 1367, "h": 830 },
     { "id": "recipe",     "label": "Recipe",     "figmaName": "Frame",     "x": 0,    "y": 2433, "w": 1314, "h": 789 },
     { "id": "playlist",   "label": "Playlist",   "figmaName": "Frame",     "x": 2099, "y": 2823, "w": 1329, "h": 731 }
