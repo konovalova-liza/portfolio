@@ -638,6 +638,26 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dg-cam-pad` | `48px` | Inset the camera keeps when a section is larger than the viewport |
 | `--dg-key-step` | `120px` | Arrow-key pan step while the board has focus |
 | `--dg-ref-opacity` | `.3` | Dev-only overlay of `assets/ref/board.png` (git-ignored), toggled with `G` on localhost / `file:` / `?dev` |
+| `--dg-outline-w` | `2px` | Width inside `--dg-outline`; the `.dg-art` layer insets by it so art aligns to the section's border box |
+| `--dg-font` | `"Shantell Sans", var(--font)` | Handwritten Digest text (quiz now; hero titles, stickers and labels later). Never used in the portfolio shell |
+
+**Font.** Shantell Sans (SIL OFL 1.1), self-hosted at `assets/fonts/shantell-sans-latin-wght.woff2` with `OFL.txt` beside it. One variable file, `wght 400–600`, latin subset, `font-display:swap`. Weights used: 400 (options), 600 (quiz title, questions, score). Figma Hand, used in the Figma file, is free only inside Figma products and **not** licensed for web. Glyphs outside latin (the quiz marks ✓ ☹) fall back to the system font. Sizes come from the §2.2 scale: `1.5rem` title, `1rem` question, `.875rem` options and score.
+
+**Quiz states** (`.dg-quiz`, one `fieldset` + `legend` radio group per question):
+
+| State | Visual | Behaviour |
+|---|---|---|
+| Idle | Square box `1.25rem`, `1.5px` `--text` border, radius `.25rem`, `--background` fill | Arrow keys move focus only; Space or a click answers |
+| Hover (`hover:hover`, unlocked) | Box fill `--surface-2` | — |
+| Focus-visible | `2px --ring-light` ring, offset `2px` (§3) | — |
+| Chosen | Box fill `--ink` | The first pick locks the question |
+| Revealed | `✓` after the correct option, `☹` after the others; wrong options' text and marks in `--text-2` | Hidden text "(correct answer)" / "(your answer)" for screen readers; result in the form's `aria-live` region; score "N of 3 right" once all three are answered |
+| Locked | `cursor:default`, no hover | Clicks and Space are ignored until "Try again" |
+| Try again | `.dg-reset`: `1px --border-ctl`, `--r-pill`, `.5rem 1rem`, hover/focus `--surface-2` + `scale(1.04)`, active `scale(.98)` | Appears after the first answer; clears every question and focuses Q1 |
+
+Marks are monochrome on purpose: `--accent` and `--error` are reserved (D1, D7), so there is no green/red until the sketchy quiz assets land.
+
+**Asset rule.** Traced illustrations (auto-traced SVGs, MBs of path data) → **WebP 2x** at the board display size, quality ~85, transparent background, cropped to content. Line art (paws, loop line, icons, simple doodles) → **SVG**, optimized. Sources stay in `assets/ref/src/` (git-ignored). Hero stickers: `assets/hero/sticker-{design,dig,jam,guide}-default@2x.webp`, placed in hero px (`--sx/--sy/--sw`) measured from `board.png`.
 
 Layout-only values in the mobile stack (<768px): placeholder `min-height:16rem`, playlist `padding-bottom:10rem` (room for the cat-finale slot). Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
 

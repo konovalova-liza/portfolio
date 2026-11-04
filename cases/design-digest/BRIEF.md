@@ -14,6 +14,13 @@ Why this case matters: it is the strongest proof of the "UI design engineer" pos
 - Respect `prefers-reduced-motion` (static states, no autoplay) and touch (no hover-only content; tap reveals).
 - No external image hosts. Assets live in `cases/design-digest/assets/`.
 
+## Confirmed facts (2026-11-04)
+- **What:** Design Digest 2025, the internal annual digest of DX:Enterprise, the enterprise design team at Trinetix. Audience: the team and the whole company.
+- **Team:** 4 designers + 1 art lead. Each designer made one tab. Liza designed the whole DX:Enterprise page: concept, illustrations, copy, motion and the Figma prototype.
+- **Scope of the rebuild:** only the DX:Enterprise page is rebuilt. The other tabs are inactive decoration, styled after a Figma canvas.
+- **NDA:** "DX:Enterprise" and the Recipe numbers are OK to show publicly.
+- **Font:** Figma Hand is **not** licensed for web (free only inside Figma products), so the page uses **Shantell Sans** (SIL OFL 1.1), self-hosted.
+
 ## Page structure
 1. Portfolio header + "← All work" back link.
 2. Case intro (short, DESIGN.md typography): title, one-line summary, role / team / year / tools chips, 1 paragraph context. **Facts to confirm with Liza before writing copy**: what Design Digest was used for, her role, team, year. Do not invent them.

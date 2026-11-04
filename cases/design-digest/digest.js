@@ -47,14 +47,43 @@ function build(data){
     for(const [k,v] of Object.entries({'--x':s.x+'px','--y':s.y+'px','--w':s.w+'px','--h':s.h+'px','--aw':s.w,'--ah':s.h}))el.style.setProperty(k,v);
     el.innerHTML=`<span class="dg-meta">${s.id} · Figma “${s.figmaName}”</span><h3 id="dg-h-${id}">${s.label}</h3>`+
       `<span class="dg-meta">${s.w} × ${s.h} · x ${s.x} · y ${s.y}</span>${approxTag(s)}`;
-    el.append(nextBtn(id));world.append(el);});
+    // section content from <template id="tpl-{id}">; art layers go first so labels stay on top
+    const tpl=document.getElementById('tpl-'+id);
+    if(tpl){const n=tpl.content.cloneNode(true);n.firstElementChild.classList.contains('dg-art')?el.prepend(n):el.append(n);}
+    const slot=el.querySelector('[data-next-slot]');(slot||el).append(nextBtn(id));world.append(el);});
   data.slots.forEach(s=>{const host=world.querySelector(`[data-section="${s.parent}"]`);if(!host)return;
     const el=document.createElement('div');el.className='dg-slot';el.dataset.section=s.id;el.tabIndex=-1;
     el.setAttribute('role','group');el.setAttribute('aria-labelledby','dg-h-'+s.id);
     el.innerHTML=`<span class="dg-meta">${s.id} · slot in ${s.parent}</span><h4 id="dg-h-${s.id}">${s.label}</h4><span class="dg-meta">size TBD</span>`;
     el.append(nextBtn(s.id));host.append(el);});
   if(DEV)world.append(refImg);
+  const quiz=world.querySelector('.dg-quiz');if(quiz)initQuiz(quiz);
   readTokens();setMode();goTo(cam.order[0],{instant:true,focus:false});
+}
+
+/* quiz: one radio group per question. The first pick locks the question and reveals ✓ / ☹.
+   Arrow keys only move focus (no accidental answer); Space or a click answers. */
+function initQuiz(form){
+  const sets=[...form.querySelectorAll('fieldset')],status=form.querySelector('[role="status"]'),
+    score=form.querySelector('.dg-quiz-score'),reset=form.querySelector('.dg-reset');
+  const labelOf=r=>r.closest('label').querySelector('span').textContent;
+  function lock(fs,pick){const ans=fs.dataset.answer;fs.dataset.locked='';
+    fs.querySelectorAll('input').forEach(r=>{const l=r.closest('label'),ok=r.value===ans;
+      r.checked=r===pick;l.classList.toggle('is-chosen',r===pick);l.classList.add(ok?'is-right':'is-wrong');
+      l.insertAdjacentHTML('beforeend',`<i class="dg-mark" aria-hidden="true">${ok?'✓':'☹'}</i><span class="sr">${ok?' (correct answer)':''}${r===pick?' (your answer)':''}</span>`);});
+    const right=pick.value===ans,done=sets.filter(f=>'locked' in f.dataset),n=done.filter(f=>f.querySelector('.is-chosen.is-right')).length;
+    let msg=right?`Correct: ${labelOf(pick)}.`:`Not quite. The answer is ${labelOf(fs.querySelector(`input[value="${ans}"]`))}.`;
+    if(done.length===sets.length){score.textContent=`${n} of ${sets.length} right`;msg+=` You got ${n} of ${sets.length}.`;}
+    status.textContent=msg;reset.hidden=false;}
+  form.addEventListener('click',e=>{const fs=e.target.closest('fieldset');if(fs&&'locked' in fs.dataset&&e.target.matches('input'))e.preventDefault();});
+  form.addEventListener('change',e=>{const r=e.target,fs=r.closest('fieldset');if(!fs||'locked' in fs.dataset)return;lock(fs,r);});
+  form.addEventListener('keydown',e=>{const r=e.target;if(!r.matches('input[type="radio"]'))return;
+    const d={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];if(!d)return;
+    e.preventDefault();e.stopPropagation();const g=[...r.closest('fieldset').querySelectorAll('input')];g[(g.indexOf(r)+d+g.length)%g.length].focus({preventScroll:true});});
+  reset.addEventListener('click',()=>{sets.forEach(fs=>{delete fs.dataset.locked;
+      fs.querySelectorAll('label').forEach(l=>{l.classList.remove('is-chosen','is-right','is-wrong');l.querySelectorAll('.dg-mark,.sr').forEach(n=>n.remove());});
+      fs.querySelectorAll('input').forEach(r=>r.checked=false);});
+    score.textContent='';reset.hidden=true;status.textContent='Quiz reset.';sets[0].querySelector('input').focus({preventScroll:true});});
 }
 
 /* dev only: "G" toggles assets/ref/board.png (git-ignored) over the world, loaded on first use */
@@ -101,17 +130,23 @@ board.addEventListener('wheel',e=>{if(!cam.active||e.ctrlKey)return;e.preventDef
   const k=e.deltaMode===1?16:e.deltaMode===2?cam.vh:1;panBy(e.deltaX*k,e.deltaY*k);},{passive:false});
 let drag=null;
 // a press on the world focuses the board (for arrow keys), never a section, so focusin doesn't re-aim the camera mid-drag
-board.addEventListener('mousedown',e=>{if(e.target.closest('button,a'))return;e.preventDefault();board.focus({preventScroll:true});});
-board.addEventListener('pointerdown',e=>{if(!cam.active||e.button!==0||e.target.closest('button,a'))return;
+const CONTROLS='button,a,input,label,select,textarea';
+board.addEventListener('mousedown',e=>{if(e.target.closest(CONTROLS))return;e.preventDefault();board.focus({preventScroll:true});});
+board.addEventListener('pointerdown',e=>{if(!cam.active||e.button!==0||e.target.closest(CONTROLS))return;
   stop();drag={id:e.pointerId,x:e.clientX,y:e.clientY,cx:cam.x,cy:cam.y};board.setPointerCapture(e.pointerId);board.classList.add('is-dragging');});
 board.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;setCam(drag.cx-(e.clientX-drag.x),drag.cy-(e.clientY-drag.y));});
 const endDrag=e=>{if(!drag||e.pointerId!==drag.id)return;drag=null;board.classList.remove('is-dragging');};
 board.addEventListener('pointerup',endDrag);board.addEventListener('pointercancel',endDrag);
 const KEYS={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
 // Tab into/inside the world: move focus ourselves with preventScroll, otherwise the browser scrolls the board and the page
-const tabbables=()=>$$('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])').filter(n=>n.getClientRects().length);
+// one tab stop per radio group (the checked radio, else the first), like the browser does
+const tabbables=()=>$$('a[href],button:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex="-1"])').filter(n=>{
+  if(!n.getClientRects().length)return false;if(n.type!=='radio')return true;
+  const g=$$(`input[type="radio"][name="${n.name}"]`);return n.checked||(!g.some(r=>r.checked)&&g[0]===n);});
 document.addEventListener('keydown',e=>{if(e.key!=='Tab'||!cam.active||e.altKey||e.metaKey||e.ctrlKey)return;
-  const list=tabbables(),next=list[list.indexOf(document.activeElement)+(e.shiftKey?-1:1)];
+  const cur=document.activeElement,same=n=>n===cur||(cur.type==='radio'&&n.name===cur.name),
+    after=(x,y)=>x.compareDocumentPosition(y)&Node.DOCUMENT_POSITION_FOLLOWING,list=tabbables().filter(n=>!same(n));
+  const next=e.shiftKey?list.filter(n=>after(n,cur)).pop():list.find(n=>after(cur,n));
   if(!next||!world.contains(next))return;
   e.preventDefault();next.focus({preventScroll:true});goTo(next.closest('[data-section]').dataset.section,{focus:false});});
 board.addEventListener('keydown',e=>{const d=KEYS[e.key];if(!cam.active||!d||e.altKey||e.metaKey||e.ctrlKey)return;

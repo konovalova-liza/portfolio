@@ -188,15 +188,15 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
   <section class="shell intro" id="intro" aria-labelledby="intro-title">
     <a class="back" href="../../prototype/index.html" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-l"/></svg>All work</a>
     <div><span class="eyebrow">Case study</span></div>
-    <h1 id="intro-title" tabindex="-1">[Case title]</h1>
-    <p class="sum">[One-line summary]</p>
+    <h1 id="intro-title" tabindex="-1">Design Digest</h1>
+    <p class="sum">An interactive year-in-review for the DX:Enterprise design team, rebuilt from a Figma canvas into a live page.</p>
     <ul class="tags" aria-label="Project facts">
-      <li><b>Role</b>[Role]</li>
-      <li><b>Team</b>[Team]</li>
-      <li><b>Year</b>[Year]</li>
-      <li><b>Tools</b>[Tools]</li>
+      <li><b>Role</b>Concept, illustration, motion</li>
+      <li><b>Team</b>4 designers + 1 art lead</li>
+      <li><b>Year</b>2025</li>
+      <li><b>Tools</b>Figma, Claude Code</li>
     </ul>
-    <p class="ctx">[Context paragraph: the problem, who it was for and what changed. Facts pending.]</p>
+    <p class="ctx">Design Digest 2025 is the annual digest of DX:Enterprise, the enterprise design team at Trinetix, shared with the team and the whole company. Each designer took a tab; I designed the DX:Enterprise page end to end: concept, sketchy illustrations, copy and an interactive Figma prototype styled like a Figma canvas. This version rebuilds that page in code, so the hovers, quiz and camera moves work in a browser, not only in a prototype.</p>
   </section>
 </div>
 
@@ -222,6 +222,42 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
       </div>
     </div>
     <p class="sr" id="dgLive" role="status" aria-live="polite"></p>
+
+    <!-- Hero stickers: default frames, positions in hero px measured from assets/ref/board.png (square top-left minus the image's square offset) -->
+    <template id="tpl-hero">
+      <div class="dg-art">
+        <img class="dg-sticker" src="assets/hero/sticker-design-default@2x.webp" width="235" height="259" alt="Design sticker" style="--sx:320;--sy:299;--sw:235" decoding="async">
+        <img class="dg-sticker" src="assets/hero/sticker-dig-default@2x.webp" width="235" height="239" alt="Dig sticker" style="--sx:530;--sy:379.5;--sw:235" decoding="async">
+        <img class="dg-sticker" src="assets/hero/sticker-jam-default@2x.webp" width="262" height="276" alt="Jam sticker" style="--sx:715.5;--sy:298;--sw:261.5" decoding="async">
+        <img class="dg-sticker" src="assets/hero/sticker-guide-default@2x.webp" width="297" height="240" alt="Guide sticker" style="--sx:948;--sy:377.5;--sw:296.5" decoding="async">
+      </div>
+    </template>
+
+    <template id="tpl-quiz">
+      <form class="dg-quiz" id="dgQuiz" novalidate>
+        <h4 class="dg-quiz-title">Quick design test?</h4>
+        <fieldset data-answer="lego">
+          <legend>1. Which logo has never been redesigned since 1962?</legend>
+          <label><input type="radio" name="q1" value="lego"><span>LEGO</span></label>
+          <label><input type="radio" name="q1" value="nasa"><span>NASA</span></label>
+          <label><input type="radio" name="q1" value="ibm"><span>IBM</span></label>
+        </fieldset>
+        <fieldset data-answer="blue">
+          <legend>2. Which color is most often associated with trust in UI?</legend>
+          <label><input type="radio" name="q2" value="red"><span>Red</span></label>
+          <label><input type="radio" name="q2" value="green"><span>Green</span></label>
+          <label><input type="radio" name="q2" value="blue"><span>Blue</span></label>
+        </fieldset>
+        <fieldset data-answer="dark">
+          <legend>3. Which term describes unfair design meant to trick users?</legend>
+          <label><input type="radio" name="q3" value="fair"><span>Fair pattern</span></label>
+          <label><input type="radio" name="q3" value="dark"><span>Dark pattern</span></label>
+          <label><input type="radio" name="q3" value="gray"><span>Gray UI</span></label>
+        </fieldset>
+        <div class="dg-quiz-foot" data-next-slot><p class="dg-quiz-score" aria-hidden="true"></p><button type="button" class="dg-reset" hidden>Try again</button></div>
+        <p class="sr" role="status" aria-live="polite"></p>
+      </form>
+    </template>
   </div>
 
   <section class="shell sec" id="built" aria-labelledby="built-title">
