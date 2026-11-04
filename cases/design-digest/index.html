@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design Digest — Konovalova</title>
+<meta name="theme-color" content="#0a0a0a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="digest.css">
+<style>
+/* Case page shell. Tokens: DESIGN.md §2.0 (v1). Board styles live in digest.css under .digest */
+:root{
+  color-scheme:light;
+  --background:#ffffff; --surface:#f1f0ee; --surface-2:#e3e2df; --surface-soft:rgba(241,240,238,.5); --ink:#0a0a0a;
+  --foreground:#111111; --text:var(--foreground); --text-2:rgba(17,17,17,.7); --text-3:rgba(17,17,17,.5);
+  --on-ink:#ffffff; --on-ink-2:rgba(255,255,255,.7); --on-ink-3:rgba(255,255,255,.5);
+  --line:#e6e5e2; --line-on-ink:rgba(255,255,255,.1); --border-ctl:rgba(17,17,17,.5); --border-on-ink:rgba(255,255,255,.4);
+  --accent:#4f5bd5; --error:#b42318;
+  --holo-1:#6fe3e1; --holo-2:#b9a7ff; --holo-3:#ffc7a3;
+  --holo-gradient:linear-gradient(135deg,var(--holo-1),var(--holo-2),var(--holo-3));
+  --glass-rest:rgba(255,255,255,.1); --glass-hover:rgba(255,255,255,.2);
+  --ring-light:var(--accent); --ring-ink:var(--on-ink);
+  --font:"Onest", "Helvetica Neue", Arial, sans-serif;
+  --font-mono:"Geist Mono", ui-monospace, Menlo, monospace;
+  --r-card:2rem; --r-card-sm:1.25rem; --r-ctl:.875rem; --r-pill:9999px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05); --shadow-panel:0 25px 50px -12px rgba(0,0,0,.25); --ring-hairline:0 0 0 1px;
+  --blur-ctl:blur(4px); --blur-card:blur(12px); --blur-overlay:blur(16px); --blur-lens:blur(1.4px) saturate(1.8);
+  --z-bg:0; --z-decor:1; --z-raised:10; --z-content:20; --z-header:50;
+  --z-lens:99; --z-cursor:100; --z-modal:110; --z-nav:115; --z-loader:120; --z-skip:130;
+  --ease-spring:cubic-bezier(.22,1,.36,1); --ease-line:cubic-bezier(.215,.61,.355,1);
+  --ease-word:cubic-bezier(.165,.84,.44,1); --ease-hover:cubic-bezier(.2,.8,.2,1);
+  --dur-micro:300ms; --dur-surface:450ms; --dur-item:500ms; --dur-overlay:400ms; --dur-exit:600ms;
+  --dur-word:700ms; --dur-reveal:800ms; --dur-line:900ms;
+  --stagger-list:80ms; --stagger-line:120ms; --stagger-word:35ms;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:clamp(16px, calc(5.3333px + .5555vw), 21.3333px);-webkit-font-smoothing:antialiased}
+body{background:var(--background);color:var(--text);font-family:var(--font);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+ul,ol{list-style:none}
+:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
+.ink :focus-visible,footer :focus-visible{outline-color:var(--ring-ink)}
+.shell{max-width:88rem;margin-inline:auto;padding-left:max(1.25rem, env(safe-area-inset-left, 0px));padding-right:max(1.25rem, env(safe-area-inset-right, 0px))}
+@media (min-width:640px){.shell{padding-left:max(2rem, env(safe-area-inset-left, 0px));padding-right:max(2rem, env(safe-area-inset-right, 0px))}}
+.ico{width:1em;height:1em;display:inline-block;flex:none}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px}
+.skip:focus{position:fixed;left:1rem;top:1rem;z-index:var(--z-skip);border-radius:var(--r-ctl);background:var(--ink);padding:.5rem 1rem;font-size:.875rem;color:var(--on-ink)}
+
+/* pill (§4.1) */
+.pill{display:inline-flex;align-items:center;gap:.75rem;border-radius:var(--r-pill);font-size:.875rem;font-weight:500;padding:.875rem 1.75rem;transition:transform var(--dur-micro) var(--ease-hover)}
+.pill.arrow{padding:.375rem .375rem .375rem 1.5rem}
+.pill .bd{width:2.25rem;height:2.25rem;display:grid;place-items:center;border-radius:var(--r-pill);font-size:1rem}
+.pill .bd .ico{transition:transform var(--dur-micro) var(--ease-hover)}
+.pill.dark{background:var(--ink);color:var(--on-ink)}.pill.dark .bd{background:var(--on-ink);color:var(--ink)}
+.pill.light{background:var(--surface);color:var(--text)}.pill.light .bd{background:var(--ink);color:var(--on-ink)}
+.ink .pill.light{background:var(--on-ink);color:var(--ink)}
+@media (hover:hover){.pill:hover{transform:scale(1.04)}.pill:hover .bd .r{transform:translateX(3px)}.pill:hover .bd .ur,.pill:hover .bd .l{transform:translate(2px,-2px)}}
+.pill:focus-visible{transform:scale(1.04)}
+.pill:active{transform:scale(.98)}
+
+/* eyebrow (§4.2) */
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.875rem;font-weight:500;color:var(--text-2)}
+.eyebrow::before{content:"";width:.375rem;height:.375rem;border-radius:var(--r-pill);background:var(--text-3)}
+.ink .eyebrow{color:var(--on-ink-2)}.ink .eyebrow::before{background:var(--on-ink-3)}
+
+/* case hero: header + intro on one ink sheet (D6 hero block) */
+.ink{background:var(--ink);color:var(--on-ink)}
+.case-hero{border-radius:0 0 var(--r-card) var(--r-card)}
+
+/* header (§4.7, single on-ink variant) */
+header.top{position:relative;z-index:var(--z-header)}
+header.top .shell{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding-block:1.25rem}
+@media (min-width:640px){header.top .shell{padding-block:1.5rem}}
+.logo{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600;letter-spacing:-.01em;transition:transform var(--dur-micro) var(--ease-hover)}
+.logo .ico{font-size:1.25rem;color:var(--holo-2)}
+@media (hover:hover){.logo:hover{transform:scale(1.04)}}
+.logo:focus-visible{transform:scale(1.04)}
+.pnav{display:none;gap:2rem;font-size:.875rem;font-weight:500}
+.pnav a{display:inline-block;color:var(--on-ink-2);transition:transform var(--dur-micro) var(--ease-hover),color var(--dur-micro) var(--ease-hover)}
+.pnav a[aria-current]{color:var(--on-ink)}
+@media (hover:hover){.pnav a:hover{transform:translateY(-2px);color:var(--on-ink)}}
+.pnav a:focus-visible{transform:translateY(-2px);color:var(--on-ink)}
+@media (min-width:1024px){.pnav{display:flex}}
+.chip{display:none;align-items:center;gap:.75rem;border:1px solid var(--border-on-ink);background:var(--glass-rest);backdrop-filter:var(--blur-ctl);-webkit-backdrop-filter:var(--blur-ctl);border-radius:var(--r-ctl);padding:.5rem .75rem;font-size:.75rem;color:var(--on-ink-2)}
+.chip .t,.chip .dt{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-weight:500}
+.chip .t{min-width:3.5rem;color:var(--on-ink)}.chip .sep{color:var(--on-ink-3)}
+@media (min-width:768px){.chip{display:flex}}
+
+/* case intro (all copy pending: [brackets] are placeholders) */
+.intro{padding-top:2.5rem;padding-bottom:5rem}
+@media (min-width:1024px){.intro{padding-top:3rem;padding-bottom:7rem}}
+.back{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:var(--on-ink-2);transition:color var(--dur-micro) var(--ease-hover),transform var(--dur-micro) var(--ease-hover)}
+@media (hover:hover){.back:hover{color:var(--on-ink);transform:translateX(-4px)}}
+.back:focus-visible{color:var(--on-ink);transform:translateX(-4px)}
+.intro .eyebrow{margin-top:3rem}
+.intro h1{margin-top:1.25rem;max-width:18ch;font-size:2.25rem;font-weight:600;line-height:.98;letter-spacing:-.02em}
+@media (min-width:640px){.intro h1{font-size:3rem}}
+@media (min-width:768px){.intro h1{font-size:3.75rem}}
+.intro .sum{margin-top:1.5rem;max-width:40rem;font-size:1rem;color:var(--on-ink-2)}
+.tags{margin-top:2rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.tags li{display:inline-flex;gap:.5rem;border:1px solid var(--line-on-ink);border-radius:var(--r-pill);padding:.5rem 1rem;font-size:.875rem;color:var(--on-ink-2)}
+.tags b{font-family:var(--font-mono);font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--on-ink-3);align-self:center}
+.intro .ctx{margin-top:3rem;max-width:40rem;font-size:.875rem;line-height:1.6;color:var(--on-ink-2)}
+#intro-title:focus{outline:none}
+#intro-title:focus-visible{outline:2px solid var(--ring-ink)}
+
+/* how it's built (static list, §4.5 look without hover) */
+.sec{padding-top:5rem;padding-bottom:7rem}
+.sec h2{margin-top:1.25rem;font-size:2.25rem;font-weight:600;line-height:1.05;letter-spacing:-.02em}
+@media (min-width:640px){.sec h2{font-size:3rem}}
+.pts{margin-top:3rem;border-top:1px solid var(--line)}
+.pts li{display:flex;align-items:baseline;gap:1rem;padding:1.5rem;border-bottom:1px solid var(--line)}
+.pts .ix{width:1.75rem;font-family:var(--font-mono);font-size:.875rem;font-weight:500;color:var(--text-2)}
+.pts h3{flex:1;font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
+.pts p{display:none;max-width:20rem;font-size:.875rem;color:var(--text-2)}
+@media (min-width:768px){.pts h3{font-size:1.875rem}.pts p{display:block}}
+.next{margin-top:5rem;display:flex;flex-direction:column;gap:1.5rem}
+@media (min-width:768px){.next{flex-direction:row;align-items:center;justify-content:space-between}}
+.next h3{font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
+
+/* footer (§4.11) */
+footer{position:relative;overflow:hidden;border-radius:var(--r-card) var(--r-card) 0 0;background:var(--ink);color:var(--on-ink)}
+footer .shell{position:relative;z-index:var(--z-raised);padding-top:5rem;padding-bottom:2.5rem}
+@media (min-width:1024px){footer .shell{padding-top:6rem}}
+.fcta{display:flex;flex-direction:column;gap:2rem;border-bottom:1px solid var(--line-on-ink);padding-bottom:4rem}
+@media (min-width:1024px){.fcta{flex-direction:row;align-items:flex-end;justify-content:space-between}}
+.fcta h2{max-width:16ch;font-size:2.25rem;font-weight:600;letter-spacing:-.02em;line-height:1.02}
+@media (min-width:640px){.fcta h2{font-size:3rem}}
+@media (min-width:768px){.fcta h2{font-size:3.75rem}}
+footer .pill.light{background:var(--on-ink);color:var(--ink)}
+.fcols{display:grid;grid-template-columns:1fr;gap:3rem;padding-block:4rem}
+@media (min-width:768px){.fcols{grid-template-columns:1fr 1fr}}
+@media (min-width:1024px){.fcols{grid-template-columns:repeat(4,1fr)}}
+.fcols .b{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600}
+.fcols .b .ico{font-size:1.25rem;color:var(--holo-2)}
+.fcols .tg{margin-top:1rem;max-width:20rem;font-size:.875rem;color:var(--on-ink-2)}
+.fcols h4{font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--on-ink-2);margin-bottom:1rem}
+.fcols ul{display:flex;flex-direction:column;gap:.75rem;font-size:.875rem}
+.al{display:inline-flex}.al span{color:var(--on-ink-2);transition:transform var(--dur-micro) var(--ease-hover),color var(--dur-micro) var(--ease-hover)}
+@media (hover:hover){.al:hover span{transform:translateX(4px);color:var(--on-ink)}}
+.al:focus-visible span{transform:translateX(4px);color:var(--on-ink)}
+.legal{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--line-on-ink);padding-top:2rem;font-size:.75rem;color:var(--on-ink-2)}
+@media (min-width:640px){.legal{flex-direction:row}}
+.fwm{position:absolute;inset-inline:0;bottom:-1.5rem;z-index:var(--z-bg);text-align:center;pointer-events:none;user-select:none;font-weight:700;line-height:1;font-size:13rem;letter-spacing:-.03em;color:rgba(255,255,255,.05)}
+
+/* glass droplet cursor (§5.2) */
+#drop{position:fixed;left:0;top:0;z-index:var(--z-cursor);pointer-events:none;will-change:transform}
+#lens{position:fixed;left:0;top:0;border-radius:50%;z-index:var(--z-lens);pointer-events:none;backdrop-filter:var(--blur-lens);-webkit-backdrop-filter:var(--blur-lens);opacity:0}
+@media (pointer:coarse){#drop,#lens{display:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  #drop,#lens{display:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 48 48"><path fill="currentColor" d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z"/></symbol>
+  <symbol id="i-r" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-l" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-ur" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 4l16 16M20 4 4 20"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="ink case-hero">
+  <header class="top" id="hdr">
+    <div class="shell">
+      <a class="logo" href="../../prototype/index.html" aria-label="Liza Konovalova, home" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg>Konovalova</a>
+      <nav aria-label="Primary"><ul class="pnav">
+        <li><a href="../../prototype/index.html#home">Home</a></li>
+        <li><a href="../../prototype/index.html#works" aria-current="page">Work</a></li>
+        <li><a href="../../prototype/index.html#services">Approach</a></li>
+        <li><a href="../../prototype/index.html#about">About</a></li>
+        <li><a href="../../prototype/index.html#stats">Numbers</a></li>
+      </ul></nav>
+      <div class="chip"><span class="lbl">Kyiv time</span><span class="t" data-time>9:41am</span><span class="sep">•</span><span class="dt" data-date>4 November, 2026</span></div>
+    </div>
+  </header>
+
+  <section class="shell intro" id="intro" aria-labelledby="intro-title">
+    <a class="back" href="../../prototype/index.html" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-l"/></svg>All work</a>
+    <div><span class="eyebrow">Case study</span></div>
+    <h1 id="intro-title" tabindex="-1">[Case title]</h1>
+    <p class="sum">[One-line summary]</p>
+    <ul class="tags" aria-label="Project facts">
+      <li><b>Role</b>[Role]</li>
+      <li><b>Team</b>[Team]</li>
+      <li><b>Year</b>[Year]</li>
+      <li><b>Tools</b>[Tools]</li>
+    </ul>
+    <p class="ctx">[Context paragraph: the problem, who it was for and what changed. Facts pending.]</p>
+  </section>
+</div>
+
+<main id="main">
+  <a class="skip" href="#built">Skip the board</a>
+
+  <div class="digest" id="digest">
+    <nav class="dg-nav" aria-label="Digest issues">
+      <ul class="dg-tabs">
+        <li><a class="dg-tab" href="#digest" aria-current="page">DX: Enterprise</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Projects</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Cheers</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Recommendations</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Design Lab</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Survey</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Volunteering</a></li>
+      </ul>
+      <button class="dg-close" id="dgClose" type="button" aria-label="Close the board and go to the case intro"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </nav>
+    <div class="dg-board" id="dgBoard" role="region" aria-label="Design Digest board. Drag, scroll or use the arrow keys to move around." tabindex="0">
+      <div class="dg-world" id="dgWorld">
+        <p class="dg-status" id="dgStatus">Loading the board…</p>
+      </div>
+    </div>
+    <p class="sr" id="dgLive" role="status" aria-live="polite"></p>
+  </div>
+
+  <section class="shell sec" id="built" aria-labelledby="built-title">
+    <span class="eyebrow">How it's built</span>
+    <h2 id="built-title">[How it's built: heading]</h2>
+    <ol class="pts">
+      <li><span class="ix">01</span><h3>[Point 1]</h3><p>[One-line explanation]</p></li>
+      <li><span class="ix">02</span><h3>[Point 2]</h3><p>[One-line explanation]</p></li>
+      <li><span class="ix">03</span><h3>[Point 3]</h3><p>[One-line explanation]</p></li>
+      <li><span class="ix">04</span><h3>[Point 4]</h3><p>[One-line explanation]</p></li>
+      <li><span class="ix">05</span><h3>[Point 5]</h3><p>[One-line explanation]</p></li>
+    </ol>
+    <div class="next">
+      <div><span class="eyebrow">Next case</span><h3>[Next case title]</h3></div>
+      <a class="pill dark arrow" href="../../prototype/index.html#works" data-holo="md">Next case<span class="bd"><svg class="ico r" aria-hidden="true"><use href="#i-r"/></svg></span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="fcta">
+      <h2>Have a dense product? Let's make it clear.</h2>
+      <a class="pill light arrow" href="../../prototype/index.html" data-holo="md">Start a conversation<span class="bd"><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></a>
+    </div>
+    <div class="fcols">
+      <div><div class="b"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg>Konovalova</div><p class="tg">Middle+ UX/UI designer and UI design engineer for enterprise B2B products.</p></div>
+      <div><h4>Work</h4><ul><li><a class="al" href="../../prototype/index.html#works"><span>Romper</span></a></li><li><a class="al" href="../../prototype/index.html#works"><span>GAAPT</span></a></li><li><a class="al" href="../../prototype/index.html#works"><span>Next Experience</span></a></li><li><a class="al" href="#intro"><span>Design Digest</span></a></li></ul></div>
+      <div><h4>Approach</h4><ul><li><a class="al" href="../../prototype/index.html#services"><span>Product &amp; UX</span></a></li><li><a class="al" href="../../prototype/index.html#services"><span>Data-heavy UI</span></a></li><li><a class="al" href="../../prototype/index.html#services"><span>Design systems</span></a></li><li><a class="al" href="../../prototype/index.html#services"><span>Design engineering</span></a></li></ul></div>
+      <div><h4>Contact</h4><ul><li><a class="al" href="https://www.linkedin.com/in/liza-konovalova-35927a20b"><span>LinkedIn</span></a></li><li><a class="al" href="https://t.me/nvrfrgtlz"><span>Telegram @nvrfrgtlz</span></a></li><li><a class="al" href="https://konovalova.store"><span>konovalova.store</span></a></li></ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Liza Konovalova. Demo build.</span><span>Kyiv, Ukraine</span></div>
+  </div>
+  <div class="fwm" aria-hidden="true">KONOVALOVA</div>
+</footer>
+
+<div id="lens" aria-hidden="true"></div>
+<canvas id="drop" aria-hidden="true"></canvas>
+<script src="digest.js"></script>
+</body>
+</html>

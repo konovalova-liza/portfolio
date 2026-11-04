@@ -1,0 +1,58 @@
+/* Design Digest board. Everything is scoped under .digest; new values are listed in DESIGN.md "Digest scope".
+   World units are Figma px (1:1 with board.json), so the board geometry is in px, not rem. */
+.digest{
+  --dg-dot:rgba(17,17,17,.18);   /* grid dot color */
+  --dg-dot-r:1px;                /* grid dot radius (2px dots) */
+  --dg-grid:24px;                /* grid spacing */
+  --dg-outline:2px dashed var(--border-ctl); /* placeholder outline */
+  --dur-camera:600ms;            /* camera.goTo */
+  --dg-cam-pad:48px;             /* camera inset when a section is larger than the viewport */
+  --dg-key-step:120px;           /* arrow-key pan step */
+  position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--background);color:var(--text)
+}
+
+/* top nav */
+.digest .dg-nav{display:flex;align-items:center;gap:1rem;padding:.75rem max(1.25rem, env(safe-area-inset-left, 0px));border-bottom:1px solid var(--line)}
+.digest .dg-tabs{flex:1;min-width:0;display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none}
+.digest .dg-tabs::-webkit-scrollbar{display:none}
+.digest .dg-tab{display:inline-flex;white-space:nowrap;border-radius:var(--r-pill);padding:.5rem 1rem;font-size:.875rem;font-weight:500;color:var(--text-2);background:var(--surface);transition:transform var(--dur-micro) var(--ease-hover)}
+.digest .dg-tab[aria-current]{background:var(--ink);color:var(--on-ink)}
+.digest .dg-tab[aria-disabled="true"]{opacity:.4;cursor:not-allowed}
+.digest .dg-close{flex:none;width:2.5rem;height:2.5rem;display:grid;place-items:center;border:1px solid var(--border-ctl);border-radius:var(--r-pill);font-size:1rem;transition:transform var(--dur-micro) var(--ease-hover),background var(--dur-micro) var(--ease-hover)}
+@media (hover:hover){.digest .dg-close:hover{background:var(--surface-2);transform:scale(1.04)}}
+.digest .dg-close:focus-visible{background:var(--surface-2);transform:scale(1.04)}
+.digest .dg-close:active{transform:scale(.98)}
+
+/* viewport + world */
+.digest .dg-board{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none;cursor:grab;outline:none}
+.digest .dg-board:focus-visible{box-shadow:inset 0 0 0 2px var(--ring-light)}
+.digest .dg-board.is-dragging{cursor:grabbing}
+.digest .dg-world{position:absolute;left:0;top:0;width:var(--w);height:var(--h);transform-origin:0 0;will-change:transform;user-select:none;-webkit-user-select:none;
+  background-color:var(--background);
+  background-image:radial-gradient(circle, var(--dg-dot) var(--dg-dot-r), transparent calc(var(--dg-dot-r) + .5px));
+  background-size:var(--dg-grid) var(--dg-grid)}
+.digest .dg-status{position:absolute;left:var(--dg-cam-pad);top:var(--dg-cam-pad);font-size:.875rem;color:var(--text-2)}
+
+/* placeholders */
+.digest .dg-sec{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);display:flex;flex-direction:column;align-items:flex-start;gap:.75rem;padding:1.5rem;
+  border:var(--dg-outline);border-radius:var(--r-card);background:var(--surface-soft)}
+.digest .dg-sec:focus{outline:none}
+.digest .dg-sec:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
+.digest .dg-sec h3{font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
+.digest .dg-meta{font-family:var(--font-mono);font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--text-2)}
+.digest .dg-approx{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-pill);padding:.25rem .75rem;font-family:var(--font-mono);font-size:.75rem;font-weight:500;color:var(--text-2)}
+.digest .dg-next{margin-top:.5rem}
+.digest .dg-slot{position:absolute;left:50%;bottom:1.5rem;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem 1.5rem;
+  border:var(--dg-outline);border-radius:var(--r-card-sm);background:var(--background);text-align:center}
+.digest .dg-slot h4{font-size:1rem;font-weight:500}
+.digest .dg-slot .dg-next{margin-top:0}
+
+/* mobile: no camera, sections stack in normal flow */
+@media (max-width:767px){
+  .digest{height:auto}
+  .digest .dg-board{overflow:visible;touch-action:auto;cursor:auto}
+  .digest .dg-world{position:static;width:auto;height:auto;transform:none!important;display:flex;flex-direction:column;gap:1.5rem;padding:1.5rem max(1.25rem, env(safe-area-inset-left, 0px))}
+  .digest .dg-status{position:static}
+  .digest .dg-sec{position:relative;left:auto;top:auto;width:100%;height:auto;aspect-ratio:var(--aw) / var(--ah);min-height:16rem}
+  .digest .dg-sec[data-section="playlist"]{padding-bottom:10rem}
+}

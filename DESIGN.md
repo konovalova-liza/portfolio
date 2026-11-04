@@ -625,6 +625,21 @@ const FX = {
 - No droplet, no lens, no brush (D3).
 - Every hover rule is inside `@media (hover:hover)`, so no hover state sticks on touch (T9).
 
+### 5.6 Digest scope
+Values introduced by the Design Digest case page (`cases/design-digest/`, added 2026-11-04). They are custom properties on `.digest` and are used **only** inside it (`digest.css`, read by `digest.js`). Board geometry is in Figma px (1:1 with `board.json`), so these values are px, not rem.
+
+| Token | Value | Where / why |
+|---|---|---|
+| `--dg-dot` | `rgba(17,17,17,.18)` | Grid dot color on the world (`--background`). Decorative, not text or a UI border, so T1/T4 don't apply |
+| `--dg-dot-r` | `1px` | Grid dot radius (2px dots) |
+| `--dg-grid` | `24px` | Grid spacing (`background-size`) |
+| `--dg-outline` | `2px dashed var(--border-ctl)` | Placeholder outline of section blocks and slots. Temporary, removed when real assets land |
+| `--dur-camera` | `600ms` | `camera.goTo()` move, eased with `--ease-spring`. Instant under reduced motion |
+| `--dg-cam-pad` | `48px` | Inset the camera keeps when a section is larger than the viewport |
+| `--dg-key-step` | `120px` | Arrow-key pan step while the board has focus |
+
+Layout-only values in the mobile stack (<768px): placeholder `min-height:16rem`, playlist `padding-bottom:10rem` (room for the cat-finale slot). Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
+
 ---
 
 ## 6. Accessibility rules
