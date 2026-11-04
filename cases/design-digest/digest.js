@@ -53,8 +53,16 @@ function build(data){
     el.setAttribute('role','group');el.setAttribute('aria-labelledby','dg-h-'+s.id);
     el.innerHTML=`<span class="dg-meta">${s.id} · slot in ${s.parent}</span><h4 id="dg-h-${s.id}">${s.label}</h4><span class="dg-meta">size TBD</span>`;
     el.append(nextBtn(s.id));host.append(el);});
+  if(DEV)world.append(refImg);
   readTokens();setMode();goTo(cam.order[0],{instant:true,focus:false});
 }
+
+/* dev only: "G" toggles assets/ref/board.png (git-ignored) over the world, loaded on first use */
+const DEV=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)||location.protocol==='file:'||new URLSearchParams(location.search).has('dev');
+const refImg=document.createElement('img');refImg.className='dg-ref';refImg.alt='';refImg.hidden=true;refImg.decoding='async';
+refImg.addEventListener('error',()=>console.warn('dev overlay: assets/ref/board.png not found'));
+if(DEV)document.addEventListener('keydown',e=>{if(e.key.toLowerCase()!=='g'||e.metaKey||e.ctrlKey||e.altKey||e.target.closest('input,textarea,select,[contenteditable]'))return;
+  if(!refImg.src)refImg.src='assets/ref/board.png';refImg.hidden=!refImg.hidden;});
 
 function readTokens(){ease=bezier(tok('--ease-spring')||'cubic-bezier(.22,1,.36,1)');dur=ms(tok('--dur-camera')||'600ms');
   pad=parseFloat(tok('--dg-cam-pad'))||48;step=parseFloat(tok('--dg-key-step'))||120;}

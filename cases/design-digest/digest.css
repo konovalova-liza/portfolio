@@ -8,6 +8,7 @@
   --dur-camera:600ms;            /* camera.goTo */
   --dg-cam-pad:48px;             /* camera inset when a section is larger than the viewport */
   --dg-key-step:120px;           /* arrow-key pan step */
+  --dg-ref-opacity:.3;           /* dev-only board.png overlay ("G") */
   position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--background);color:var(--text)
 }
 
@@ -31,6 +32,8 @@
   background-color:var(--background);
   background-image:radial-gradient(circle, var(--dg-dot) var(--dg-dot-r), transparent calc(var(--dg-dot-r) + .5px));
   background-size:var(--dg-grid) var(--dg-grid)}
+.digest .dg-ref{position:absolute;left:0;top:0;max-width:none;opacity:var(--dg-ref-opacity);pointer-events:none}
+.digest .dg-ref[hidden]{display:none}
 .digest .dg-status{position:absolute;left:var(--dg-cam-pad);top:var(--dg-cam-pad);font-size:.875rem;color:var(--text-2)}
 
 /* placeholders */
@@ -53,6 +56,7 @@
   .digest .dg-board{overflow:visible;touch-action:auto;cursor:auto}
   .digest .dg-world{position:static;width:auto;height:auto;transform:none!important;display:flex;flex-direction:column;gap:1.5rem;padding:1.5rem max(1.25rem, env(safe-area-inset-left, 0px))}
   .digest .dg-status{position:static}
+  .digest .dg-ref{display:none}
   .digest .dg-sec{position:relative;left:auto;top:auto;width:100%;height:auto;aspect-ratio:var(--aw) / var(--ah);min-height:16rem}
   .digest .dg-sec[data-section="playlist"]{padding-bottom:10rem}
 }

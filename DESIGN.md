@@ -637,6 +637,7 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dur-camera` | `600ms` | `camera.goTo()` move, eased with `--ease-spring`. Instant under reduced motion |
 | `--dg-cam-pad` | `48px` | Inset the camera keeps when a section is larger than the viewport |
 | `--dg-key-step` | `120px` | Arrow-key pan step while the board has focus |
+| `--dg-ref-opacity` | `.3` | Dev-only overlay of `assets/ref/board.png` (git-ignored), toggled with `G` on localhost / `file:` / `?dev` |
 
 Layout-only values in the mobile stack (<768px): placeholder `min-height:16rem`, playlist `padding-bottom:10rem` (room for the cat-finale slot). Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
 

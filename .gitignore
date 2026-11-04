@@ -9,3 +9,6 @@ Icon?
 
 # Hero photo sources (large PNGs, not committed)
 prototype/assets/src/
+
+# Design Digest reference files (board.png, screen recordings), never committed
+cases/design-digest/assets/ref/
