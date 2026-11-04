@@ -34,34 +34,60 @@ function build(data){
   world.style.setProperty('--w',cam.W+'px');world.style.setProperty('--h',cam.H+'px');
   world.textContent='';
   const byId={};data.sections.forEach(s=>byId[s.id]=s);
-  const label=id=>(byId[id]||data.slots.find(s=>s.id===id)).label;
-  const nextOf=id=>{const i=cam.order.indexOf(id),n=cam.order[(i+1)%cam.order.length];return{id:n,label:n===cam.order[0]?'Back to start':label(n)};};
-  const nextBtn=id=>{const n=nextOf(id),b=document.createElement('button');
-    b.type='button';b.className='pill dark arrow dg-next';b.dataset.goto=n.id;b.setAttribute('data-holo','md');
-    b.innerHTML=`${n.id===cam.order[0]?'Back to start':'Next: '+n.label}<span class="bd"><svg class="ico r" aria-hidden="true"><use href="#i-r"/></svg></span>`;
-    return b;};
-  const approxTag=s=>s.approx?`<span class="dg-approx">approx: ${(s.approxFields||['all']).join(', ')}</span>`:'';
+  const nextOf=id=>byId[cam.order[(cam.order.indexOf(id)+1)%cam.order.length]];
+  // under everything: paw trail + props (desktop board only, hidden in the mobile stack)
+  world.append(trailLayer(data),propsLayer(data));
   // stack order on mobile follows the camera order
   cam.order.filter(id=>byId[id]).forEach(id=>{const s=byId[id],el=document.createElement('section');
-    el.className='dg-sec';el.dataset.section=id;el.tabIndex=-1;el.setAttribute('aria-labelledby','dg-h-'+id);
+    el.className='dg-sec';el.dataset.section=id;el.tabIndex=-1;
     for(const [k,v] of Object.entries({'--x':s.x+'px','--y':s.y+'px','--w':s.w+'px','--h':s.h+'px','--aw':s.w,'--ah':s.h}))el.style.setProperty(k,v);
-    el.innerHTML=`<span class="dg-meta">${s.id} · Figma “${s.figmaName}”</span><h3 id="dg-h-${id}">${s.label}</h3>`+
-      `<span class="dg-meta">${s.w} × ${s.h} · x ${s.x} · y ${s.y}</span>${approxTag(s)}`;
-    // section content from <template id="tpl-{id}">; art layers go first so labels stay on top
-    const tpl=document.getElementById('tpl-'+id);
-    if(tpl){const n=tpl.content.cloneNode(true);n.firstElementChild.classList.contains('dg-art')?el.prepend(n):el.append(n);
-      if(tpl.hasAttribute('data-filled'))el.classList.add('is-filled');}
-    const slot=el.querySelector('[data-next-slot]');(slot||el).append(nextBtn(id));world.append(el);});
-  data.slots.forEach(s=>{const host=world.querySelector(`[data-section="${s.parent}"]`);if(!host)return;
-    const el=document.createElement('div');el.className='dg-slot';el.dataset.section=s.id;el.tabIndex=-1;
-    el.setAttribute('role','group');el.setAttribute('aria-labelledby','dg-h-'+s.id);
-    el.innerHTML=`<span class="dg-meta">${s.id} · slot in ${s.parent}</span><h4 id="dg-h-${s.id}">${s.label}</h4><span class="dg-meta">size TBD</span>`;
-    el.append(nextBtn(s.id));host.append(el);});
+    // section content from <template id="tpl-{id}">; a visible h3 in it names the section, else a hidden one does
+    const tpl=document.getElementById('tpl-'+id);if(tpl)el.append(tpl.content.cloneNode(true));
+    let h=el.querySelector('h3');if(!h){h=document.createElement('h3');h.className='sr';h.textContent=s.label;el.prepend(h);}
+    h.id='dg-h-'+id;el.setAttribute('aria-labelledby',h.id);
+    if(s.paw)el.append(pawBtn(s,nextOf(id)));
+    world.append(el);});
   if(DEV)world.append(refImg);
   const quiz=world.querySelector('.dg-quiz');if(quiz)initQuiz(quiz);
   const hero=world.querySelector('.dg-hero');if(hero)initHero(hero);
+  initCat();
   readTokens();setMode();goTo(cam.order[0],{instant:true,focus:false});
 }
+
+/* paw button: sketchy square + arrow (#i-paw-box, #i-paw-arrow), pointing at the next section's paw; colored square behind on hover/focus */
+const pawCenter=s=>({x:s.x+s.paw.x+26,y:s.y+s.paw.y+26});
+function pawBtn(s,n){const a=pawCenter(s),b=pawCenter(n),b2=document.createElement('button');
+  b2.type='button';b2.className='dg-paw';b2.dataset.goto=n.id;b2.setAttribute('aria-label','Go to '+n.label);
+  b2.style.cssText=`--l:${s.paw.x};--t:${s.paw.y};--c:var(--dg-paw-${s.paw.color});--rot:${Math.round(Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI)}deg`;
+  b2.innerHTML='<svg viewBox="0 0 44 44" aria-hidden="true" focusable="false"><use href="#i-paw-box"/><use class="dg-paw-arrow" href="#i-paw-arrow"/></svg>';return b2;}
+
+/* paw trail: prints every ~44px along a gentle curve from each paw to the next (not to the start again) */
+const SVGNS='http://www.w3.org/2000/svg';
+function trailLayer(data){const svg=document.createElementNS(SVGNS,'svg');svg.setAttribute('class','dg-trail');svg.setAttribute('aria-hidden','true');
+  svg.setAttribute('viewBox',`0 0 ${data.board.w} ${data.board.h}`);
+  const pr=parseFloat(tok('--dg-print'))||18,h=pr/2;
+  const secs=data.order.map(id=>data.sections.find(s=>s.id===id)).filter(s=>s&&s.paw);
+  secs.slice(0,-1).forEach((s,k)=>{const a=pawCenter(s),b=pawCenter(secs[k+1]),dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy),
+      bend=(k%2?1:-1)*.18*len,c={x:(a.x+b.x)/2-dy/len*bend,y:(a.y+b.y)/2+dx/len*bend};
+    const P=t=>({x:(1-t)**2*a.x+2*(1-t)*t*c.x+t*t*b.x,y:(1-t)**2*a.y+2*(1-t)*t*c.y+t*t*b.y});
+    const n=Math.max(2,Math.round(len*1.1/44));
+    for(let i=1;i<n;i++){const t=i/n,p=P(t),q=P(t+.01),ang=Math.atan2(q.y-p.y,q.x-p.x),side=i%2?7:-7;
+      const u=document.createElementNS(SVGNS,'use');u.setAttribute('href','#i-print');u.setAttribute('width',pr);u.setAttribute('height',pr);
+      u.setAttribute('transform',`translate(${(p.x-Math.sin(ang)*side).toFixed(1)} ${(p.y+Math.cos(ang)*side).toFixed(1)}) rotate(${(ang*180/Math.PI+90).toFixed(0)}) translate(${-h} ${-h})`);
+      svg.append(u);}});
+  return svg;}
+
+/* decorative props from board.png (assets/static), world px */
+function propsLayer(data){const g=document.createElement('div');g.className='dg-props';g.setAttribute('aria-hidden','true');
+  data.props.forEach(p=>{g.insertAdjacentHTML('beforeend',`<img src="assets/static/${p.id}.webp" alt="" width="${p.w}" height="${p.h}" style="left:${p.x}px;top:${p.y}px" loading="lazy" decoding="async">`);
+    if(p.caption)g.insertAdjacentHTML('beforeend',`<span class="dg-prop-cap" style="left:${p.caption.x}px;top:${p.caption.y}px">${p.caption.text}</span>`);});
+  return g;}
+
+/* playlist cat: tail wags (CSS); hover/focus rise in CSS, tap toggles .is-up and a tap elsewhere drops it */
+function initCat(){const cat=world.querySelector('.dg-cat');if(!cat)return;let touch=false;
+  cat.addEventListener('pointerdown',e=>{touch=e.pointerType!=='mouse';});
+  cat.addEventListener('click',()=>{if(touch)cat.classList.toggle('is-up');});
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('.dg-cat'))cat.classList.remove('is-up');},{passive:true});}
 
 /* quiz: one radio group per question. The first pick locks the question: the right option's box gets a check,
    a wrong pick gets a sad face (assets/quiz/checkbox.svg). Arrow keys only move focus; Space or a click answers. */

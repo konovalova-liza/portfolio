@@ -633,12 +633,10 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dg-dot` | `rgba(17,17,17,.18)` | Grid dot color on the world (`--background`). Decorative, not text or a UI border, so T1/T4 don't apply |
 | `--dg-dot-r` | `1px` | Grid dot radius (2px dots) |
 | `--dg-grid` | `24px` | Grid spacing (`background-size`) |
-| `--dg-outline` | `2px dashed var(--border-ctl)` | Placeholder outline of section blocks and slots. Temporary, removed when real assets land |
 | `--dur-camera` | `600ms` | `camera.goTo()` move, eased with `--ease-spring`. Instant under reduced motion |
 | `--dg-cam-pad` | `48px` | Inset the camera keeps when a section is larger than the viewport |
 | `--dg-key-step` | `120px` | Arrow-key pan step while the board has focus |
 | `--dg-ref-opacity` | `.3` | Dev-only overlay of `assets/ref/board.png` (git-ignored), toggled with `G` on localhost / `file:` / `?dev` |
-| `--dg-outline-w` | `2px` | Width inside `--dg-outline`; the `.dg-art` layer insets by it so art aligns to the section's border box |
 | `--dg-font` | `"Shantell Sans", var(--font)` | Handwritten Digest text (quiz, hero title and subtitle; labels later). Never used in the portfolio shell |
 | `--dg-quiz-correct` | `#2b8a3e` | Quiz check mark. 4.37:1 on `--background` (graphic, ≥3:1) |
 | `--dg-quiz-wrong` | `#d6332a` | Quiz sad face. 4.81:1 on `--background` |
@@ -649,7 +647,16 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dg-intro-draw` | `1200ms` | Loop line draw |
 | `--dg-intro-y` | `14px` | Title/subtitle rise (smallest v0 reveal offset) |
 | `--dg-intro-scale` | `.92` | Sticker start scale |
-| `--dg-ease-draw` | `cubic-bezier(.65,0,.35,1)` | Ease-in-out, **only** the loop draw. The one Digest exception to "every transition names one of the four §2.5 easings" |
+| `--dg-ease-draw` | `cubic-bezier(.65,0,.35,1)` | Ease-in-out, **only** the loop draw and the cat's tail wag. The one Digest exception to "every transition names one of the four §2.5 easings" |
+| `--dg-paw-green` / `-yellow` / `-pink` / `-purple` / `-blue` | `#cfe891` / `#fcdf7f` / `#fec2ba` / `#deb2ff` / `#d5d9fa` | Paw button hover square and heading highlights, sampled from `board.png`. Blue is also the playlist card. Decorative fills, never text |
+| `--dg-paw-size` | `52px` | Paw button hit area (44px sketchy square inside) |
+| `--dg-paw-shift` / `--dg-paw-tilt` | `6px` / `-6deg` | Colored square offset and rotation on hover/focus |
+| `--dg-print` | `18px` | Paw print in the trail |
+| `--dg-trail-in` | `600ms` | Trail fade-in once on load (`--ease-spring`); none under reduced motion |
+| `--dg-band-ai` / `--dg-band-brand` | `#eaeaf3` / `#cdcfdc` | What We Do label band behind the AI and Branding cards (the image's own bottom color) |
+| `--dg-wag` / `--dg-wag-angle` | `1.6s` / `10deg` | Cat tail: one left-right loop, `--dg-ease-draw`, infinite |
+| `--dg-cat-peek` | `72px` | How far the cat sits below the card edge at rest |
+| `--dg-fs-h` / `--dg-fs-xl` / `--dg-fs-lg` / `--dg-fs-md` | `40` / `64` / `22` / `18px` | Board text: section headings / "That's all, folks" / card labels, group headings, recipe list / roles, notes, pill. Mobile: headings 28px, folks 40px |
 
 **Font.** Shantell Sans (SIL OFL 1.1), self-hosted at `assets/fonts/shantell-sans-latin-wght.woff2` with `OFL.txt` beside it. One variable file, `wght 400–600`, latin subset, `font-display:swap`. Weights used: 400 (options, hero subtitle), 600 (quiz title, questions, score, hero title). Figma Hand, used in the Figma file, is free only inside Figma products and **not** licensed for web. Text inside the board uses **board px** fitted to `board.png`, not the §2.2 rem scale (rem grows with the viewport, the board doesn't): quiz title `24px`, questions and options `18px` (line `24px`); hero title `60px`, subtitle `30px`, both scaled with the section via `cqw` so the mobile stack keeps the layout. Score and "Try again" stay `.875rem`.
 
@@ -667,7 +674,7 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | Locked | `cursor:default`, no hover | Clicks and Space are ignored until "Try again" |
 | Try again | `.dg-reset`: `1px --border-ctl`, `--r-pill`, `.5rem 1rem`, hover/focus `--surface-2` + `scale(1.04)`, active `scale(.98)` | Appears after the first answer; clears every question and focuses Q1 |
 
-**Quiz frame.** `board.json` quiz = `x 2733, y 146, 572 × 835`: the ink bounding box in `board.png` at 1:1 (no visible inset, so frame = content). The section is "filled" (`<template data-filled>`): no placeholder outline, meta hidden, `h3` visually hidden. On desktop the fieldsets sit at the measured rows (`top` 69 / 342 / 637px, options every 55px); score, "Try again" and Next sit bottom-right in the empty corner. The mobile stack keeps normal flow.
+**Quiz frame.** `board.json` quiz = `x 2733, y 146, 572 × 835`: the ink bounding box in `board.png` at 1:1 (no visible inset, so frame = content). On desktop the fieldsets sit at the measured rows (`top` 69 / 342 / 637px, options every 55px); score and "Try again" sit bottom-right in the empty corner, the paw button just below the frame. The mobile stack keeps normal flow.
 
 **Hero stickers.** Each sticker is a `<button>` with `aria-label` = its bubble text ("Design with purpose", "Dig into challenges", "Jam as a team", "Guide the vision"). Default and hover frames are stacked; the hover frame is offset by `--hx/--hy/--hw` so both squares line up.
 
@@ -691,7 +698,15 @@ Reduced motion: `data-intro="done"` at once, so the final state shows instantly 
 
 **Asset rule.** Traced illustrations (auto-traced SVGs, MBs of path data) → **WebP 2x** at the board display size, quality ~85, transparent background, cropped to content. Line art (paws, loop line, icons, simple doodles) → **SVG**, optimized. Sources stay in `assets/ref/src/` (git-ignored). Hero stickers: `assets/hero/sticker-{design,dig,jam,guide}-{default,hover}@2x.webp`, placed in hero px (`--sx/--sy/--sw`) measured from `board.png`. Loop line: `assets/hero/loop.svg#loop`, one hand-traced path (2px, round caps), drawn under the stickers. Guide's frames have the dragon's neck baked in outside the square, so a CSS `mask-image` hides everything right of the square (and, on the hover frame, below the bubble) and `loop.svg` draws the neck instead. Quiz checkbox: `assets/quiz/checkbox.svg` (`#cb-empty`, `#cb-check`, `#cb-sad`). Hero weight: 8 WebP 198.1 KB (defaults 77.2 + hovers 120.9) + loop 3.0 KB = **≈201 KB**.
 
-Layout-only values in the mobile stack (<768px): placeholder `min-height:16rem`, playlist `padding-bottom:10rem` (room for the cat-finale slot). Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
+**Static images: crop from `board.png`; export from Figma only if a crop looks bad.** Crops are 1:1 board px, WebP q .85, in `assets/static/`. Line-art props get a transparent background by flood-filling the canvas gray and grid dots (neutral, luminance ≥ 175) from the crop edges; enclosed light pixels are painted white. Photo-like card images are plain rectangle crops. Headings, lists and labels are never baked in: they are live HTML in Shantell Sans. Team doodles: the root SVGs (300–620 KB each, with a photo and a name beside the doodle) → only the doodle frame, WebP 2x at card size (150 × 173 → 300 × 346) in `assets/team/`, named by group and position (`mgmt-1`, `lead-1`, `designer-1`), never by person. The root SVGs stay uncommitted.
+
+**Sections.** Every section in `board.json` is `"done": true`: no placeholder chrome. Content sits at section px from `board.png` via `.dg-at` (`--l/--t/--wd/--ht`) on desktop and flows in DOM order in the mobile stack. A visible `h3` in a template names its section; otherwise a visually hidden one with the `board.json` label does.
+
+**Paw navigation.** One paw button per section (`board.json` `paw`: local x/y, color), `aria-label` "Go to <next label>", `click` → `camera.goTo(next)`. The arrow points at the next paw. Hover/focus-visible: the colored square fades in behind with `translate(--dg-paw-shift) rotate(--dg-paw-tilt)`, `--dur-micro` `--ease-hover`. The trail is one `#i-print` symbol repeated every ~44px on a gentle curve between consecutive paws (static, aria-hidden, desktop only). "Follow the paws… secrets below" sits under the hero with one hand-drawn underline path.
+
+**Cat (playlist card).** Inline SVG peeking from the card bottom (`translateY(--dg-cat-peek)`). Tail: `rotate(±--dg-wag-angle)`, `--dg-wag` loop. Hover, focus-visible or tap (`.is-up`, a tap elsewhere resets) → `translateY(0)` in `--dur-micro` `--ease-hover`, showing head and paws. Reduced motion: no wag, no rise. CSS transforms only.
+
+Layout-only values in the mobile stack (<768px): world gap `3rem`, team cards two per row, What We Do cards one column (max 299px), burger 60% wide, playlist card `20rem`. Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
 
 ---
 

@@ -90,7 +90,7 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .chip .t{min-width:3.5rem;color:var(--on-ink)}.chip .sep{color:var(--on-ink-3)}
 @media (min-width:768px){.chip{display:flex}}
 
-/* case intro (all copy pending: [brackets] are placeholders) */
+/* case intro */
 .intro{padding-top:2.5rem;padding-bottom:5rem}
 @media (min-width:1024px){.intro{padding-top:3rem;padding-bottom:7rem}}
 .back{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:var(--on-ink-2);transition:color var(--dur-micro) var(--ease-hover),transform var(--dur-micro) var(--ease-hover)}
@@ -166,6 +166,10 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
   <symbol id="i-l" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M11 6l-6 6 6 6"/></symbol>
   <symbol id="i-ur" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 4l16 16M20 4 4 20"/></symbol>
+  <!-- Digest paw button (sketchy square, arrow points right and is rotated per button) and paw print for the trail -->
+  <symbol id="i-paw-box" viewBox="0 0 44 44"><path fill="var(--background)" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7.4 4.6c9.4-.8 19.6-.3 30.6-1.2 1.5 12.2 1.8 24.7.6 37-10.5 1.1-20.7 1.2-31.1.7C6.2 30.2 6 17.9 6.9 3.2"/></symbol>
+  <symbol id="i-paw-arrow" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M13 22.6c5.6-.5 11.4-.2 17.6-.6M24.4 15.6c2.4 2.3 4.6 4.3 6.6 6.4-2.2 2.4-4.4 4.5-6.8 6.7"/></symbol>
+  <symbol id="i-print" viewBox="0 0 18 18"><g fill="currentColor"><path d="M9 7.6c2.6 0 4.8 2.9 4.8 5.2 0 1.8-1.5 2.4-2.6 2.1-1-.3-1.5-.6-2.2-.6s-1.2.3-2.2.6c-1.1.3-2.6-.3-2.6-2.1 0-2.3 2.2-5.2 4.8-5.2Z"/><ellipse cx="3.2" cy="7.4" rx="1.6" ry="2"/><ellipse cx="6.6" cy="3.6" rx="1.6" ry="2.1"/><ellipse cx="11.4" cy="3.6" rx="1.6" ry="2.1"/><ellipse cx="14.8" cy="7.4" rx="1.6" ry="2"/></g></symbol>
 </svg>
 
 <a class="skip" href="#main">Skip to content</a>
@@ -229,6 +233,8 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
       <div class="dg-art dg-hero">
         <p class="dg-hero-title" style="--sx:353;--sy:139;--sw:800">Hey, we’re DX:Enterprise!</p>
         <p class="dg-hero-sub" style="--sx:552;--sy:229;--sw:400">The ones who typically</p>
+        <p class="dg-hero-follow" style="--sx:497;--sy:674;--sw:480">Follow the paws… secrets below</p>
+        <svg class="dg-follow-line" viewBox="0 0 500 82" style="--sx:500;--sy:672;--sw:500" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(-500 -672)" d="M990 679c7 10 7 24-6 30-60 8-280 2-390 9-40 3-70 16-86 30m0 0 18-3m-18 3 7-16"/></svg>
         <svg class="dg-loop" viewBox="0 0 1016 280" style="--sx:236;--sy:336;--sw:1016" aria-hidden="true" focusable="false"><use href="assets/hero/loop.svg#loop"/></svg>
         <button class="dg-sticker" type="button" aria-label="Design with purpose" style="--i:0;--sx:320;--sy:299;--sw:235;--hx:-27.5;--hy:-10;--hw:262.5">
           <img class="dg-st-def" src="assets/hero/sticker-design-default@2x.webp" width="235" height="259" alt="" decoding="async">
@@ -250,7 +256,58 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
       </div>
     </template>
 
-    <template id="tpl-quiz" data-filled>
+    <!-- Sections below: desktop positions are section px from board.png (.dg-at --l/--t/--wd); the mobile stack uses normal flow -->
+    <template id="tpl-team">
+      <h3 class="dg-at dg-h" style="--l:38;--t:146"><span class="dg-hl" style="--c:var(--dg-paw-green)">Our team</span></h3>
+      <p class="dg-at dg-pill" style="--l:38;--t:208">or how we see each other</p>
+      <div class="dg-at dg-team" style="--l:38;--t:255;--wd:1180;--ht:1490">
+        <div role="group" aria-labelledby="dg-g-mgmt"><h4 id="dg-g-mgmt">Team management</h4>
+          <ul class="dg-cards">
+            <li><img src="assets/team/mgmt-1.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Portfolio Lead</span></li>
+            <li><img src="assets/team/mgmt-2.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Delivery Director</span></li>
+            <li><img src="assets/team/mgmt-3.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Art Director</span></li>
+            <li><img src="assets/team/mgmt-4.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Manager</span></li>
+            <li><img src="assets/team/mgmt-5.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Art Director, serving in the Armed Forces</span></li>
+          </ul></div>
+        <div role="group" aria-labelledby="dg-g-lead"><h4 id="dg-g-lead">Leads</h4>
+          <ul class="dg-cards">
+            <li><img src="assets/team/lead-1.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-2.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-3.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-4.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-5.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-6.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+          </ul></div>
+        <div role="group" aria-labelledby="dg-g-des"><h4 id="dg-g-des">Designers</h4>
+          <ul class="dg-cards">
+            <li><img src="assets/team/designer-1.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-2.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-3.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UI Front-end Developer</span></li>
+            <li><img src="assets/team/designer-4.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-5.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-6.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-7.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-8.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-9.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-10.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-11.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-12.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+          </ul></div>
+      </div>
+    </template>
+
+    <template id="tpl-what-we-do">
+      <h3 class="dg-at dg-h" style="--l:35;--t:146"><span class="dg-hl" style="--c:var(--dg-paw-yellow)">What We Do</span></h3>
+      <ul class="dg-at dg-wwd" style="--l:37;--t:228">
+        <li><img src="assets/static/wwd-enterprise.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>Enterprise design</span></li>
+        <li><img src="assets/static/wwd-accessibility.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>Accessibility</span></li>
+        <li style="--band:var(--dg-band-ai)"><img src="assets/static/wwd-ai.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>AI-driven user interfaces</span></li>
+        <li><img src="assets/static/wwd-graph.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>Graph design &amp; Illustrations</span></li>
+        <li style="--band:var(--dg-band-brand)"><img src="assets/static/wwd-branding.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>Branding</span></li>
+      </ul>
+    </template>
+
+    <template id="tpl-quiz">
       <form class="dg-quiz" id="dgQuiz" novalidate>
         <h4 class="dg-quiz-title"><span aria-hidden="true">🤓</span> Quick design test?</h4>
         <fieldset data-answer="lego">
@@ -271,25 +328,72 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
           <label><input type="radio" name="q3" value="dark"><span>Dark pattern</span></label>
           <label><input type="radio" name="q3" value="gray"><span>Gray UI</span></label>
         </fieldset>
-        <div class="dg-quiz-foot" data-next-slot><p class="dg-quiz-score" aria-hidden="true"></p><button type="button" class="dg-reset" hidden>Try again</button></div>
+        <div class="dg-quiz-foot"><p class="dg-quiz-score" aria-hidden="true"></p><button type="button" class="dg-reset" hidden>Try again</button></div>
         <p class="sr" role="status" aria-live="polite"></p>
       </form>
     </template>
+
+    <template id="tpl-values">
+      <h3 class="dg-at dg-h" style="--l:55;--t:284"><span class="dg-hl" style="--c:var(--dg-paw-pink)">At work, we value most</span></h3>
+      <img class="dg-at dg-wheel" src="assets/static/values-wheel.webp" width="654" height="654" alt="" style="--l:557;--t:206;--wd:654" loading="lazy" decoding="async">
+      <div class="sr">
+        <p>Values wheel, outer ring:</p>
+        <ol><li>People</li><li>Purposeful design</li><li>Clear and honest communication</li><li>Taking initiative</li><li>A culture we love</li></ol>
+        <p>Inner ring:</p>
+        <ul><li>Learn</li><li>Share</li><li>Improve</li><li>Reflect</li><li>Repeat</li><li>Grow</li></ul>
+      </div>
+    </template>
+
+    <template id="tpl-recipe">
+      <img class="dg-at dg-burger" src="assets/static/burger.webp" width="348" height="561" alt="" style="--l:0;--t:174;--wd:348" loading="lazy" decoding="async">
+      <svg class="dg-at dg-arrows" viewBox="290 220 190 450" style="--l:290;--t:220;--wd:190" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M300 262Q380 230 462 252l-10.6 2.8M462 252l-7.8 -7.8M350 365Q400 360 458 330l-5.9 9.3M458 330l-11.0 -0.5M318 430Q390 410 466 404l-9.1 6.2M466 404l-9.9 -4.7M330 495Q390 462 470 462l-9.5 5.5M470 462l-9.5 -5.5M352 552Q410 548 466 554l-10.1 4.5M466 554l-8.9 -6.5M352 652Q420 650 468 622l-5.5 9.6M468 622l-11.0 0.0"/></svg>
+      <h3 class="dg-at dg-h" style="--l:485;--t:166"><span class="dg-hl" style="--c:var(--dg-paw-purple)">Recipe for a DX legendary Year</span></h3>
+      <p class="dg-at dg-note" style="--l:780;--t:220;--wd:300">*from start of 25 (:</p>
+      <ul class="dg-at dg-recipe" style="--l:498;--t:256">
+        <li>Design Digest – <b>1</b></li>
+        <li>Client projects – <b>38</b></li>
+        <li>Team knowledge sharing sessions – <b>12</b></li>
+        <li>Ideas (bravely) rejected – <b>104</b><small>(but we loved each of them anyway)</small></li>
+        <li>New teammates – <b>4</b></li>
+        <li>Design team laughs – <b aria-label="infinite">∞</b></li>
+      </ul>
+      <p class="dg-at dg-served" style="--l:498;--t:676;--wd:470"><span aria-hidden="true">📌</span> Best served with deadlines and a pinch of chaos</p>
+    </template>
+
+    <template id="tpl-playlist">
+      <h3 class="dg-at dg-folks" style="--l:175;--t:128;--wd:800">That’s all, folks</h3>
+      <p class="dg-at dg-vibe" style="--l:175;--t:226;--wd:800">…unless you <span aria-hidden="true">🪩</span> are still vibing…</p>
+      <p class="dg-at dg-pl-link" style="--l:175;--t:314;--wd:800"><a href="https://www.youtube.com/playlist?list=PLpM1eHko8nXcVity8AMpO4RsIrKfJCQyR" target="_blank" rel="noopener">DX Design playlist<span class="sr"> (YouTube, opens in a new tab)</span></a></p>
+      <div class="dg-at dg-card" style="--l:257;--t:395;--wd:632;--ht:336">
+        <p>Background music for the next sprint<br>Or for gently reorganising auto layouts (again)</p>
+        <!-- cat: drawn inline; tail wags, hover/focus/tap lifts it out of the card (CSS transforms only) -->
+        <button class="dg-cat" type="button" aria-label="Say hi to the cat">
+          <svg viewBox="0 0 220 200" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path class="dg-cat-tail" d="M166 200c4-38 30-50 26-86-2-20-16-28-25-20"/>
+            <path fill="var(--background)" d="M40 200c0-48 10-80 22-96l-4-52 30 28c10-4 34-4 44 0l30-28-4 52c12 16 22 48 22 96Z"/>
+            <path fill="currentColor" stroke="none" d="M90 112a4 6 0 1 0 8 0a4 6 0 1 0-8 0M122 112a4 6 0 1 0 8 0a4 6 0 1 0-8 0M105 124h10l-5 5Z"/>
+            <path stroke-width="2" d="M110 129c-2 5-8 6-11 2m11-2c2 5 8 6 11 2M82 124l-26-4m26 10-24 5m80-11 26-4m-26 10 24 5"/>
+            <path fill="var(--background)" d="M64 200v-22c0-10 24-10 24 0v22m44 0v-22c0-10 24-10 24 0v22"/>
+            <path stroke-width="2" d="M72 186v7m8-7v7m60-7v7m8-7v7"/>
+          </g></svg>
+        </button>
+      </div>
+    </template>
+
   </div>
 
   <section class="shell sec" id="built" aria-labelledby="built-title">
-    <span class="eyebrow">How it's built</span>
-    <h2 id="built-title">[How it's built: heading]</h2>
+    <span class="eyebrow">Under the hood</span>
+    <h2 id="built-title">How it’s built</h2>
     <ol class="pts">
-      <li><span class="ix">01</span><h3>[Point 1]</h3><p>[One-line explanation]</p></li>
-      <li><span class="ix">02</span><h3>[Point 2]</h3><p>[One-line explanation]</p></li>
-      <li><span class="ix">03</span><h3>[Point 3]</h3><p>[One-line explanation]</p></li>
-      <li><span class="ix">04</span><h3>[Point 4]</h3><p>[One-line explanation]</p></li>
-      <li><span class="ix">05</span><h3>[Point 5]</h3><p>[One-line explanation]</p></li>
+      <li><span class="ix">01</span><h3>Free-scroll board</h3><p>One transform-driven camera with wheel, drag and arrow keys; a plain vertical stack on mobile.</p></li>
+      <li><span class="ix">02</span><h3>Intro choreography</h3><p>Staggered stickers and a loop line that draws itself with stroke-dashoffset.</p></li>
+      <li><span class="ix">03</span><h3>Asset diet</h3><p>~36 MB of traced Figma SVGs became ~200 KB of WebP; simple line art was redrawn as tiny inline SVGs.</p></li>
+      <li><span class="ix">04</span><h3>Accessible by default</h3><p>Keyboard camera, a real radio-button quiz with live feedback, reduced-motion fallbacks.</p></li>
+      <li><span class="ix">05</span><h3>Built with Claude Code</h3><p>From Figma references, with a scoped style layer so the Digest look never leaks into the portfolio.</p></li>
     </ol>
     <div class="next">
-      <div><span class="eyebrow">Next case</span><h3>[Next case title]</h3></div>
-      <a class="pill dark arrow" href="../../prototype/index.html#works" data-holo="md">Next case<span class="bd"><svg class="ico r" aria-hidden="true"><use href="#i-r"/></svg></span></a>
+      <a class="pill dark arrow" href="../../prototype/index.html#works" data-holo="md">Back to all work<span class="bd"><svg class="ico r" aria-hidden="true"><use href="#i-r"/></svg></span></a>
     </div>
   </section>
 </main>

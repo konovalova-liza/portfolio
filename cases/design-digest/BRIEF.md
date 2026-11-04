@@ -21,6 +21,7 @@ Why this case matters: it is the strongest proof of the "UI design engineer" pos
 - **NDA:** "DX:Enterprise" and the Recipe numbers are OK to show publicly.
 - **Font:** Figma Hand is **not** licensed for web (free only inside Figma products), so the page uses **Shantell Sans** (SIL OFL 1.1), self-hosted.
 - **Fidelity:** pixel-perfect copies are not required. Keep the idea and feel of each drawing and animation; simplify when it saves weight or effort.
+- **Team section:** roles only under every card (e.g. "Project Lead", "UX/UI designer"). No names at all, Liza's included, and no photos: the doodle SVGs also contain a photo and a name, so only the doodle frame is cropped. Static grid, no hover.
 - **Colors:** the DESIGN.md accent/error restriction applies to the portfolio shell only. Inside `.digest` the canvas uses its own Digest-scope colors (quiz: green check, red sad face; DESIGN.md §5.7).
 
 ## Page structure
