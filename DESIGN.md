@@ -208,7 +208,7 @@ Not computable from tokens: any text over the hero photo. This needs a visual ch
 |---|---|---|---|---|---|
 | digits (stats) | mono (trial) | `3rem` → `3.75rem` → `4.5rem` | 600 | 1 | `-.02em` |
 | display / card wordmark | Onest | `4.5rem` | 700 | — | `-.04em` (holo gradient text) |
-| footer watermark | Onest | rem-only size, value set in Stage 3 (T7; v0 was `min(13rem,16vw)`) | 700 | 1 | `-.03em` |
+| watermark (hero, footer) | Onest | rem-only size, value set in Stage 3 (T7; v0 was `min(13rem,16vw)`) | 700 | 1 | `-.03em` |
 | h1 (hero, footer CTA) | Onest | `2.25rem` → `3rem` → `3.75rem` | 600 | `.98` / `1.02` | `-.02em` |
 | nav overlay link | Onest | `2.25rem` → `3.75rem` | 600 | — | `-.02em` |
 | h2 | Onest | `2.25rem` → `3rem` | 600 | `1.05` | `-.02em` |
@@ -531,7 +531,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
   - Tagline and links `--on-ink-2` → `--on-ink` on hover/focus
   - Column `h4` and legal in `--on-ink-2`
   - Dividers `--line-on-ink`
-  - **Watermark `KONOVALOVA` stays here only.** Color `rgba(255,255,255,.05)` is decorative and kept (v0); size in rem only (T7)
+  - **Watermark `KONOVALOVA`** (`.fwm`). Color `rgba(255,255,255,.05)` is decorative and kept (v0); size in rem only (T7). The hero has its own watermark (§4.13)
 
 ### 4.12 Loader
 - **Spec:**
@@ -549,7 +549,8 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
   - B/W portrait + LiquidReveal color layer + dark vignette
   - **Photo files:** `prototype/assets/hero-bw-{1280,2337}.webp` (the `<img srcset>`, `sizes="100vw"`) and `hero-color-{1280,2337}.webp` (the LiquidReveal source, 2337 when `innerWidth × dpr > 1280`). WebP q84, aspect 2337×1568, no upscaling. **The B/W file is always derived from the color file** (desaturate + contrast 1.08) so both layers align pixel-for-pixel. Sources live in `prototype/assets/src/` and are git-ignored
   - Text uses the on-ink tokens
-- **Removed:** the hero watermark `KONOVALOVA` (it moves to the footer only) and the Toolkit list (it moves to About).
+- **Watermark `KONOVALOVA` (`.wm`):** restored on 2026-11-04 at the owner's request, reversing the earlier removal. Decorative, `aria-hidden`, `--z-decor`, centred, `bottom:7rem`, 700, line-height 1, `-.03em`, white at opacity `.18` on the dark hero, entrance `.rv` (`--y:20px`, delay 300ms). Size follows the footer watermark: v0 `min(13rem,16vw)`, to become rem-only together with `.fwm` (T7, backlog #11).
+- **Removed:** the Toolkit list (it moves to About).
 - **`.hcard` carousel:**
   - `--glass-rest` (+ `--blur-card`); pane `--glass-rest`
   - Fully keyboard-operable (T10, §6)
@@ -858,7 +859,7 @@ Concrete edits to `prototype/index.html` that bring it to v1. Each item cites th
    - Use `--r-card` for the `#loader`, `#home` and `footer` sheet corners.
 9. **Hero background (D6).** `#home{background:var(--ink)}`.
 10. **Holo never as text (D1).** `#nav .nl button:hover small` changes from `--holo-1` to `--on-ink`. Then grep that no `color:var(--holo-*)` remains on a text element (icons per Q3).
-11. **Remove the hero watermark.** Delete `.wm` markup (L401) and CSS (L108–109, L168). Keep the footer `.fwm`, sized in rem only (T7).
+11. **Watermark sizes (T7).** ~~Remove the hero watermark~~: reversed 2026-11-04, the hero `.wm` stays (§4.13). Size both `.wm` and `.fwm` in rem only.
 12. **Move Toolkit to About.** *Done 2026-11-04 (§4.14).*
     - Move the `.partners` markup out of `.hrc` into `#about`.
     - Restyle it for light with `--text-2` and `--text-3` icons.
