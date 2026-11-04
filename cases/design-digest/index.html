@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design Digest — Konovalova</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%230a0a0a' d='M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="digest.css">
+<style>
+/* Case page shell. Tokens: DESIGN.md §2.0 (v1). Board styles live in digest.css under .digest */
+:root{
+  color-scheme:light;
+  --background:#ffffff; --surface:#f1f0ee; --surface-2:#e3e2df; --surface-soft:rgba(241,240,238,.5); --ink:#0a0a0a;
+  --foreground:#111111; --text:var(--foreground); --text-2:rgba(17,17,17,.7); --text-3:rgba(17,17,17,.5);
+  --on-ink:#ffffff; --on-ink-2:rgba(255,255,255,.7); --on-ink-3:rgba(255,255,255,.5);
+  --line:#e6e5e2; --line-on-ink:rgba(255,255,255,.1); --border-ctl:rgba(17,17,17,.5); --border-on-ink:rgba(255,255,255,.4);
+  --accent:#4f5bd5; --error:#b42318;
+  --holo-1:#6fe3e1; --holo-2:#b9a7ff; --holo-3:#ffc7a3;
+  --holo-gradient:linear-gradient(135deg,var(--holo-1),var(--holo-2),var(--holo-3));
+  --glass-rest:rgba(255,255,255,.1); --glass-hover:rgba(255,255,255,.2);
+  --ring-light:var(--accent); --ring-ink:var(--on-ink);
+  --font:"Onest", "Helvetica Neue", Arial, sans-serif;
+  --font-mono:"Geist Mono", ui-monospace, Menlo, monospace;
+  --r-card:2rem; --r-card-sm:1.25rem; --r-ctl:.875rem; --r-pill:9999px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05); --shadow-panel:0 25px 50px -12px rgba(0,0,0,.25); --ring-hairline:0 0 0 1px;
+  --blur-ctl:blur(4px); --blur-card:blur(12px); --blur-overlay:blur(16px); --blur-lens:blur(1.4px) saturate(1.8);
+  --z-bg:0; --z-decor:1; --z-raised:10; --z-content:20; --z-header:50;
+  --z-lens:99; --z-cursor:100; --z-modal:110; --z-nav:115; --z-loader:120; --z-skip:130;
+  --ease-spring:cubic-bezier(.22,1,.36,1); --ease-line:cubic-bezier(.215,.61,.355,1);
+  --ease-word:cubic-bezier(.165,.84,.44,1); --ease-hover:cubic-bezier(.2,.8,.2,1);
+  --dur-micro:300ms; --dur-surface:450ms; --dur-item:500ms; --dur-overlay:400ms; --dur-exit:600ms;
+  --dur-word:700ms; --dur-reveal:800ms; --dur-line:900ms;
+  --stagger-list:80ms; --stagger-line:120ms; --stagger-word:35ms;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:clamp(16px, calc(5.3333px + .5555vw), 21.3333px);-webkit-font-smoothing:antialiased}
+body{background:var(--background);color:var(--text);font-family:var(--font);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+ul,ol{list-style:none}
+:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
+.ink :focus-visible,footer :focus-visible{outline-color:var(--ring-ink)}
+.shell{max-width:88rem;margin-inline:auto;padding-left:max(1.25rem, env(safe-area-inset-left, 0px));padding-right:max(1.25rem, env(safe-area-inset-right, 0px))}
+@media (min-width:640px){.shell{padding-left:max(2rem, env(safe-area-inset-left, 0px));padding-right:max(2rem, env(safe-area-inset-right, 0px))}}
+.ico{width:1em;height:1em;display:inline-block;flex:none}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px}
+.skip:focus{position:fixed;left:1rem;top:1rem;z-index:var(--z-skip);border-radius:var(--r-ctl);background:var(--ink);padding:.5rem 1rem;font-size:.875rem;color:var(--on-ink)}
+
+/* pill (§4.1) */
+.pill{display:inline-flex;align-items:center;gap:.75rem;border-radius:var(--r-pill);font-size:.875rem;font-weight:500;padding:.875rem 1.75rem;transition:transform var(--dur-micro) var(--ease-hover)}
+.pill.arrow{padding:.375rem .375rem .375rem 1.5rem}
+.pill .bd{width:2.25rem;height:2.25rem;display:grid;place-items:center;border-radius:var(--r-pill);font-size:1rem}
+.pill .bd .ico{transition:transform var(--dur-micro) var(--ease-hover)}
+.pill.dark{background:var(--ink);color:var(--on-ink)}.pill.dark .bd{background:var(--on-ink);color:var(--ink)}
+.pill.light{background:var(--surface);color:var(--text)}.pill.light .bd{background:var(--ink);color:var(--on-ink)}
+.ink .pill.light{background:var(--on-ink);color:var(--ink)}
+@media (hover:hover){.pill:hover{transform:scale(1.04)}.pill:hover .bd .r{transform:translateX(3px)}.pill:hover .bd .ur,.pill:hover .bd .l{transform:translate(2px,-2px)}}
+.pill:focus-visible{transform:scale(1.04)}
+.pill:active{transform:scale(.98)}
+
+/* eyebrow (§4.2) */
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.875rem;font-weight:500;color:var(--text-2)}
+.eyebrow::before{content:"";width:.375rem;height:.375rem;border-radius:var(--r-pill);background:var(--text-3)}
+.ink .eyebrow{color:var(--on-ink-2)}.ink .eyebrow::before{background:var(--on-ink-3)}
+
+/* case hero: header + intro on one ink sheet (D6 hero block) */
+.ink{background:var(--ink);color:var(--on-ink)}
+.case-hero{border-radius:0 0 var(--r-card) var(--r-card)}
+
+/* header (§4.7, single on-ink variant) */
+header.top{position:relative;z-index:var(--z-header)}
+header.top .shell{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding-block:1.25rem}
+@media (min-width:640px){header.top .shell{padding-block:1.5rem}}
+.logo{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600;letter-spacing:-.01em;transition:transform var(--dur-micro) var(--ease-hover)}
+.logo .ico{font-size:1.25rem;color:var(--holo-2)}
+@media (hover:hover){.logo:hover{transform:scale(1.04)}}
+.logo:focus-visible{transform:scale(1.04)}
+.pnav{display:none;gap:2rem;font-size:.875rem;font-weight:500}
+.pnav a{display:inline-block;color:var(--on-ink-2);transition:transform var(--dur-micro) var(--ease-hover),color var(--dur-micro) var(--ease-hover)}
+.pnav a[aria-current]{color:var(--on-ink)}
+@media (hover:hover){.pnav a:hover{transform:translateY(-2px);color:var(--on-ink)}}
+.pnav a:focus-visible{transform:translateY(-2px);color:var(--on-ink)}
+@media (min-width:1024px){.pnav{display:flex}}
+.chip{display:none;align-items:center;gap:.75rem;border:1px solid var(--border-on-ink);background:var(--glass-rest);backdrop-filter:var(--blur-ctl);-webkit-backdrop-filter:var(--blur-ctl);border-radius:var(--r-ctl);padding:.5rem .75rem;font-size:.75rem;color:var(--on-ink-2)}
+.chip .t,.chip .dt{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-weight:500}
+.chip .t{min-width:3.5rem;color:var(--on-ink)}.chip .sep{color:var(--on-ink-3)}
+@media (min-width:768px){.chip{display:flex}}
+
+/* case intro */
+.intro{padding-top:2.5rem;padding-bottom:5rem}
+@media (min-width:1024px){.intro{padding-top:3rem;padding-bottom:7rem}}
+.back{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:var(--on-ink-2);transition:color var(--dur-micro) var(--ease-hover),transform var(--dur-micro) var(--ease-hover)}
+@media (hover:hover){.back:hover{color:var(--on-ink);transform:translateX(-4px)}}
+.back:focus-visible{color:var(--on-ink);transform:translateX(-4px)}
+.intro .eyebrow{margin-top:3rem}
+.intro h1{margin-top:1.25rem;max-width:18ch;font-size:2.25rem;font-weight:600;line-height:.98;letter-spacing:-.02em}
+@media (min-width:640px){.intro h1{font-size:3rem}}
+@media (min-width:768px){.intro h1{font-size:3.75rem}}
+.intro .sum{margin-top:1.5rem;max-width:40rem;font-size:1rem;color:var(--on-ink-2)}
+.tags{margin-top:2rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.tags li{display:inline-flex;gap:.5rem;border:1px solid var(--line-on-ink);border-radius:var(--r-pill);padding:.5rem 1rem;font-size:.875rem;color:var(--on-ink-2)}
+.tags b{font-family:var(--font-mono);font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--on-ink-3);align-self:center}
+.intro .ctx{margin-top:3rem;max-width:40rem;font-size:.875rem;line-height:1.6;color:var(--on-ink-2)}
+#intro-title:focus{outline:none}
+#intro-title:focus-visible{outline:2px solid var(--ring-ink)}
+
+/* how it's built (static list, §4.5 look without hover) */
+.sec{padding-top:5rem;padding-bottom:7rem}
+.sec h2{margin-top:1.25rem;font-size:2.25rem;font-weight:600;line-height:1.05;letter-spacing:-.02em}
+@media (min-width:640px){.sec h2{font-size:3rem}}
+.pts{margin-top:3rem;border-top:1px solid var(--line)}
+.pts li{display:flex;align-items:baseline;gap:1rem;padding:1.5rem;border-bottom:1px solid var(--line)}
+.pts .ix{width:1.75rem;font-family:var(--font-mono);font-size:.875rem;font-weight:500;color:var(--text-2)}
+.pts h3{flex:1;font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
+.pts p{display:none;max-width:20rem;font-size:.875rem;color:var(--text-2)}
+@media (min-width:768px){.pts h3{font-size:1.875rem}.pts p{display:block}}
+.next{margin-top:5rem;display:flex;flex-direction:column;gap:1.5rem}
+@media (min-width:768px){.next{flex-direction:row;align-items:center;justify-content:space-between}}
+.next h3{font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
+
+/* footer (§4.11) */
+footer{position:relative;overflow:hidden;border-radius:var(--r-card) var(--r-card) 0 0;background:var(--ink);color:var(--on-ink)}
+footer .shell{position:relative;z-index:var(--z-raised);padding-top:5rem;padding-bottom:2.5rem}
+@media (min-width:1024px){footer .shell{padding-top:6rem}}
+.fcta{display:flex;flex-direction:column;gap:2rem;border-bottom:1px solid var(--line-on-ink);padding-bottom:4rem}
+@media (min-width:1024px){.fcta{flex-direction:row;align-items:flex-end;justify-content:space-between}}
+.fcta h2{max-width:16ch;font-size:2.25rem;font-weight:600;letter-spacing:-.02em;line-height:1.02}
+@media (min-width:640px){.fcta h2{font-size:3rem}}
+@media (min-width:768px){.fcta h2{font-size:3.75rem}}
+footer .pill.light{background:var(--on-ink);color:var(--ink)}
+.fcols{display:grid;grid-template-columns:1fr;gap:3rem;padding-block:4rem}
+@media (min-width:768px){.fcols{grid-template-columns:1fr 1fr}}
+@media (min-width:1024px){.fcols{grid-template-columns:repeat(4,1fr)}}
+.fcols .b{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600}
+.fcols .b .ico{font-size:1.25rem;color:var(--holo-2)}
+.fcols .tg{margin-top:1rem;max-width:20rem;font-size:.875rem;color:var(--on-ink-2)}
+.fcols h4{font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--on-ink-2);margin-bottom:1rem}
+.fcols ul{display:flex;flex-direction:column;gap:.75rem;font-size:.875rem}
+.al{display:inline-flex}.al span{color:var(--on-ink-2);transition:transform var(--dur-micro) var(--ease-hover),color var(--dur-micro) var(--ease-hover)}
+@media (hover:hover){.al:hover span{transform:translateX(4px);color:var(--on-ink)}}
+.al:focus-visible span{transform:translateX(4px);color:var(--on-ink)}
+.legal{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--line-on-ink);padding-top:2rem;font-size:.75rem;color:var(--on-ink-2)}
+@media (min-width:640px){.legal{flex-direction:row}}
+.fwm{position:absolute;inset-inline:0;bottom:-1.5rem;z-index:var(--z-bg);text-align:center;pointer-events:none;user-select:none;font-weight:700;line-height:1;font-size:13rem;letter-spacing:-.03em;color:rgba(255,255,255,.05)}
+
+/* glass droplet cursor (§5.2) */
+#drop{position:fixed;left:0;top:0;z-index:var(--z-cursor);pointer-events:none;will-change:transform}
+#lens{position:fixed;left:0;top:0;border-radius:50%;z-index:var(--z-lens);pointer-events:none;backdrop-filter:var(--blur-lens);-webkit-backdrop-filter:var(--blur-lens);opacity:0}
+@media (pointer:coarse){#drop,#lens{display:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  #drop,#lens{display:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 48 48"><path fill="currentColor" d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z"/></symbol>
+  <symbol id="i-r" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-l" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-ur" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 4l16 16M20 4 4 20"/></symbol>
+  <!-- Digest paw button (sketchy square, arrow points right and is rotated per button) and paw print for the trail -->
+  <symbol id="i-paw-box" viewBox="0 0 44 44"><path fill="var(--background)" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7.4 4.6c9.4-.8 19.6-.3 30.6-1.2 1.5 12.2 1.8 24.7.6 37-10.5 1.1-20.7 1.2-31.1.7C6.2 30.2 6 17.9 6.9 3.2"/></symbol>
+  <symbol id="i-paw-arrow" viewBox="0 0 44 44"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M13 22.6c5.6-.5 11.4-.2 17.6-.6M24.4 15.6c2.4 2.3 4.6 4.3 6.6 6.4-2.2 2.4-4.4 4.5-6.8 6.7"/></symbol>
+  <symbol id="i-print" viewBox="0 0 18 18"><g fill="currentColor"><path d="M9 7.6c2.6 0 4.8 2.9 4.8 5.2 0 1.8-1.5 2.4-2.6 2.1-1-.3-1.5-.6-2.2-.6s-1.2.3-2.2.6c-1.1.3-2.6-.3-2.6-2.1 0-2.3 2.2-5.2 4.8-5.2Z"/><ellipse cx="3.2" cy="7.4" rx="1.6" ry="2"/><ellipse cx="6.6" cy="3.6" rx="1.6" ry="2.1"/><ellipse cx="11.4" cy="3.6" rx="1.6" ry="2.1"/><ellipse cx="14.8" cy="7.4" rx="1.6" ry="2"/></g></symbol>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="ink case-hero">
+  <header class="top" id="hdr">
+    <div class="shell">
+      <a class="logo" href="../../prototype/index.html" aria-label="Liza Konovalova, home" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg>Konovalova</a>
+      <nav aria-label="Primary"><ul class="pnav">
+        <li><a href="../../prototype/index.html#home">Home</a></li>
+        <li><a href="../../prototype/index.html#works" aria-current="page">Work</a></li>
+        <li><a href="../../prototype/index.html#services">Approach</a></li>
+        <li><a href="../../prototype/index.html#about">About</a></li>
+        <li><a href="../../prototype/index.html#stats">Numbers</a></li>
+      </ul></nav>
+      <div class="chip"><span class="lbl">Kyiv time</span><span class="t" data-time>9:41am</span><span class="sep">•</span><span class="dt" data-date>4 November, 2026</span></div>
+    </div>
+  </header>
+
+  <section class="shell intro" id="intro" aria-labelledby="intro-title">
+    <a class="back" href="../../prototype/index.html" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-l"/></svg>All work</a>
+    <div><span class="eyebrow">Case study</span></div>
+    <h1 id="intro-title" tabindex="-1">Design Digest</h1>
+    <p class="sum">An interactive year-in-review for the DX:Enterprise design team, rebuilt from a Figma canvas into a live page.</p>
+    <ul class="tags" aria-label="Project facts">
+      <li><b>Role</b>Concept, illustration, motion</li>
+      <li><b>Team</b>4 designers + 1 art lead</li>
+      <li><b>Year</b>2025</li>
+      <li><b>Tools</b>Figma, Claude Code</li>
+    </ul>
+    <p class="ctx">Design Digest 2025 is the annual digest of DX:Enterprise, the enterprise design team at Trinetix, shared with the team and the whole company. Each designer took a tab; I designed the DX:Enterprise page end to end: concept, sketchy illustrations, copy and an interactive Figma prototype styled like a Figma canvas. This version rebuilds that page in code, so the hovers, quiz and camera moves work in a browser, not only in a prototype.</p>
+  </section>
+</div>
+
+<main id="main">
+  <a class="skip" href="#built">Skip the board</a>
+
+  <div class="digest" id="digest">
+    <nav class="dg-nav" aria-label="Digest issues">
+      <ul class="dg-tabs">
+        <li><a class="dg-tab" href="#digest" aria-current="page">DX: Enterprise</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Projects</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Cheers</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Recommendations</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Design Lab</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Survey</a></li>
+        <li><a class="dg-tab" aria-disabled="true" role="link">Volunteering</a></li>
+      </ul>
+      <button class="dg-close" id="dgClose" type="button" aria-label="Close Design Digest"><svg viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M4.6 4.2c6.4 6 12.6 12.4 18.8 19.4M23.2 4.6C16.8 10.4 10.8 16.8 4.4 23.6"/></svg></button>
+    </nav>
+    <div class="dg-board" id="dgBoard" role="region" aria-label="Design Digest board. Drag, scroll or use the arrow keys to move around." tabindex="0">
+      <div class="dg-world" id="dgWorld">
+        <p class="dg-status" id="dgStatus">Loading the board…</p>
+      </div>
+    </div>
+    <p class="sr" id="dgLive" role="status" aria-live="polite"></p>
+
+    <!-- Hero: positions in hero px measured from assets/ref/board.png. Stickers sit at the default frame (square top-left minus the image's
+         square offset); --hx/--hy/--hw place the hover frame relative to it so both squares line up. The loop sits under the stickers. -->
+    <template id="tpl-hero">
+      <div class="dg-art dg-hero">
+        <p class="dg-hero-title" style="--sx:353;--sy:139;--sw:800">Hey, we’re DX:Enterprise!</p>
+        <p class="dg-hero-sub" style="--sx:552;--sy:229;--sw:400">The ones who typically</p>
+        <p class="dg-hero-follow" style="--sx:497;--sy:674;--sw:480">Follow the paws… secrets below</p>
+        <svg class="dg-follow-line" viewBox="0 0 500 82" style="--sx:500;--sy:672;--sw:500" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(-500 -672)" d="M990 679c7 10 7 24-6 30-60 8-280 2-390 9-40 3-70 16-86 30m0 0 18-3m-18 3 7-16"/></svg>
+        <svg class="dg-loop" viewBox="0 0 1016 280" style="--sx:236;--sy:336;--sw:1016" aria-hidden="true" focusable="false"><use href="assets/hero/loop.svg#loop"/></svg>
+        <button class="dg-sticker" type="button" aria-label="Design with purpose" style="--i:0;--sx:320;--sy:299;--sw:235;--hx:-27.5;--hy:-10;--hw:262.5">
+          <img class="dg-st-def" src="assets/hero/sticker-design-default@2x.webp" width="235" height="259" alt="" decoding="async">
+          <img class="dg-st-hov" src="assets/hero/sticker-design-hover@2x.webp" width="263" height="286" alt="" decoding="async">
+        </button>
+        <button class="dg-sticker" type="button" aria-label="Dig into challenges" style="--i:1;--sx:530;--sy:379.5;--sw:235;--hx:-6.5;--hy:-14.5;--hw:239.5">
+          <img class="dg-st-def" src="assets/hero/sticker-dig-default@2x.webp" width="235" height="239" alt="" decoding="async">
+          <img class="dg-st-hov" src="assets/hero/sticker-dig-hover@2x.webp" width="240" height="296" alt="" decoding="async">
+        </button>
+        <button class="dg-sticker" type="button" aria-label="Jam as a team" style="--i:2;--sx:715.5;--sy:298;--sw:261.5;--hx:.5;--hy:-12.5;--hw:261">
+          <img class="dg-st-def" src="assets/hero/sticker-jam-default@2x.webp" width="262" height="276" alt="" decoding="async">
+          <img class="dg-st-hov" src="assets/hero/sticker-jam-hover@2x.webp" width="261" height="285" alt="" decoding="async">
+        </button>
+        <!-- Guide: both frames have the dragon's neck baked in outside the square; a CSS mask hides it so loop.svg isn't doubled -->
+        <button class="dg-sticker dg-st-guide" type="button" aria-label="Guide the vision" style="--i:3;--sx:948;--sy:377.5;--sw:296.5;--hx:-5.5;--hy:.5;--hw:357.5">
+          <img class="dg-st-def" src="assets/hero/sticker-guide-default@2x.webp" width="297" height="240" alt="" decoding="async">
+          <img class="dg-st-hov" src="assets/hero/sticker-guide-hover@2x.webp" width="358" height="239" alt="" decoding="async">
+        </button>
+      </div>
+    </template>
+
+    <!-- Sections below: desktop positions are section px from board.png (.dg-at --l/--t/--wd); the mobile stack uses normal flow -->
+    <template id="tpl-team">
+      <h3 class="dg-at dg-h" style="--l:38;--t:146"><span class="dg-hl" style="--c:var(--dg-paw-green)">Our team</span></h3>
+      <p class="dg-at dg-pill" style="--l:38;--t:208">or how we see each other</p>
+      <div class="dg-at dg-team" style="--l:38;--t:255;--wd:1180;--ht:1490">
+        <div role="group" aria-labelledby="dg-g-mgmt"><h4 id="dg-g-mgmt">Team management</h4>
+          <ul class="dg-cards">
+            <li><img src="assets/team/mgmt-1.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Portfolio Lead</span></li>
+            <li><img src="assets/team/mgmt-2.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Delivery Director</span></li>
+            <li><img src="assets/team/mgmt-3.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Art Director</span></li>
+            <li><img src="assets/team/mgmt-4.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Manager</span></li>
+            <li><img src="assets/team/mgmt-5.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Art Director, serving in the Armed Forces</span></li>
+          </ul></div>
+        <div role="group" aria-labelledby="dg-g-lead"><h4 id="dg-g-lead">Leads</h4>
+          <ul class="dg-cards">
+            <li><img src="assets/team/lead-1.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-2.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-3.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-4.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-5.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+            <li><img src="assets/team/lead-6.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>Project Lead</span></li>
+          </ul></div>
+        <div role="group" aria-labelledby="dg-g-des"><h4 id="dg-g-des">Designers</h4>
+          <ul class="dg-cards">
+            <li><img src="assets/team/designer-1.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-2.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-3.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UI Front-end Developer</span></li>
+            <li><img src="assets/team/designer-4.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-5.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-6.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-7.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-8.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-9.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-10.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-11.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+            <li><img src="assets/team/designer-12.webp" width="150" height="173" alt="" loading="lazy" decoding="async"><span>UX/UI designer</span></li>
+          </ul></div>
+      </div>
+    </template>
+
+    <template id="tpl-what-we-do">
+      <h3 class="dg-at dg-h" style="--l:35;--t:146"><span class="dg-hl" style="--c:var(--dg-paw-yellow)">What We Do</span></h3>
+      <ul class="dg-at dg-wwd" style="--l:37;--t:228">
+        <li tabindex="0" role="group" aria-label="Enterprise design"><img src="assets/static/wwd-enterprise.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">Enterprise design</span><p class="dg-wwd-d">We translate complex business workflows into clean, human-friendly digital experiences</p></li>
+        <li tabindex="0" role="group" aria-label="Accessibility"><img src="assets/static/wwd-accessibility.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">Accessibility</span><p class="dg-wwd-d">We run accessibility reviews and design with empathy, making sure everyone can use what we create.</p></li>
+        <li tabindex="0" role="group" aria-label="AI-driven user interfaces" style="--band:var(--dg-band-ai)"><img src="assets/static/wwd-ai.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">AI-driven user interfaces</span><p class="dg-wwd-d">We create intuitive UIs that help users interact with AI in a way that feels natural and helpful</p></li>
+        <li tabindex="0" role="group" aria-label="Graph design and Illustrations"><img src="assets/static/wwd-graph.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">Graph design &amp; Illustrations</span><p class="dg-wwd-d">We design custom graphics and illustrations that make interfaces clearer, more engaging, and on-brand</p></li>
+        <li tabindex="0" role="group" aria-label="Branding" style="--band:var(--dg-band-brand)"><img src="assets/static/wwd-branding.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">Branding</span><p class="dg-wwd-d">We shape visual identities that tell stories, build trust, and support product goals</p></li>
+      </ul>
+    </template>
+
+    <template id="tpl-quiz">
+      <form class="dg-quiz" id="dgQuiz" novalidate>
+        <h4 class="dg-quiz-title"><span aria-hidden="true">🤓</span> Quick design test?</h4>
+        <fieldset data-answer="lego">
+          <legend>1. Which logo has never been redesigned since 1962?</legend>
+          <label><input type="radio" name="q1" value="lego"><span>LEGO</span></label>
+          <label><input type="radio" name="q1" value="nasa"><span>NASA</span></label>
+          <label><input type="radio" name="q1" value="ibm"><span>IBM</span></label>
+        </fieldset>
+        <fieldset data-answer="blue">
+          <legend>2. Which color is most often associated with trust in UI?</legend>
+          <label><input type="radio" name="q2" value="red"><span>Red</span></label>
+          <label><input type="radio" name="q2" value="green"><span>Green</span></label>
+          <label><input type="radio" name="q2" value="blue"><span>Blue</span></label>
+        </fieldset>
+        <fieldset data-answer="dark">
+          <legend>3. Which term describes unfair design meant to trick users?</legend>
+          <label><input type="radio" name="q3" value="fair"><span>Fair pattern</span></label>
+          <label><input type="radio" name="q3" value="dark"><span>Dark pattern</span></label>
+          <label><input type="radio" name="q3" value="gray"><span>Gray UI</span></label>
+        </fieldset>
+        <div class="dg-quiz-foot"><p class="dg-quiz-score" aria-hidden="true"></p><button type="button" class="dg-reset" hidden>Try again</button></div>
+        <p class="sr" role="status" aria-live="polite"></p>
+      </form>
+    </template>
+
+    <template id="tpl-values">
+      <h3 class="dg-at dg-h" style="--l:55;--t:284"><span class="dg-hl" style="--c:var(--dg-paw-pink)">At work, we value most</span></h3>
+      <img class="dg-at dg-wheel" src="assets/static/values-wheel.webp" width="654" height="654" alt="" style="--l:557;--t:206;--wd:654" loading="lazy" decoding="async">
+      <div class="sr">
+        <p>Values wheel, outer ring:</p>
+        <ol><li>People</li><li>Purposeful design</li><li>Clear and honest communication</li><li>Taking initiative</li><li>A culture we love</li></ol>
+        <p>Inner ring:</p>
+        <ul><li>Learn</li><li>Share</li><li>Improve</li><li>Reflect</li><li>Repeat</li><li>Grow</li></ul>
+      </div>
+    </template>
+
+    <template id="tpl-recipe">
+      <img class="dg-at dg-burger" src="assets/static/burger.webp" width="348" height="561" alt="" style="--l:0;--t:174;--wd:348" loading="lazy" decoding="async">
+      <svg class="dg-at dg-arrows" viewBox="290 220 190 450" style="--l:290;--t:220;--wd:190" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M300 262Q380 230 462 252l-10.6 2.8M462 252l-7.8 -7.8M350 365Q400 360 458 330l-5.9 9.3M458 330l-11.0 -0.5M318 430Q390 410 466 404l-9.1 6.2M466 404l-9.9 -4.7M330 495Q390 462 470 462l-9.5 5.5M470 462l-9.5 -5.5M352 552Q410 548 466 554l-10.1 4.5M466 554l-8.9 -6.5M352 652Q420 650 468 622l-5.5 9.6M468 622l-11.0 0.0"/></svg>
+      <h3 class="dg-at dg-h" style="--l:485;--t:166"><span class="dg-hl" style="--c:var(--dg-paw-purple)">Recipe for a DX legendary Year</span></h3>
+      <p class="dg-at dg-note" style="--l:780;--t:220;--wd:300">*from start of 25 (:</p>
+      <ul class="dg-at dg-recipe" style="--l:498;--t:256">
+        <li>Design Digest – <b>1</b></li>
+        <li>Client projects – <b>38</b></li>
+        <li>Team knowledge sharing sessions – <b>12</b></li>
+        <li>Ideas (bravely) rejected – <b>104</b><small>(but we loved each of them anyway)</small></li>
+        <li>New teammates – <b>4</b></li>
+        <li>Design team laughs – <b aria-label="infinite">∞</b></li>
+      </ul>
+      <p class="dg-at dg-served" style="--l:498;--t:676;--wd:470"><span aria-hidden="true">📌</span> Best served with deadlines and a pinch of chaos</p>
+    </template>
+
+    <template id="tpl-playlist">
+      <h3 class="dg-at dg-folks" style="--l:175;--t:128;--wd:800">That’s all, folks</h3>
+      <p class="dg-at dg-vibe" style="--l:175;--t:226;--wd:800">…unless you <span aria-hidden="true">🪩</span> are still vibing…</p>
+      <p class="dg-at dg-pl-link" style="--l:175;--t:314;--wd:800"><a href="https://www.youtube.com/playlist?list=PLpM1eHko8nXcVity8AMpO4RsIrKfJCQyR" target="_blank" rel="noopener">DX Design playlist<span class="sr"> (YouTube, opens in a new tab)</span></a></p>
+      <div class="dg-at dg-card" style="--l:257;--t:395;--wd:632;--ht:300">
+        <p>Background music for the next sprint<br>Or for gently reorganising auto layouts (again)</p>
+        <!-- cat: drawn inline; tail wags, hover/focus/tap lifts it out of the card (CSS transforms only) -->
+        <button class="dg-cat" type="button" aria-label="Say hi to the cat">
+          <svg viewBox="0 0 220 200" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path class="dg-cat-tail" d="M166 200c4-38 30-50 26-86-2-20-16-28-25-20"/>
+            <path fill="var(--background)" d="M40 200c0-48 10-80 22-96l-4-52 30 28c10-4 34-4 44 0l30-28-4 52c12 16 22 48 22 96Z"/>
+            <path fill="currentColor" stroke="none" d="M90 112a4 6 0 1 0 8 0a4 6 0 1 0-8 0M122 112a4 6 0 1 0 8 0a4 6 0 1 0-8 0M105 124h10l-5 5Z"/>
+            <path stroke-width="2" d="M110 129c-2 5-8 6-11 2m11-2c2 5 8 6 11 2M82 124l-26-4m26 10-24 5m80-11 26-4m-26 10 24 5"/>
+            <path fill="var(--background)" d="M64 200v-22c0-10 24-10 24 0v22m44 0v-22c0-10 24-10 24 0v22"/>
+            <path stroke-width="2" d="M72 186v7m8-7v7m60-7v7m8-7v7"/>
+          </g></svg>
+        </button>
+      </div>
+    </template>
+
+  </div>
+
+  <section class="shell sec" id="built" aria-labelledby="built-title">
+    <span class="eyebrow">Under the hood</span>
+    <h2 id="built-title">How it’s built</h2>
+    <ol class="pts">
+      <li><span class="ix">01</span><h3>Free-scroll board</h3><p>One transform-driven camera with wheel, drag and arrow keys; a plain vertical stack on mobile.</p></li>
+      <li><span class="ix">02</span><h3>Intro choreography</h3><p>Staggered stickers and a loop line that draws itself with stroke-dashoffset.</p></li>
+      <li><span class="ix">03</span><h3>Asset diet</h3><p>~36 MB of traced Figma SVGs became ~200 KB of WebP; simple line art was redrawn as tiny inline SVGs.</p></li>
+      <li><span class="ix">04</span><h3>Accessible by default</h3><p>Keyboard camera, a real radio-button quiz with live feedback, reduced-motion fallbacks.</p></li>
+      <li><span class="ix">05</span><h3>Built with Claude Code</h3><p>From Figma references, with a scoped style layer so the Digest look never leaks into the portfolio.</p></li>
+    </ol>
+    <div class="next">
+      <a class="pill dark arrow" href="../../prototype/index.html#works" data-holo="md">Back to all work<span class="bd"><svg class="ico r" aria-hidden="true"><use href="#i-r"/></svg></span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="fcta">
+      <h2>Have a dense product? Let's make it clear.</h2>
+      <a class="pill light arrow" href="../../prototype/index.html" data-holo="md">Start a conversation<span class="bd"><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></a>
+    </div>
+    <div class="fcols">
+      <div><div class="b"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg>Konovalova</div><p class="tg">Middle+ UX/UI designer and UI design engineer for enterprise B2B products.</p></div>
+      <div><h4>Work</h4><ul><li><a class="al" href="../../prototype/index.html#works"><span>Romper</span></a></li><li><a class="al" href="../../prototype/index.html#works"><span>GAAPT</span></a></li><li><a class="al" href="../../prototype/index.html#works"><span>Next Experience</span></a></li><li><a class="al" href="#intro"><span>Design Digest</span></a></li></ul></div>
+      <div><h4>Approach</h4><ul><li><a class="al" href="../../prototype/index.html#services"><span>Product &amp; UX</span></a></li><li><a class="al" href="../../prototype/index.html#services"><span>Data-heavy UI</span></a></li><li><a class="al" href="../../prototype/index.html#services"><span>Design systems</span></a></li><li><a class="al" href="../../prototype/index.html#services"><span>Design engineering</span></a></li></ul></div>
+      <div><h4>Contact</h4><ul><li><a class="al" href="https://www.linkedin.com/in/liza-konovalova-35927a20b"><span>LinkedIn</span></a></li><li><a class="al" href="https://t.me/nvrfrgtlz"><span>Telegram @nvrfrgtlz</span></a></li><li><a class="al" href="https://konovalova.store"><span>konovalova.store</span></a></li></ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Liza Konovalova. Demo build.</span><span>Kyiv, Ukraine</span></div>
+  </div>
+  <div class="fwm" aria-hidden="true">KONOVALOVA</div>
+</footer>
+
+<div id="lens" aria-hidden="true"></div>
+<canvas id="drop" aria-hidden="true"></canvas>
+<script src="digest.js"></script>
+</body>
+</html>
