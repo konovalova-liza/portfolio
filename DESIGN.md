@@ -593,22 +593,24 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 - **In the hero (D3):**
   - The droplet renders **above** the brush canvas (`--z-cursor` > `--z-bg`)
   - Diameter must be **< 143px**, so the hero radius is ≤ 71. With 16/30 the diameters are 32/60
-  - The droplet's low centre alpha (`.06`) and `--blur-lens` let the color revealed by the brush show through
+  - The droplet's low centre alpha (`.06`) lets the color revealed by the brush show through. The `#lens` backdrop blur is **not** shown over the hero, because it would re-blur the live brush canvas every frame (§5.6). The shader rim carries the glass look there
   - The brush keeps painting under the droplet
 - **Disabled when:** `(pointer: coarse)`, `pointerType==='touch'` or `prefers-reduced-motion`. No droplet or lens is rendered (D3).
+- **Position:** The droplet centre equals the pointer, except for the `follow` smoothing and the `lg` magnet. Measured offset ≤ 1.3px at 1440 and 745 widths (2026-11-04). The canvas is `FX.drop.box` CSS px square and follows the droplet via `transform`; the shader's `uDpr` is the exact backing/CSS ratio.
 
 ### 5.3 Effect config object
-All effect constants live in one JS object (T5). The values are v0 except `drop.radius.hero` and `heroHolo`, which are new in v1 per D3.
+All effect constants live in one JS object (T5), `FX` in `prototype/index.html`. The values are v0 except `drop.radius.hero` and `heroHolo` (v1, D3) and the performance fields `dprMax`, `drop.box`, `drop.settleMs` and `countUp` (2026-11-04).
 
 ```js
 const FX = {
-  brush: { radius: 143, dprMax: 2, decay: .016, idleDecayStep: .004, idleDecayMax: .5,
+  dprMax: 1.5,                                   // both canvases (§5.6)
+  brush: { radius: 143, decay: .016, idleDecayStep: .004, idleDecayMax: .5,
            idleClearFrames: 120, stepRatio: .3, maxStamps: 60 },
   drop:  { radius: { off: 0, read: 5, default: 16, md: 30, lg: 72, hero: 16, heroHolo: 30 },
-           follow: .2, grow: .12, magnet: .18, dprMax: 1.5, drawMin: .4, lensMin: 2 },
-  loader:{ fill: 1300, fallback: 1000 },
-  reveal:{ threshold: .12, fallback: 6000 },
-  countUp:{ throttle: 30 }
+           follow: .2, grow: .12, magnet: .18, drawMin: .4, lensMin: 2,
+           settleMs: 1200,                       // wobble keeps animating this long after the last pointer move
+           box: 192 },                           // droplet canvas size, CSS px (≥ 2 × 72 × 1.2 + AA)
+  countUp: { duration: 1200, stagger: 80, threshold: .35 }
 };
 // invariant (D3): 2 * max(FX.drop.radius.hero, FX.drop.radius.heroHolo) < FX.brush.radius
 ```
@@ -618,12 +620,33 @@ const FX = {
 - Lenis is off.
 - The loader still renders `000→100` but completes instantly (open: see backlog #27).
 - No LiquidReveal and no droplet (D3).
-- **Stats show final values immediately (T11).**
+- **Stats show final values immediately (T11).** Otherwise the count-up starts once, when `.stats` is 35% in view (IntersectionObserver, which also works with Lenis because Lenis drives native scroll), over 1200ms with an 80ms stagger.
 - The carousel swaps instantly.
 
 ### 5.5 Touch / coarse pointer
 - No droplet, no lens, no brush (D3).
 - Every hover rule is inside `@media (hover:hover)`, so no hover state sticks on touch (T9).
+
+
+### 5.6 Performance
+Target: 60 fps while scrolling and moving the pointer, and an idle page when nothing moves. Measured on 2026-11-04 (Chrome, 1440×900, DPR 2, 10s scripted wheel + pointer trace): 53 → 60 fps, frames dropped at 60Hz 70 → 1–4, 0 main-thread frames > 16ms; rAF callbacks while idle 441–540 / 3s → 0.
+
+- **One rAF loop.** Every per-frame effect (Lenis, brush, droplet, count-up) is a task in one shared `requestAnimationFrame` loop. A task returns `true` while it still has work; the loop stops when none does and restarts on input (`wake()`). No effect may start its own perpetual rAF.
+- **Handlers only record.** `pointermove`, `scroll`, `wheel` and `keydown` handlers store coordinates or flags and call `wake()`. All reading and drawing happens inside the loop.
+- **No layout reads per frame.** Rects (`#home`, every `[data-holo]` and `[data-read]`) are cached in document coordinates by `measure()` on resize, body resize, image load and `transitionend`. Zones are hit-tested against that cache, not `elementFromPoint`. The scroll offset is read once per frame (`lenis.animatedScroll`, else `scrollY`) before any style writes.
+- **Pause when idle or hidden.**
+  - The brush stops when its trail has fully faded and the pointer is still, and does not render while the hero is off-screen (IntersectionObserver; the trail is cleared on exit).
+  - The droplet stops `settleMs` after the last pointer move, once position and radius have converged, keeping its last frame.
+  - The loop does not run while `document.hidden`.
+- **Canvas density.** `devicePixelRatio` is capped at `FX.dprMax` (1.5) for both canvases.
+- **Small droplet canvas.** `#drop` is a `FX.drop.box` square that follows the droplet with `transform`, not a full-viewport WebGL canvas.
+- **Brush fade on the dirty rect only.** `destination-out` fades only the bounding box of stamps since the trail was last empty. Outside it the canvas is already transparent, so the result is identical.
+- **Compositor-only writes.** Moving or resizing the droplet and lens changes only `transform` and `opacity` (the lens is a fixed 160px box scaled by `transform`), and only when the value changed.
+- **No live `backdrop-filter` over animated content.** A backdrop blur above a canvas that changes every frame is re-rendered every frame.
+  - `.hcard` uses a **pre-blurred glass**: a static `filter:blur(12px)` copy of the hero photo with the same cover math, vignette and `.12` white tint, positioned by `measure()`. Measured difference against the live blur: mean 0.4/255 at 1440, 8/255 at 745.
+  - `.chip` and `.menu-btn` have no blur. It was invisible over the dark backdrop: mean difference ≤ 0.5/255.
+  - The lens is hidden over the hero (§5.2).
+  - `backdrop-filter` stays only on static overlays (modal scrim) and on the lens outside the hero.
 
 ---
 

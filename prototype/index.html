@@ -101,10 +101,10 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 @media (hover:hover){.pnav button:hover{transform:translateY(-2px);opacity:1}}
 @media (min-width:1024px){.pnav{display:flex}}
 .hr{display:flex;align-items:center;gap:.75rem}
-.chip{display:none;align-items:center;gap:.75rem;border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border-radius:var(--r-ctl);padding:.5rem .75rem;font-size:.75rem;color:rgba(17,17,17,.7)}
+.chip{display:none;align-items:center;gap:.75rem;border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);border-radius:var(--r-ctl);padding:.5rem .75rem;font-size:.75rem;color:rgba(17,17,17,.7)}
 .chip .lbl{color:rgba(17,17,17,.45)}.chip .t{min-width:3.5rem;font-variant-numeric:tabular-nums;font-weight:500;color:#111}.chip .sep{color:rgba(17,17,17,.3)}.chip .dt{font-weight:500}
 @media (min-width:768px){.chip{display:flex}}
-.menu-btn{border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border-radius:var(--r-ctl);display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em;transition:background .3s}
+.menu-btn{border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);border-radius:var(--r-ctl);display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em;transition:background .3s}
 .menu-btn .ico{font-size:.875rem}
 @media (hover:hover){.menu-btn:hover{background:rgba(255,255,255,.7)}}
 @media (max-width:639px){.menu-btn .word{display:none}}
@@ -159,7 +159,9 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 #home.dark .rating{color:rgba(255,255,255,.78)}#home.dark .rating .stars{color:var(--holo-1)}
 #home.dark .pill.outline{border-color:rgba(255,255,255,.35);color:#fff}
 #home.dark .pill.dark{background:#fff;color:var(--ink)}#home.dark .pill.dark .bd{background:var(--ink);color:#fff}
-#home.dark .hcard{background:rgba(255,255,255,.12);box-shadow:0 0 0 1px rgba(255,255,255,.16)}
+#home.dark .hcard{position:relative;isolation:isolate;overflow:hidden;background:transparent;box-shadow:0 0 0 1px rgba(255,255,255,.16);backdrop-filter:none;-webkit-backdrop-filter:none}
+/* pre-blurred glass: a static blurred copy of the photo under the card (set by measure()), instead of a live backdrop-filter over the brush canvas */
+#home.dark .hcard::before{content:"";position:absolute;inset:-24px;z-index:-1;background:var(--hb,rgba(255,255,255,.12));filter:blur(12px)}
 #home.dark .pane{background:rgba(255,255,255,.1)}
 #home.dark .item small{color:rgba(255,255,255,.55)}
 #home.dark .dots i{background:rgba(255,255,255,.3)}#home.dark .dots i.on{background:#fff}
@@ -365,8 +367,8 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* glass droplet cursor */
-#drop{position:fixed;inset:0;width:100vw;height:100vh;z-index:100;pointer-events:none}
-#lens{position:fixed;left:0;top:0;border-radius:50%;z-index:99;pointer-events:none;backdrop-filter:blur(1.4px) saturate(1.8);-webkit-backdrop-filter:blur(1.4px) saturate(1.8);opacity:0}
+#drop{position:fixed;left:0;top:0;z-index:100;pointer-events:none;will-change:transform}
+#lens{position:fixed;left:0;top:0;width:160px;height:160px;transform-origin:0 0;will-change:transform,opacity;border-radius:50%;z-index:99;pointer-events:none;backdrop-filter:blur(1.4px) saturate(1.8);-webkit-backdrop-filter:blur(1.4px) saturate(1.8);opacity:0}
 @media (pointer:coarse){#drop,#lens{display:none}}
 
 @media (prefers-reduced-motion:reduce){
@@ -394,7 +396,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 <div id="loader" role="status" aria-live="polite">
   <div class="c">
     <div class="brand"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div>
-    <p>Dense data, made human.</p>
+    <p>Liza Konovalova · UX/UI Designer</p>
   </div>
   <div class="prog">
     <div class="track"><div class="fill" id="fill"></div></div>
@@ -658,14 +660,53 @@ function grid(){const B=16,W=1920,k=.6666,w=innerWidth;const red=((W-w)/W)*100;c
   if(s>B)document.documentElement.style.fontSize=s+'px';else document.documentElement.style.removeProperty('font-size');}
 grid();addEventListener('resize',grid);
 
+/* ---------- effects config + one shared rAF loop (DESIGN.md §5.3, §5.6) ---------- */
+const FX={
+  dprMax:1.5,
+  brush:{radius:143,decay:.016,idleDecayStep:.004,idleDecayMax:.5,idleClearFrames:120,stepRatio:.3,maxStamps:60},
+  drop:{radius:{off:0,read:5,default:16,md:30,lg:72,hero:16,heroHolo:30},follow:.2,grow:.12,magnet:.18,drawMin:.4,lensMin:2,settleMs:1200,box:192},
+  countUp:{duration:1200,stagger:80,threshold:.35}
+};
+const DPR=()=>Math.min(devicePixelRatio||1,FX.dprMax);
+const tasks=[];let looping=false,scrolled=false,lastInput=0,SY=0;
+function wake(){if(looping||document.hidden)return;looping=true;requestAnimationFrame(frame);}
+function frame(t){let busy=false;SY=scrollY;for(const fn of tasks.slice())busy=fn(t)||busy;scrolled=false;
+  if(busy&&!document.hidden)requestAnimationFrame(frame);else looping=false;}
+function kick(){lastInput=performance.now();wake();}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)wake();});
+// input handlers only record state; all work happens in frame()
+const ptr={x:-999,y:-999,has:false,seq:0,t:0};
+addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;ptr.x=e.clientX;ptr.y=e.clientY;ptr.has=true;ptr.seq++;ptr.t=performance.now();wake();},{passive:true});
+document.documentElement.addEventListener('pointerleave',()=>{ptr.has=false;ptr.seq++;wake();});
+addEventListener('scroll',()=>{scrolled=true;kick();},{passive:true});
+addEventListener('wheel',kick,{passive:true});
+addEventListener('keydown',kick);
+// cached document-space rects; refreshed on resize/layout changes, never per frame
+const rects={home:{l:0,t:0,r:0,b:0,w:0,h:0},zones:[]};
+function measure(){const sy=scrollY,box=e=>{const b=e.getBoundingClientRect();return{l:b.left,t:b.top+sy,r:b.right,b:b.bottom+sy,w:b.width,h:b.height};};
+  rects.home=box($('#home'));
+  rects.zones=[...$$('[data-read]').map(e=>Object.assign(box(e),{z:'read'})),
+    ...$$('[data-holo]').map(e=>Object.assign(box(e),{z:e.dataset.holo==='lg'?'lg':'md'}))];
+  // pre-blurred hcard glass: same cover math as the hero <img>, plus the dark vignette and the .12 white tint
+  const hc=$('#home.dark .hcard'),bi=$('#baseImg');
+  if(hc&&bi){const c=box(hc),h=rects.home,iw=+bi.getAttribute('width'),ih=+bi.getAttribute('height'),k=Math.max(h.w/iw,h.h/ih),pad=24;
+    const x=pad-(c.l-h.l),y=pad-(c.t-h.t),src=bi.currentSrc||bi.getAttribute('src');
+    hc.style.setProperty('--hb',`linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)),`+
+      `linear-gradient(to bottom,rgba(0,0,0,.28),transparent 45%,rgba(0,0,0,.3)) ${x}px ${y}px/${h.w}px ${h.h}px no-repeat,`+
+      `url("${src}") ${x+(h.w-iw*k)/2}px ${y+(h.h-ih*k)/2}px/${iw*k}px ${ih*k}px no-repeat`);}}
+$('#baseImg').addEventListener('load',()=>remeasure());
+let mT=0;function remeasure(){clearTimeout(mT);mT=setTimeout(()=>{measure();ptr.seq++;wake();},120);}
+measure();addEventListener('resize',remeasure);addEventListener('transitionend',remeasure,{passive:true});
+new ResizeObserver(remeasure).observe(document.body);
+
 /* ---------- Lenis + scroll lock ---------- */
 let lenis=null;
-try{ if(window.Lenis&&!reduce){lenis=new Lenis({smoothWheel:true});(function raf(t){lenis.raf(t);requestAnimationFrame(raf);})(performance.now());} }catch(e){lenis=null;}
+try{ if(window.Lenis&&!reduce){lenis=new Lenis({smoothWheel:true});tasks.push(t=>{lenis.raf(t);SY=lenis.animatedScroll;return !!lenis.isScrolling||Math.abs(lenis.targetScroll-lenis.animatedScroll)>.5||t-lastInput<300;});wake();} }catch(e){lenis=null;}
 const H=document.documentElement;
 function stopScroll(){lenis&&lenis.stop();H.style.position='relative';H.style.overflow='hidden';H.style.height='100%';}
 function startScroll(){lenis&&lenis.start();H.style.removeProperty('position');H.style.removeProperty('overflow');H.style.removeProperty('height');}
 function go(id){const el=document.getElementById(id);if(!el)return;
-  if(lenis)lenis.scrollTo(el,{offset:0});else scrollTo({top:el.getBoundingClientRect().top+pageYOffset,behavior:reduce?'auto':'smooth'});}
+  if(lenis){lenis.scrollTo(el,{offset:0});kick();}else scrollTo({top:el.getBoundingClientRect().top+pageYOffset,behavior:reduce?'auto':'smooth'});}
 try{scrollTo(0,0);}catch(e){}
 
 /* ---------- loader ---------- */
@@ -781,12 +822,18 @@ addEventListener('keydown',e=>{if(e.key!=='Tab'||!modal.classList.contains('open
   if(e.shiftKey&&(a===first||!inside)){e.preventDefault();last.focus();}
   else if(!e.shiftKey&&(a===last||!inside)){e.preventDefault();first.focus();}});
 
-/* ---------- stats count-up (top bottom → center center) ---------- */
-const nums=$$('[data-count]');let lastC=0;
-function counts(){const now=performance.now();if(now-lastC<30)return;lastC=now;const vh=innerHeight;
-  nums.forEach(n=>{const r=n.getBoundingClientRect();const start=vh,end=vh/2-r.height/2;const p=Math.min(1,Math.max(0,(start-r.top)/(start-end)));
-    n.textContent=Math.round(p*+n.dataset.count)+(n.dataset.suf||'');});}
-addEventListener('scroll',counts,{passive:true});lenis&&lenis.on&&lenis.on('scroll',counts);counts();
+/* ---------- stats count-up: starts when the panel enters the viewport ---------- */
+const nums=$$('[data-count]');
+const finalOf=n=>n.dataset.count+(n.dataset.suf||'');
+if(reduce)nums.forEach(n=>n.textContent=finalOf(n));
+else{let c0=0;
+  const countTask=t=>{let busy=false;
+    nums.forEach((n,i)=>{const k=Math.min(1,Math.max(0,(t-c0-i*FX.countUp.stagger)/FX.countUp.duration));
+      n.textContent=Math.round((1-Math.pow(1-k,3))*+n.dataset.count)+(n.dataset.suf||'');if(k<1)busy=true;});
+    if(!busy)tasks.splice(tasks.indexOf(countTask),1);return busy;};
+  const cio=new IntersectionObserver(es=>{if(!es.some(e=>e.isIntersecting))return;cio.disconnect();
+    c0=performance.now();tasks.push(countTask);wake();},{threshold:FX.countUp.threshold});
+  cio.observe($('.stats'));}
 
 /* ---------- hero images: placeholder portrait + holographic reveal layer ---------- */
 const baseImg=$('#baseImg');let revealSrc=null;
@@ -814,36 +861,43 @@ const COLOR_SRC=(innerWidth*Math.min(devicePixelRatio||1,2)>1280)?'assets/hero-c
 
 /* ---------- LiquidReveal brush ---------- */
 const wrap=$('#lr'),cv=$('#lrc'),ctx=cv.getContext('2d');
-const BR=143,DECAY=.016;let dpr=Math.min(devicePixelRatio||1,2),radius=BR*dpr,cover=null,brush=null,bctx=null;
-let points=[],last=null,idle=999;
-function buildCover(){const r=wrap.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);
+let dpr=DPR(),radius=FX.brush.radius*dpr,cover=null,brush=null,bctx=null;
+let points=[],last=null,idle=999,heroOn=true,bSeen=-1,dirty=null;
+function buildCover(){const r=wrap.getBoundingClientRect();dpr=DPR();
   cv.width=Math.max(1,Math.round(r.width*dpr));cv.height=Math.max(1,Math.round(r.height*dpr));
-  radius=BR*dpr;const d=Math.ceil(radius*2);brush=document.createElement('canvas');brush.width=brush.height=d;bctx=brush.getContext('2d');
+  radius=FX.brush.radius*dpr;const d=Math.ceil(radius*2);brush=document.createElement('canvas');brush.width=brush.height=d;bctx=brush.getContext('2d');
   if(!revealSrc)return;cover=document.createElement('canvas');cover.width=cv.width;cover.height=cv.height;const cx=cover.getContext('2d');
   const iw=revealSrc.width,ih=revealSrc.height,s=Math.max(cv.width/iw,cv.height/ih);const dw=iw*s,dh=ih*s;
   cx.drawImage(revealSrc,(cv.width-dw)/2,(cv.height-dh)/2,dw,dh);}
-if(!reduce){new ResizeObserver(buildCover).observe(wrap);}
-addEventListener('pointermove',e=>{if(reduce||!cover)return;const r=cv.getBoundingClientRect();
-  const x=(e.clientX-r.left)*dpr,y=(e.clientY-r.top)*dpr;
+function sample(){if(!ptr.has){last=null;return;}const h=rects.home;
+  const x=(ptr.x-h.l)*dpr,y=(ptr.y-(h.t-SY))*dpr;
   if(x<-radius||y<-radius||x>cv.width+radius||y>cv.height+radius){last=null;return;}
-  if(last){const dx=x-last.x,dy=y-last.y,dist=Math.hypot(dx,dy),st=Math.max(radius*.3,1),n=Math.min(Math.ceil(dist/st),60);
+  if(last){const dx=x-last.x,dy=y-last.y,dist=Math.hypot(dx,dy),st=Math.max(radius*FX.brush.stepRatio,1),n=Math.min(Math.ceil(dist/st),FX.brush.maxStamps);
     for(let i=1;i<=n;i++)points.push({x:last.x+dx*i/n,y:last.y+dy*i/n});}else points.push({x,y});
-  last={x,y};},{passive:true});
+  last={x,y};}
 function stamp(x,y){const d=brush.width,c=d/2;bctx.globalCompositeOperation='source-over';bctx.clearRect(0,0,d,d);
   const g=bctx.createRadialGradient(c,c,0,c,c,c);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.55,'rgba(255,255,255,.82)');g.addColorStop(1,'rgba(255,255,255,0)');
   bctx.fillStyle=g;bctx.fillRect(0,0,d,d);bctx.globalCompositeOperation='source-in';bctx.drawImage(cover,x-c,y-c,d,d,0,0,d,d);
-  ctx.globalCompositeOperation='source-over';ctx.drawImage(brush,x-c,y-c);}
-function lrTick(){
-  if(cover&&brush){const drawing=points.length>0;
-    if(drawing)idle=0;else idle++;
-    if(idle<=120){const fade=drawing?DECAY:Math.min(DECAY+idle*.004,.5);
-      ctx.globalCompositeOperation='destination-out';ctx.fillStyle=`rgba(0,0,0,${fade})`;ctx.fillRect(0,0,cv.width,cv.height);
-      if(drawing){points.forEach(p=>stamp(p.x,p.y));points=[];}
-      if(idle===120)ctx.clearRect(0,0,cv.width,cv.height);}}
-  requestAnimationFrame(lrTick);}
-if(!reduce)requestAnimationFrame(lrTick);
+  ctx.globalCompositeOperation='source-over';ctx.drawImage(brush,x-c,y-c);
+  const l=Math.max(0,Math.floor(x-c)),t=Math.max(0,Math.floor(y-c)),r=Math.min(cv.width,Math.ceil(x+c)),b=Math.min(cv.height,Math.ceil(y+c));
+  dirty=dirty?{l:Math.min(dirty.l,l),t:Math.min(dirty.t,t),r:Math.max(dirty.r,r),b:Math.max(dirty.b,b)}:{l,t,r,b};}
+function brushTask(){
+  if(!heroOn||!cover||!brush)return false;
+  if(ptr.seq!==bSeen){bSeen=ptr.seq;sample();}
+  const drawing=points.length>0;if(drawing)idle=0;else idle++;
+  if(idle>FX.brush.idleClearFrames)return false;
+  const fade=drawing?FX.brush.decay:Math.min(FX.brush.decay+idle*FX.brush.idleDecayStep,FX.brush.idleDecayMax);
+  if(dirty){ctx.globalCompositeOperation='destination-out';ctx.fillStyle=`rgba(0,0,0,${fade})`;ctx.fillRect(dirty.l,dirty.t,dirty.r-dirty.l,dirty.b-dirty.t);}
+  if(drawing){points.forEach(p=>stamp(p.x,p.y));points=[];}
+  if(idle===FX.brush.idleClearFrames){ctx.clearRect(0,0,cv.width,cv.height);dirty=null;return false;}
+  return true;}
+if(!reduce&&!coarse){
+  new ResizeObserver(()=>{buildCover();remeasure();}).observe(wrap);
+  new IntersectionObserver(es=>{heroOn=es[es.length-1].isIntersecting;
+    if(!heroOn){idle=999;points=[];last=null;dirty=null;ctx.clearRect(0,0,cv.width,cv.height);}else wake();}).observe(wrap);
+  tasks.push(brushTask);}
 
-/* ---------- glass droplet cursor (outside the hero) ---------- */
+/* ---------- glass droplet cursor: every page area, above the brush in the hero ---------- */
 const dc=$('#drop'),lens=$('#lens');
 const gl=(!reduce&&!coarse)?dc.getContext('webgl',{premultipliedAlpha:true,alpha:true,antialias:false}):null;
 if(gl){
@@ -866,28 +920,35 @@ void main(){vec2 p=vec2(gl_FragCoord.x,uRes.y-gl_FragCoord.y)/uDpr;vec2 dv=p-uC;
   const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
   const al=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);
   const U={};['uRes','uDpr','uC','uR','uTime'].forEach(n=>U[n]=gl.getUniformLocation(pr,n));gl.clearColor(0,0,0,0);
-  let ddpr=1;function rs(){ddpr=Math.min(devicePixelRatio||1,1.5);dc.width=Math.round(innerWidth*ddpr);dc.height=Math.round(innerHeight*ddpr);gl.viewport(0,0,dc.width,dc.height);}
-  rs();addEventListener('resize',rs);
-  const ptr={x:-200,y:-200,has:false,zone:'hero',el:null};
-  function zone(x,y){const el=document.elementFromPoint(x,y);if(!el)return{zone:'default',el:null};
-    if(el.closest('#loader,#nav,#modal'))return{zone:'off',el:null};
-    if(el.closest('#home'))return{zone:el.closest('[data-holo]')?'md':'hero',el:null};
-    if(el.closest('[data-read]'))return{zone:'read',el:null};
-    const h=el.closest('[data-holo]');if(h)return{zone:h.dataset.holo==='lg'?'lg':'md',el:h};
-    return{zone:'default',el:null};}
-  addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;ptr.x=e.clientX;ptr.y=e.clientY;ptr.has=true;Object.assign(ptr,zone(ptr.x,ptr.y));},{passive:true});
-  addEventListener('scroll',()=>{if(ptr.has)Object.assign(ptr,zone(ptr.x,ptr.y));},{passive:true});
-  document.documentElement.addEventListener('pointerleave',()=>{ptr.has=false;});
-  const drop={x:-200,y:-200,r:0};const T0=performance.now();
-  (function f(now){const t=(now-T0)/1000;
-    const R={hero:0,off:0,read:5,lg:72,md:30,default:16}[ptr.zone];const tr=ptr.has&&ready?R:0;
-    let tx=ptr.x,ty=ptr.y;
-    if(ptr.zone==='lg'&&ptr.el){const c=ptr.el.getBoundingClientRect();tx+=((c.left+c.width/2)-tx)*.18;ty+=((c.top+c.height/2)-ty)*.18;}
-    drop.x+=(tx-drop.x)*.2;drop.y+=(ty-drop.y)*.2;drop.r+=(tr-drop.r)*.12;
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    if(drop.r>.4){gl.uniform2f(U.uRes,dc.width,dc.height);gl.uniform1f(U.uDpr,ddpr);gl.uniform2f(U.uC,drop.x,drop.y);gl.uniform1f(U.uR,drop.r);gl.uniform1f(U.uTime,t);gl.drawArrays(gl.TRIANGLES,0,3);}
-    lens.style.opacity=drop.r>2?'1':'0';const d=drop.r*2;lens.style.width=d+'px';lens.style.height=d+'px';lens.style.transform=`translate(${drop.x-drop.r}px,${drop.y-drop.r}px)`;
-    requestAnimationFrame(f);})(T0);
+  // the canvas is only as big as the largest droplet and follows it; uDpr is the exact backing/CSS ratio
+  const S=FX.drop.box;let px=1;
+  function rs(){dc.width=dc.height=Math.round(S*DPR());dc.style.width=dc.style.height=S+'px';px=dc.width/S;gl.viewport(0,0,dc.width,dc.height);}
+  rs();addEventListener('resize',()=>{rs();ptr.seq++;wake();});
+  function zoneAt(x,y){
+    if(!ready||!ptr.has||nav.classList.contains('open')||modal.classList.contains('open'))return{z:'off'};
+    const dy=y+SY,h=rects.home,inHero=x>=h.l&&x<=h.r&&dy>=h.t&&dy<=h.b;
+    for(const z of rects.zones)if(x>=z.l&&x<=z.r&&dy>=z.t&&dy<=z.b)return inHero?{z:z.z==='md'?'heroHolo':z.z,c:z}:{z:z.z,c:z};
+    return{z:inHero?'hero':'default'};}
+  const drop={x:-999,y:-999,r:0},T0=performance.now();let dSeen=-1,zone={z:'off'},frozen=false;
+  const LENS=160;let dcT='',lensT='',lensO='';
+  function render(t){const left=Math.round(drop.x-S/2),top=Math.round(drop.y-S/2);
+    const tf=`translate3d(${left}px,${top}px,0)`;if(tf!==dcT){dc.style.transform=dcT=tf;}gl.clear(gl.COLOR_BUFFER_BIT);
+    if(drop.r>FX.drop.drawMin){gl.uniform2f(U.uRes,dc.width,dc.height);gl.uniform1f(U.uDpr,px);gl.uniform2f(U.uC,drop.x-left,drop.y-top);
+      gl.uniform1f(U.uR,drop.r);gl.uniform1f(U.uTime,(t-T0)/1000);gl.drawArrays(gl.TRIANGLES,0,3);}
+    // no backdrop lens over the hero: it would re-blur the live brush canvas every frame; the shader rim + clear centre keep the glass look
+    const on=drop.r>FX.drop.lensMin&&zone.z!=='hero'&&zone.z!=='heroHolo',o=on?'1':'0';if(o!==lensO){lens.style.opacity=lensO=o;lens.style.visibility=on?'visible':'hidden';}
+    if(on){const lt=`translate3d(${(drop.x-drop.r).toFixed(1)}px,${(drop.y-drop.r).toFixed(1)}px,0) scale(${(drop.r*2/LENS).toFixed(4)})`;if(lt!==lensT)lens.style.transform=lensT=lt;}}
+  tasks.push(t=>{
+    if(ptr.seq!==dSeen||scrolled){dSeen=ptr.seq;zone=zoneAt(ptr.x,ptr.y);}
+    const tr=FX.drop.radius[zone.z];let tx=ptr.x,ty=ptr.y;
+    if(zone.z==='lg'){const c=zone.c;tx+=((c.l+c.w/2)-tx)*FX.drop.magnet;ty+=((c.t-SY+c.h/2)-ty)*FX.drop.magnet;}
+    if(drop.r<FX.drop.drawMin&&tr>0){drop.x=tx;drop.y=ty;}
+    drop.x+=(tx-drop.x)*FX.drop.follow;drop.y+=(ty-drop.y)*FX.drop.follow;drop.r+=(tr-drop.r)*FX.drop.grow;
+    const moving=Math.abs(tx-drop.x)>.1||Math.abs(ty-drop.y)>.1||Math.abs(tr-drop.r)>.05;
+    const wobble=drop.r>FX.drop.drawMin&&t-ptr.t<FX.drop.settleMs;
+    if(moving||wobble||!frozen){render(t);frozen=!moving&&!wobble;}
+    return moving||wobble;});
+  if(new URLSearchParams(location.search).has('fxdebug'))window.__fx={drop,ptr,get zone(){return zone.z},rects};
 }
 })();
 </script>
