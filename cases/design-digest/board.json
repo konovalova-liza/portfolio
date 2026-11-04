@@ -2,7 +2,7 @@
   "source": {
     "figmaFile": "uEV7RsM69aXk884lza2AOM",
     "figmaNode": "377:104997",
-    "note": "Board px, measured from assets/ref/board.png at 1:1 (relative to the board frame \"Home\"). Section x/y/w/h are the Figma frames; paw and prop positions are measured from the same PNG. Paw x/y are local to the section (top-left of the 52px button); prop x/y are world px.",
+    "note": "Board px, measured from assets/ref/board.png at 1:1 (relative to the board frame \"Home\"). Section x/y/w/h are the Figma frames; paw and prop positions are measured from the same PNG. Paw x/y are local to the section (top-left of the 52px button); prop x/y are world px. Optional \"camera\" {y,h} narrows what camera.goTo() frames (playlist: heading to card bottom, so the cat stays on screen on short viewports).",
     "date": "2026-11-04",
     "reference": "assets/ref/board.png (3428 × 3554, 1:1 with board px, git-ignored). Hero x checked against it: logo left 1097 and close (×) right 2356 sit 89/91px inside a 1438 frame → x 1008. Quiz = ink bounding box at 1:1 (luminance < 110 plus the emoji): x 2733–3304, y 146–980; the frame has no visible inset, so frame = content box."
   },
@@ -16,7 +16,7 @@
     { "id": "quiz",       "label": "Quiz",       "figmaName": "Frame",     "x": 2733, "y": 146,  "w": 572,  "h": 835,  "done": true, "paw": { "x": 470,  "y": 862, "color": "blue" } },
     { "id": "values",     "label": "Values",     "figmaName": "Frame",     "x": 1587, "y": 1819, "w": 1367, "h": 830,  "done": true, "paw": { "x": 423,  "y": 613, "color": "pink" } },
     { "id": "recipe",     "label": "Recipe",     "figmaName": "Frame",     "x": 0,    "y": 2433, "w": 1314, "h": 789,  "done": true, "paw": { "x": 1036, "y": 551, "color": "purple" } },
-    { "id": "playlist",   "label": "Playlist",   "figmaName": "Frame",     "x": 2099, "y": 2823, "w": 1329, "h": 731,  "done": true, "paw": { "x": 1231, "y": 647, "color": "blue" } }
+    { "id": "playlist",   "label": "Playlist",   "figmaName": "Frame",     "x": 2099, "y": 2823, "w": 1329, "h": 731,  "done": true, "paw": { "x": 1231, "y": 647, "color": "blue" }, "camera": { "y": 100, "h": 600 } }
   ],
   "props": [
     { "id": "giraffe",    "x": 177,  "y": 27,   "w": 565, "h": 682, "caption": { "text": "No serious designs after this point", "x": 749, "y": 576 } },

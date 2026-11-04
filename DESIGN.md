@@ -635,6 +635,12 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dg-grid` | `24px` | Grid spacing (`background-size`) |
 | `--dur-camera` | `600ms` | `camera.goTo()` move, eased with `--ease-spring`. Instant under reduced motion |
 | `--dg-cam-pad` | `48px` | Inset the camera keeps when a section is larger than the viewport |
+| `--dg-cam-pad-top` | `88px` | Top inset of the camera: room for the floating tab bar. Sections centre in the space below it |
+| `--dg-bar-bg` | `#2c2c2c` | Digest tab bar (Figma-style floating toolbar), `--dg-bar-r` `12px`, `--dg-bar-shadow` `0 4px 16px rgba(0,0,0,.16), 0 1px 3px rgba(0,0,0,.12)`, `--dg-bar-top` `16px` from the board top |
+| `--dg-bar-active` | `#0d99ff` | Active tab pill (Figma blue), white text. **Open:** white on `#0d99ff` is 2.99:1, below AA for 14px text (kept on request to match Figma) |
+| `--dg-bar-text` | `rgba(255,255,255,.7)` | Inactive tabs (`#ffffffb3`), 7.7:1 on the bar; `aria-disabled`, no hover |
+| `--dg-bar-gap` | `32px` | Bar → close ✕ |
+| `--dg-wwd-scale` / `--dg-wwd-lift` / `--dg-wwd-delay` | `.62` / `168px` / `60ms` | What We Do hover: image scale (origin top centre), title rise, description delay |
 | `--dg-key-step` | `120px` | Arrow-key pan step while the board has focus |
 | `--dg-ref-opacity` | `.3` | Dev-only overlay of `assets/ref/board.png` (git-ignored), toggled with `G` on localhost / `file:` / `?dev` |
 | `--dg-font` | `"Shantell Sans", var(--font)` | Handwritten Digest text (quiz, hero title and subtitle; labels later). Never used in the portfolio shell |
@@ -655,7 +661,7 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dg-trail-in` | `600ms` | Trail fade-in once on load (`--ease-spring`); none under reduced motion |
 | `--dg-band-ai` / `--dg-band-brand` | `#eaeaf3` / `#cdcfdc` | What We Do label band behind the AI and Branding cards (the image's own bottom color) |
 | `--dg-wag` / `--dg-wag-angle` | `1.6s` / `10deg` | Cat tail: one left-right loop, `--dg-ease-draw`, infinite |
-| `--dg-cat-peek` | `72px` | How far the cat sits below the card edge at rest |
+| `--dg-cat-peek` | `64px` | How far the cat sits below the card edge at rest; ears, eyes and nose stay visible |
 | `--dg-fs-h` / `--dg-fs-xl` / `--dg-fs-lg` / `--dg-fs-md` | `40` / `64` / `22` / `18px` | Board text: section headings / "That's all, folks" / card labels, group headings, recipe list / roles, notes, pill. Mobile: headings 28px, folks 40px |
 
 **Font.** Shantell Sans (SIL OFL 1.1), self-hosted at `assets/fonts/shantell-sans-latin-wght.woff2` with `OFL.txt` beside it. One variable file, `wght 400–600`, latin subset, `font-display:swap`. Weights used: 400 (options, hero subtitle), 600 (quiz title, questions, score, hero title). Figma Hand, used in the Figma file, is free only inside Figma products and **not** licensed for web. Text inside the board uses **board px** fitted to `board.png`, not the §2.2 rem scale (rem grows with the viewport, the board doesn't): quiz title `24px`, questions and options `18px` (line `24px`); hero title `60px`, subtitle `30px`, both scaled with the section via `cqw` so the mobile stack keeps the layout. Score and "Try again" stay `.875rem`.
@@ -704,9 +710,15 @@ Reduced motion: `data-intro="done"` at once, so the final state shows instantly 
 
 **Paw navigation.** One paw button per section (`board.json` `paw`: local x/y, color), `aria-label` "Go to <next label>", `click` → `camera.goTo(next)`. The arrow points at the next paw. Hover/focus-visible: the colored square fades in behind with `translate(--dg-paw-shift) rotate(--dg-paw-tilt)`, `--dur-micro` `--ease-hover`. The trail is one `#i-print` symbol repeated every ~44px on a gentle curve between consecutive paws (static, aria-hidden, desktop only). "Follow the paws… secrets below" sits under the hero with one hand-drawn underline path.
 
-**Cat (playlist card).** Inline SVG peeking from the card bottom (`translateY(--dg-cat-peek)`). Tail: `rotate(±--dg-wag-angle)`, `--dg-wag` loop. Hover, focus-visible or tap (`.is-up`, a tap elsewhere resets) → `translateY(0)` in `--dur-micro` `--ease-hover`, showing head and paws. Reduced motion: no wag, no rise. CSS transforms only.
+**Tab bar + close.** The Digest nav floats over the board (`position:absolute`, centred, `--z-raised`) like a Figma toolbar: `--dg-bar-bg` bar, one `--dg-bar-active` pill (DX: Enterprise), the other tabs plain `--dg-bar-text`. The close is a bold hand-drawn ✕ (one 4.5px stroke path in a 28px SVG, 44px hit area, `--background` patch so it never reads as a quiz mark) to the right of the bar on the canvas; `aria-label` "Close Design Digest", click/Enter → scroll to the case intro and focus its title. Hover: `rotate(-8deg) scale(1.06)`. Mobile: the bar and ✕ sit in flow above the stack; the tabs scroll inside the bar.
 
-Layout-only values in the mobile stack (<768px): world gap `3rem`, team cards two per row, What We Do cards one column (max 299px), burger 60% wide, playlist card `20rem`. Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
+**What We Do cards.** Each card is `tabindex=0`, `role=group`, `aria-label` = title; the description is always in the DOM. Hover / focus-visible / tap (`.is-on`, a tap elsewhere resets): image `scale(--dg-wwd-scale)` from the top centre, title `translateY(-(--dg-wwd-lift))`, description fades in and rises `8px → 0`, all `--dur-micro` `--ease-hover`, description `+--dg-wwd-delay`. Enterprise design is `blur(3px)` at rest and sharp when open. Reduced motion: nothing moves; the description appears at once over the lower card on the card's band color. Mobile stack: description always shown under the title, no blur.
+
+**Camera framing.** A section may set `"camera": {y, h}` in `board.json` to narrow what `goTo()` frames. Playlist uses `y 100, h 600` (heading to card bottom), so the cat is on screen down to 720px-tall viewports.
+
+**Cat (playlist card).** Inline SVG peeking from the card bottom (`translateY(--dg-cat-peek)`). The card is `300px` tall (not to the board edge): the old card ran to the frame's bottom, where the camera can't scroll, so the cat sat below the visible area. Tail: `rotate(±--dg-wag-angle)`, `--dg-wag` loop. Hover, focus-visible or tap (`.is-up`, a tap elsewhere resets) → `translateY(0)` in `--dur-micro` `--ease-hover`, showing head and paws. Reduced motion: no wag, no rise. CSS transforms only.
+
+Layout-only values in the mobile stack (<768px): world gap `3rem`, team cards two per row, What We Do cards one column (max 299px), burger 60% wide, playlist card `20rem`, Digest nav in flow. Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
 
 ---
 

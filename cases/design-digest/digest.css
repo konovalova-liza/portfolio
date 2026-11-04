@@ -10,6 +10,17 @@
   --dg-grid:24px;                /* grid spacing */
   --dur-camera:600ms;            /* camera.goTo */
   --dg-cam-pad:48px;             /* camera inset when a section is larger than the viewport */
+  --dg-cam-pad-top:88px;         /* top inset: room for the floating tab bar */
+  --dg-bar-bg:#2c2c2c;           /* Figma-style tab bar */
+  --dg-bar-active:#0d99ff;       /* active tab (Figma blue) */
+  --dg-bar-text:rgba(255,255,255,.7); /* inactive tabs (#ffffffb3) */
+  --dg-bar-r:12px;
+  --dg-bar-shadow:0 4px 16px rgba(0,0,0,.16),0 1px 3px rgba(0,0,0,.12);
+  --dg-bar-top:16px;
+  --dg-bar-gap:32px;             /* bar → close ✕ */
+  --dg-wwd-scale:.62;            /* What We Do image on hover */
+  --dg-wwd-lift:168px;           /* title rise on hover */
+  --dg-wwd-delay:60ms;           /* description after the image */
   --dg-key-step:120px;           /* arrow-key pan step */
   --dg-ref-opacity:.3;           /* dev-only board.png overlay ("G") */
   --dg-quiz-correct:#2b8a3e;     /* quiz check mark (Digest only; --accent/--error stay reserved for the shell) */
@@ -36,7 +47,7 @@
   --dg-band-brand:#cdcfdc;       /* ... and the Branding card */
   --dg-wag:1.6s;                 /* cat tail, one left-right loop */
   --dg-wag-angle:10deg;
-  --dg-cat-peek:72px;            /* how far the cat sits below the card edge at rest */
+  --dg-cat-peek:64px;            /* how far the cat sits below the card edge at rest (ears, eyes, nose stay visible) */
   --dg-fs-h:40px;                /* section headings */
   --dg-fs-xl:64px;               /* "That's all, folks" */
   --dg-fs-lg:22px;               /* card labels, group headings, recipe list, card text */
@@ -44,17 +55,19 @@
   position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--background);color:var(--text)
 }
 
-/* top nav */
-.digest .dg-nav{display:flex;align-items:center;gap:1rem;padding:.75rem max(1.25rem, env(safe-area-inset-left, 0px));border-bottom:1px solid var(--line)}
-.digest .dg-tabs{flex:1;min-width:0;display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none}
+/* top nav: a Figma-style floating toolbar over the board, the hand-drawn close ✕ on the canvas to its right */
+.digest .dg-nav{position:absolute;top:var(--dg-bar-top);left:0;right:0;z-index:var(--z-raised);display:flex;justify-content:center;align-items:center;gap:var(--dg-bar-gap);padding-inline:max(1.25rem, env(safe-area-inset-left, 0px));pointer-events:none}
+.digest .dg-tabs{min-width:0;display:flex;gap:2px;padding:6px;overflow-x:auto;scrollbar-width:none;background:var(--dg-bar-bg);border-radius:var(--dg-bar-r);box-shadow:var(--dg-bar-shadow);pointer-events:auto}
 .digest .dg-tabs::-webkit-scrollbar{display:none}
-.digest .dg-tab{display:inline-flex;white-space:nowrap;border-radius:var(--r-pill);padding:.5rem 1rem;font-size:.875rem;font-weight:500;color:var(--text-2);background:var(--surface);transition:transform var(--dur-micro) var(--ease-hover)}
-.digest .dg-tab[aria-current]{background:var(--ink);color:var(--on-ink)}
-.digest .dg-tab[aria-disabled="true"]{opacity:.4;cursor:not-allowed}
-.digest .dg-close{flex:none;width:2.5rem;height:2.5rem;display:grid;place-items:center;border:1px solid var(--border-ctl);border-radius:var(--r-pill);font-size:1rem;transition:transform var(--dur-micro) var(--ease-hover),background var(--dur-micro) var(--ease-hover)}
-@media (hover:hover){.digest .dg-close:hover{background:var(--surface-2);transform:scale(1.04)}}
-.digest .dg-close:focus-visible{background:var(--surface-2);transform:scale(1.04)}
-.digest .dg-close:active{transform:scale(.98)}
+.digest .dg-tab{display:inline-flex;white-space:nowrap;border-radius:8px;padding:8px 16px;font-family:var(--font);font-size:.875rem;font-weight:500;line-height:1.25rem;color:var(--dg-bar-text)}
+.digest .dg-tab[aria-current]{background:var(--dg-bar-active);color:var(--on-ink)}
+.digest .dg-tab[aria-current]:focus-visible{outline:2px solid var(--on-ink);outline-offset:2px}
+.digest .dg-tab[aria-disabled="true"]{cursor:default}
+.digest .dg-close{flex:none;width:44px;height:44px;display:grid;place-items:center;border-radius:8px;background:var(--background);color:var(--text);pointer-events:auto;transition:transform var(--dur-micro) var(--ease-hover)}
+.digest .dg-close svg{width:28px;height:28px}
+@media (hover:hover){.digest .dg-close:hover{transform:rotate(-8deg) scale(1.06)}}
+.digest .dg-close:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
+.digest .dg-close:active{transform:scale(.94)}
 
 /* viewport + world */
 .digest .dg-board{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none;cursor:grab;outline:none}
@@ -102,11 +115,28 @@
 .digest .dg-cards li{width:150px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;font-size:var(--dg-fs-md);line-height:24px;color:var(--text-2)}
 .digest .dg-cards img{display:block;width:100%;height:auto}
 
-/* what we do */
+/* what we do: hover/focus/tap (.is-on) shrinks the image to the top, lifts the title, slides the description in */
 .digest .dg-wwd{display:flex;gap:34px}
-.digest .dg-wwd li{width:299px;height:528px;display:flex;flex-direction:column;border:1px solid var(--line);background:var(--band,var(--background));overflow:hidden}
-.digest .dg-wwd img{display:block;width:100%;height:auto}
-.digest .dg-wwd span{margin-top:auto;padding:0 20px 22px;font-size:var(--dg-fs-lg);line-height:30px}
+.digest .dg-wwd li{position:relative;width:299px;height:528px;display:flex;flex-direction:column;border:1px solid var(--line);background:var(--band,var(--background));overflow:hidden;cursor:default;-webkit-tap-highlight-color:transparent}
+.digest .dg-wwd li:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
+.digest .dg-wwd img{display:block;width:100%;height:auto;transform-origin:50% 0;transition:transform var(--dur-micro) var(--ease-hover),filter var(--dur-micro) var(--ease-hover)}
+.digest .dg-wwd li:first-child img{filter:blur(3px)}
+.digest .dg-wwd-t{margin-top:auto;padding:0 20px 22px;font-size:var(--dg-fs-lg);line-height:30px;transition:transform var(--dur-micro) var(--ease-hover)}
+.digest .dg-wwd-d{position:absolute;left:20px;right:20px;top:348px;font-size:var(--dg-fs-md);line-height:24px;color:var(--text-2);opacity:0;transform:translateY(8px);
+  transition:opacity var(--dur-micro) var(--ease-hover) var(--dg-wwd-delay),transform var(--dur-micro) var(--ease-hover) var(--dg-wwd-delay)}
+.digest .dg-wwd li:is(:focus-visible,.is-on) img{transform:scale(var(--dg-wwd-scale));filter:none}
+.digest .dg-wwd li:is(:focus-visible,.is-on) .dg-wwd-t{transform:translateY(calc(-1 * var(--dg-wwd-lift)))}
+.digest .dg-wwd li:is(:focus-visible,.is-on) .dg-wwd-d{opacity:1;transform:none}
+@media (hover:hover){
+  .digest .dg-wwd li:hover img{transform:scale(var(--dg-wwd-scale));filter:none}
+  .digest .dg-wwd li:hover .dg-wwd-t{transform:translateY(calc(-1 * var(--dg-wwd-lift)))}
+  .digest .dg-wwd li:hover .dg-wwd-d{opacity:1;transform:none}
+}
+/* reduced motion: nothing moves; the description appears over the lower card at once */
+@media (prefers-reduced-motion:reduce){
+  .digest .dg-wwd li img,.digest .dg-wwd li .dg-wwd-t{transform:none!important}
+  .digest .dg-wwd-d{top:auto;bottom:74px;left:0;right:0;padding:16px 20px;background:var(--band,var(--background));transform:none!important}
+}
 
 /* values, recipe */
 .digest .dg-recipe{display:flex;flex-direction:column;gap:33px;font-size:var(--dg-fs-lg);line-height:30px}
@@ -207,6 +237,8 @@
 /* mobile: no camera, sections stack in normal flow; the trail and props are board-only */
 @media (max-width:767px){
   .digest{height:auto}
+  .digest .dg-nav{position:relative;top:auto;justify-content:space-between;gap:.75rem;padding-block:.75rem}
+  .digest .dg-tabs{flex:0 1 auto}
   .digest .dg-board{overflow:visible;touch-action:auto;cursor:auto}
   .digest .dg-world{position:static;width:auto;height:auto;transform:none!important;display:flex;flex-direction:column;gap:3rem;padding:1.5rem max(1.25rem, env(safe-area-inset-left, 0px)) 3rem}
   .digest .dg-status{position:static}
@@ -221,7 +253,9 @@
   .digest .dg-cards li{width:calc(50% - .5rem)}
   .digest .dg-wwd{flex-direction:column;gap:1rem;width:100%}
   .digest .dg-wwd li{width:100%;max-width:299px;height:auto}
-  .digest .dg-wwd span{padding-top:12px}
+  .digest .dg-wwd-t{padding-top:12px;padding-bottom:4px;transform:none!important}
+  .digest .dg-wwd img{transform:none!important;filter:none!important}
+  .digest .dg-wwd-d{position:static;opacity:1;transform:none;padding:0 20px 20px}
   .digest .dg-arrows{display:none}
   .digest .dg-burger{width:60%}
   .digest .dg-recipe{gap:1rem;font-size:var(--dg-fs-md)}

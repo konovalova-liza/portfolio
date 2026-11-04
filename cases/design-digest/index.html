@@ -218,7 +218,7 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
         <li><a class="dg-tab" aria-disabled="true" role="link">Survey</a></li>
         <li><a class="dg-tab" aria-disabled="true" role="link">Volunteering</a></li>
       </ul>
-      <button class="dg-close" id="dgClose" type="button" aria-label="Close the board and go to the case intro"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
+      <button class="dg-close" id="dgClose" type="button" aria-label="Close Design Digest"><svg viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M4.6 4.2c6.4 6 12.6 12.4 18.8 19.4M23.2 4.6C16.8 10.4 10.8 16.8 4.4 23.6"/></svg></button>
     </nav>
     <div class="dg-board" id="dgBoard" role="region" aria-label="Design Digest board. Drag, scroll or use the arrow keys to move around." tabindex="0">
       <div class="dg-world" id="dgWorld">
@@ -299,11 +299,11 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
     <template id="tpl-what-we-do">
       <h3 class="dg-at dg-h" style="--l:35;--t:146"><span class="dg-hl" style="--c:var(--dg-paw-yellow)">What We Do</span></h3>
       <ul class="dg-at dg-wwd" style="--l:37;--t:228">
-        <li><img src="assets/static/wwd-enterprise.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>Enterprise design</span></li>
-        <li><img src="assets/static/wwd-accessibility.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>Accessibility</span></li>
-        <li style="--band:var(--dg-band-ai)"><img src="assets/static/wwd-ai.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>AI-driven user interfaces</span></li>
-        <li><img src="assets/static/wwd-graph.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>Graph design &amp; Illustrations</span></li>
-        <li style="--band:var(--dg-band-brand)"><img src="assets/static/wwd-branding.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span>Branding</span></li>
+        <li tabindex="0" role="group" aria-label="Enterprise design"><img src="assets/static/wwd-enterprise.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">Enterprise design</span><p class="dg-wwd-d">We translate complex business workflows into clean, human-friendly digital experiences</p></li>
+        <li tabindex="0" role="group" aria-label="Accessibility"><img src="assets/static/wwd-accessibility.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">Accessibility</span><p class="dg-wwd-d">We run accessibility reviews and design with empathy, making sure everyone can use what we create.</p></li>
+        <li tabindex="0" role="group" aria-label="AI-driven user interfaces" style="--band:var(--dg-band-ai)"><img src="assets/static/wwd-ai.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">AI-driven user interfaces</span><p class="dg-wwd-d">We create intuitive UIs that help users interact with AI in a way that feels natural and helpful</p></li>
+        <li tabindex="0" role="group" aria-label="Graph design and Illustrations"><img src="assets/static/wwd-graph.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">Graph design &amp; Illustrations</span><p class="dg-wwd-d">We design custom graphics and illustrations that make interfaces clearer, more engaging, and on-brand</p></li>
+        <li tabindex="0" role="group" aria-label="Branding" style="--band:var(--dg-band-brand)"><img src="assets/static/wwd-branding.webp" width="297" height="438" alt="" loading="lazy" decoding="async"><span class="dg-wwd-t">Branding</span><p class="dg-wwd-d">We shape visual identities that tell stories, build trust, and support product goals</p></li>
       </ul>
     </template>
 
@@ -364,7 +364,7 @@ footer .pill.light{background:var(--on-ink);color:var(--ink)}
       <h3 class="dg-at dg-folks" style="--l:175;--t:128;--wd:800">That’s all, folks</h3>
       <p class="dg-at dg-vibe" style="--l:175;--t:226;--wd:800">…unless you <span aria-hidden="true">🪩</span> are still vibing…</p>
       <p class="dg-at dg-pl-link" style="--l:175;--t:314;--wd:800"><a href="https://www.youtube.com/playlist?list=PLpM1eHko8nXcVity8AMpO4RsIrKfJCQyR" target="_blank" rel="noopener">DX Design playlist<span class="sr"> (YouTube, opens in a new tab)</span></a></p>
-      <div class="dg-at dg-card" style="--l:257;--t:395;--wd:632;--ht:336">
+      <div class="dg-at dg-card" style="--l:257;--t:395;--wd:632;--ht:300">
         <p>Background music for the next sprint<br>Or for gently reorganising auto layouts (again)</p>
         <!-- cat: drawn inline; tail wags, hover/focus/tap lifts it out of the card (CSS transforms only) -->
         <button class="dg-cat" type="button" aria-label="Say hi to the cat">

@@ -27,7 +27,7 @@ function bezier(css){const [x1,y1,x2,y2]=css.match(/-?[\d.]+/g).map(Number);
 
 /* ---------- board ---------- */
 const cam={x:0,y:0,W:0,H:0,vw:0,vh:0,order:[],anim:0,active:false};
-let ease=t=>t,dur=600,pad=48,step=120;
+let ease=t=>t,dur=600,pad=48,padTop=88,step=120;
 
 function build(data){
   cam.W=data.board.w;cam.H=data.board.h;cam.order=data.order;
@@ -46,11 +46,12 @@ function build(data){
     let h=el.querySelector('h3');if(!h){h=document.createElement('h3');h.className='sr';h.textContent=s.label;el.prepend(h);}
     h.id='dg-h-'+id;el.setAttribute('aria-labelledby',h.id);
     if(s.paw)el.append(pawBtn(s,nextOf(id)));
+    if(s.camera){el.dataset.camY=s.camera.y;el.dataset.camH=s.camera.h;}
     world.append(el);});
   if(DEV)world.append(refImg);
   const quiz=world.querySelector('.dg-quiz');if(quiz)initQuiz(quiz);
   const hero=world.querySelector('.dg-hero');if(hero)initHero(hero);
-  initCat();
+  initCat();initWwd();
   readTokens();setMode();goTo(cam.order[0],{instant:true,focus:false});
 }
 
@@ -82,6 +83,12 @@ function propsLayer(data){const g=document.createElement('div');g.className='dg-
   data.props.forEach(p=>{g.insertAdjacentHTML('beforeend',`<img src="assets/static/${p.id}.webp" alt="" width="${p.w}" height="${p.h}" style="left:${p.x}px;top:${p.y}px" loading="lazy" decoding="async">`);
     if(p.caption)g.insertAdjacentHTML('beforeend',`<span class="dg-prop-cap" style="left:${p.caption.x}px;top:${p.caption.y}px">${p.caption.text}</span>`);});
   return g;}
+
+/* What We Do cards: hover/focus in CSS; on touch a tap toggles .is-on and a tap anywhere else resets */
+function initWwd(){const cards=[...world.querySelectorAll('.dg-wwd li')];let touch=false;
+  cards.forEach(c=>{c.addEventListener('pointerdown',e=>{touch=e.pointerType!=='mouse';});
+    c.addEventListener('click',()=>{if(!touch)return;const on=!c.classList.contains('is-on');cards.forEach(x=>x.classList.toggle('is-on',x===c&&on));});});
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('.dg-wwd li'))cards.forEach(x=>x.classList.remove('is-on'));},{passive:true});}
 
 /* playlist cat: tail wags (CSS); hover/focus rise in CSS, tap toggles .is-up and a tap elsewhere drops it */
 function initCat(){const cat=world.querySelector('.dg-cat');if(!cat)return;let touch=false;
@@ -147,7 +154,7 @@ if(DEV)document.addEventListener('keydown',e=>{if(e.key.toLowerCase()!=='g'||e.m
   if(!refImg.src)refImg.src='assets/ref/board.png';refImg.hidden=!refImg.hidden;});
 
 function readTokens(){ease=bezier(tok('--ease-spring')||'cubic-bezier(.22,1,.36,1)');dur=ms(tok('--dur-camera')||'600ms');
-  pad=parseFloat(tok('--dg-cam-pad'))||48;step=parseFloat(tok('--dg-key-step'))||120;}
+  pad=parseFloat(tok('--dg-cam-pad'))||48;padTop=parseFloat(tok('--dg-cam-pad-top'))||88;step=parseFloat(tok('--dg-key-step'))||120;}
 function measure(){cam.vw=board.clientWidth;cam.vh=board.clientHeight;}
 // world smaller than the viewport on an axis → centre it; otherwise keep the view inside the world
 const clamp=(v,size,view)=>size<=view?(size-view)/2:Math.min(Math.max(v,0),size-view);
@@ -159,14 +166,15 @@ function panBy(dx,dy){stop();setCam(cam.x+dx,cam.y+dy);}
 function rectOf(el){const w=world.getBoundingClientRect(),r=el.getBoundingClientRect();return{x:r.left-w.left,y:r.top-w.top,w:r.width,h:r.height};}
 function targetFor(r){
   const x=r.w+2*pad>cam.vw?r.x-pad:r.x+r.w/2-cam.vw/2;
-  const y=r.h+2*pad>cam.vh?r.y-pad:r.y+r.h/2-cam.vh/2;
+  // vertically: keep clear of the floating tab bar (padTop) and centre in the space below it
+  const y=r.h+padTop+pad>cam.vh?r.y-padTop:r.y+r.h/2-(padTop+(cam.vh-padTop-pad)/2);
   return{x:clamp(x,cam.W,cam.vw),y:clamp(y,cam.H,cam.vh)};}
 
 function goTo(id,{instant=false,focus=true}={}){
   const el=world.querySelector(`[data-section="${id}"]`);if(!el)return Promise.resolve(false);
   const done=()=>{if(focus)el.focus({preventScroll:true});live.textContent=el.querySelector('h3,h4').textContent;return true;};
   if(!cam.active){if(focus)el.scrollIntoView({behavior:reduceMQ.matches||instant?'auto':'smooth',block:'start'});return Promise.resolve(done());}
-  stop();measure();const t=targetFor(rectOf(el));
+  stop();measure();const r=rectOf(el);if(el.dataset.camH){r.y+=+el.dataset.camY;r.h=+el.dataset.camH;}const t=targetFor(r);
   if(instant||reduceMQ.matches||dur<=0){setCam(t.x,t.y);return Promise.resolve(done());}
   const x0=cam.x,y0=cam.y,t0=performance.now();
   return new Promise(res=>{const f=now=>{const k=Math.min((now-t0)/dur,1),e=ease(k);
