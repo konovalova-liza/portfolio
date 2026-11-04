@@ -23,6 +23,7 @@ How to read the doc:
 | D4 | Loader | The `000→100` loader stays. **Note:** it was not visible during the review; find the cause in Stage 3. | [§4.12](#412-loader), backlog #27 |
 | D5 | Band "I / Design / → / Ship" | The last word uses `--accent`. The words are temporary (placeholder). The pills are **static**: no hover, no cursor change, not links or buttons. | [§4.8](#48-band-i--design----ship) |
 | D6 | Theme | There is no dark theme. The page background is always light; dark only appears as `--ink` blocks (hero, case cards, footer, menu, loader). The **light variant of the hero and header is removed** from the system. | [§2.1](#21-colors), [§4.7](#47-header-with-clock), [§4.13](#413-hero) |
+| D7 | Contact modal (2026-11-04) | "Let's talk" opens a contact modal: Telegram and LinkedIn link pills, an "or send an email" divider, and a Name / Email / Message form sent via Formspree (demo mode while the endpoint is empty). States are shown strictly one at a time. `--error:#b42318` is approved as the error color. | [§4.9](#49-contact-modal), [§2.1](#21-colors) |
 
 The technical rules T1–T11 below implement the decisions and close the v0 inconsistencies. None of them overrides D1–D6.
 
@@ -78,7 +79,7 @@ Contrast ratios are WCAG 2.x, computed after alpha-compositing over the stated b
 
   /* Accent and status */
   --accent:#4f5bd5;                                      /* W 5.54 · S 4.87 · SS 5.21 · I 3.57 (never text on ink) */
-  --error:#b42318;                                       /* (proposed) W 6.57 · S 5.77 · SS 6.18 — pending approval, see §7 Q4 */
+  --error:#b42318;                                       /* (v1, D7) W 6.57 · S 5.77 · SS 6.18 — field errors only, never decorative */
 
   /* Holo (D1: backgrounds, gradients, effects only — never text) */
   --holo-1:#6fe3e1; --holo-2:#b9a7ff; --holo-3:#ffc7a3;
@@ -178,7 +179,7 @@ Retired in v1: `--muted` (replaced by `--text-2`/`--text-3`), `--hero-to` (the h
 | `--accent` (text, ring) | W / S / SS | 5.54 / 4.87 / 5.21 | 4.5 / 3.0 | ✅ |
 | `--accent` | I | 3.57 | — | ⛔ not used on ink |
 | `--ring-ink` | I / G2 | 19.80 / 11.20 | 3.0 | ✅ |
-| `--error` (proposed) | W / S / SS | 6.57 / 5.77 / 6.18 | 4.5 | ✅ |
+| `--error` | W / S / SS | 6.57 / 5.77 / 6.18 | 4.5 | ✅ |
 | `--line` | W | 1.26 | — | decorative only, never a control border |
 | `--text` on holo stops | `#6fe3e1` / `#b9a7ff` / `#ffc7a3` | 12.36 / 9.02 / 12.54 | 4.5 | ✅ (text on gradient, D1-compliant) |
 
@@ -317,7 +318,7 @@ html{font-size:clamp(16px, calc(5.3333px + .5555vw), 21.3333px)}
 | `--ease-line` | Only `.ln>span` (line mask) |
 | `--ease-word` | Only `.w` (word mask) |
 | `--ease-hover` | Hover, focus-visible, active, and color/opacity/background changes |
-| browser `ease` / `ease-out` / `linear` | **Banned.** Every `transition` names one of the four tokens |
+| browser `ease` / `ease-out` / `linear` | **Banned.** Every `transition` names one of the four tokens. Single exception: the continuous rotation of a loading spinner (contact modal Send) uses `linear` |
 
 **Durations**
 
@@ -350,7 +351,7 @@ These rules apply to **every** interactive component (T9). Component sections on
 | **Focus-visible** | Repeats the hover visual (same transform, background and color) **plus** a ring: `outline:2px solid var(--ring-light)` on light, `var(--ring-ink)` on ink/dark hero; `outline-offset:2px`. Never `outline:none` without this replacement. |
 | **Active** | Pills and round buttons: `transform:scale(.98)` (proposed). Rows and cards keep the hover visual. Duration `--dur-micro`. |
 | **Disabled** | `disabled` attribute (or `aria-disabled="true"` on links), `opacity:.4` (proposed), `cursor:not-allowed`, no hover/active response. Exempt from contrast rules. |
-| **Error (fields)** | Border `--error`. Message below the field at `.75rem` in `--error`. `aria-invalid="true"` + `aria-describedby`. Value pending approval ([§7 Q4](#71-open-questions)). |
+| **Error (fields)** | Border `--error`. Message below the field at `.75rem`/500 in `--error`. `aria-invalid="true"` + `aria-describedby` pointing at the message. |
 | **Loading** | Button text changes to "Sending…" **and** the button is `disabled` until the request settles. |
 | **Non-interactive** | No hover, no `cursor:pointer`, no `data-holo` (e.g. band pills, tags). |
 
@@ -462,23 +463,61 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
 - **Static (D5):** no hover, no `cursor:pointer`, no `data-holo`, not links or buttons (plain `li > div`). The droplet shows its default size over the band.
 - **Motion:** Entrance stagger `--stagger-list` (80ms), `--ease-spring`.
 
-### 4.9 Modal
+### 4.9 Contact modal
+Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conversation"). D7.
+
+- **Layout (top to bottom):**
+  - Eyebrow `.mh .k` "Let's talk" + title `h2#mtitle`
+  - `.mlinks`: two `.pill.light.arrow` links, **Telegram** and **LinkedIn**. They open in a new tab (`target="_blank" rel="noopener noreferrer"`) and carry a visually hidden "(opens in a new tab)". Grid `repeat(auto-fit,minmax(9rem,1fr))`, gap `.75rem`
+  - Divider `.or` "or send an email": `.75rem`/500 uppercase `.025em`, `--text-2`, lines `--line`
+  - Form: Name, Email, Message, plus honeypot `_gotcha` (off-screen, `tabindex="-1"`, `aria-hidden`) and hidden `_subject`
+  - Footer `.fb`: mode note (`--text-2`) + Send `.pill.dark.arrow`
 - **Spec:**
   - Scrim `rgba(17,17,17,.3)` + `--blur-overlay`. The scrim color is not a text color, so T1 does not apply; it is kept (v0)
-  - Panel `--background`, `--r-card`, shadow per §2.4
-  - Fields: `--surface-soft` bg, `--border-ctl` border, `--r-ctl`
+  - Panel `--background`, `--r-card`, shadow per §2.4, max `32rem`; `max-height:calc(100dvh - 2rem)` with internal scroll on small screens
+  - Fields: `--surface-soft` bg, `1px` `--border-ctl` border (3.52:1 on SS), `--r-ctl`, text `--text`
   - Labels `.75rem` uppercase in `--text-2`
-  - Note `.fb small` in `--text-2`
-- **Motion:** Fade and panel slide `--dur-overlay` (400ms), `--ease-spring`.
-- **States:**
+- **Transport:** `FORM_ENDPOINT` constant at the top of the script.
+  - **Empty → demo mode:** simulated send of ~1000ms. Success by default; `?formstate=error` simulates a network error.
+  - **Set → Formspree:** `POST` `FormData` with `Accept: application/json`; 15s timeout → error.
+  - The recipient is configured in Formspree.
+  - A filled honeypot skips sending and shows success.
+- **States** (strictly one at a time, `mstate` = `idle | invalid | sending | success | error`):
 
-  | State | Behaviour |
-  |---|---|
-  | Field focus | Border `--text` + `--ring-light` ring |
-  | Field error | Per §3 |
-  | Submit | Disabled while "Sending…" |
+  | State | View | What the user sees | a11y |
+  |---|---|---|---|
+  | idle | form | Empty or kept values, no errors; Send enabled | — |
+  | invalid | form | Errors under the failing fields, borders `--error`; focus on the first failing field | `aria-invalid`, `aria-describedby`; live: "N fields need attention." |
+  | sending | form | Send `disabled` + `aria-busy`, label "Sending…", spinner replaces the arrow; fields `disabled` at opacity `.6`; no error text | live: "Sending your message…" |
+  | success | `#mok` | Badge (`--ink`), "Message sent", confirmation that it reached the inbox, Close. Demo mode adds a `.75rem` note that nothing was delivered. Form is cleared | Focus on the heading; live: "Message sent." |
+  | error | `#merr` | Badge (`--surface` + `--error` icon), "Couldn't send", explanation, **Retry** (`.pill.dark`) + Telegram and LinkedIn (`.pill.outline`). Values are kept | Focus on the heading; live: "Couldn't send…" |
 
-- **Focus:** Per §6.
+- **Validation:**
+
+  | Field | Rule | Message |
+  |---|---|---|
+  | Name | Required (trimmed) | "Please enter your name." |
+  | Email | Required + `name@domain.tld` | "Please enter your email." / "Enter a valid email, like name@company.com." |
+  | Message | Required, ≥ 10 characters (trimmed) | "Please write a message." / "Your message is too short: at least 10 characters." |
+
+  - Checked on **blur** once the field has been edited, and on **submit** (all fields).
+  - While a field is invalid, typing re-checks it and clears the error as soon as it passes.
+- **Transitions:**
+  - Retry → sending (form view, kept values) → success or error.
+  - Closing keeps values unless the last state was success.
+  - Reopening after success or error starts in idle.
+- **Motion:**
+  - Fade and panel slide `--dur-overlay` (400ms), `--ease-spring`. View switches are instant.
+  - The spinner is `.8s linear` (the §2.5 exception); under reduced motion it is static, and the "Sending…" label carries the state.
+- **Interaction:**
+  - Pills follow §4.1 (hover/focus `scale(1.04)`, active `scale(.98)`).
+  - Disabled Send does not scale.
+  - `.mx` close: hover/focus `--surface-2` + `--text`.
+- **Focus (§6):**
+  - On open, focus goes to Name (or the title while sending). `#main`, header and footer become `inert`
+  - Tab and Shift+Tab are trapped in the panel
+  - `Esc`, the scrim click and `.mx` close it
+  - Focus returns to the opener; the menu button if the opener was inside the menu
 
 ### 4.10 Fullscreen menu
 - **Spec:**
@@ -506,12 +545,13 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
   - Fill uses `--holo-gradient`
   - Counter `000→100` in `--on-ink-2`, tabular
 - **Motion:** Fill 1300ms (cubic in-out), sheet `--dur-reveal`, content `--dur-exit`, all `--ease-spring`.
-- **Known issue (D4):** not visible during the 2026-11-03 review; cause to be found in Stage 3 (backlog #27).
+- **Known issue (D4):** not visible during the 2026-11-03 review. On 2026-11-04 the page was in quirks mode (no doctype), which also blocked Lenis scrolling. After adding the doctype and moving the inline photos (~0.5MB of base64) out of the HTML, the loader shows from `000`. Backlog #27 tracks the remaining checks.
 
 ### 4.13 Hero
 - **Spec:**
   - `--ink` block (D6), replacing `--hero-to`
   - B/W portrait + LiquidReveal color layer + dark vignette
+  - **Photo files:** `prototype/assets/hero-bw-{1280,2337}.webp` (the `<img srcset>`, `sizes="100vw"`) and `hero-color-{1280,2337}.webp` (the LiquidReveal source, 2337 when `innerWidth × dpr > 1280`). WebP q84, aspect 2337×1568, no upscaling. **The B/W file is always derived from the color file** (desaturate + contrast 1.08) so both layers align pixel-for-pixel. Sources live in `prototype/assets/src/` and are git-ignored
   - Text uses the on-ink tokens
 - **Removed:** the hero watermark `KONOVALOVA` (it moves to the footer only) and the Toolkit list (it moves to About).
 - **`.hcard` carousel:**
@@ -521,8 +561,10 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
 - **Rating stars:** color is an open question ([§7 Q3](#71-open-questions)).
 
 ### 4.14 About — Toolkit
-- The Toolkit list (v0 `.partners`) moves into About. Text `--text-2`, icons `--text-3` (decorative).
-- Exact placement is decided in Stage 3 (backlog #12).
+- `.toolkit` in About, under the statement `h2`, above "Find me online".
+- Items: Research, Design systems, UI design in Figma, AI-assisted design, Prototyping in code, Image & video generation.
+- Label `.75rem`/500 and items `.875rem` in `--text-2`; dot icons in `--text-3` (decorative).
+- Grid 2 columns, 3 at ≥640, column-gap `1rem`, row-gap `.75rem`.
 - Hover `translateY(-2px)` only if the items become links; otherwise the list is static.
 
 ---
@@ -668,7 +710,7 @@ Each v0 item (DESIGN.md §5 at commit `f2c53c5`) is either **Resolved → rule**
 | 29 | Focus doesn't mirror hover | **Resolved →** [§3](#3-interaction-states) |
 | 30 | Field `outline:none`, weak border | **Resolved →** [§3, §4.9, T4](#3-interaction-states) |
 | 31 | Accent ring weak on ink | **Resolved →** [`--ring-ink` §2.1](#21-colors) |
-| 32 | No error state | **Resolved →** [§3](#3-interaction-states) (color value: Q4 open) |
+| 32 | No error state | **Resolved →** [§3](#3-interaction-states), [§4.9](#49-contact-modal) |
 | 33 | Dialog focus management | **Resolved →** [T10 §6](#6-accessibility-rules) |
 | 34 | Carousel not keyboard-operable | **Resolved →** [T10 §6](#6-accessibility-rules) |
 | 35 | Band pills have hover but aren't interactive | **Resolved →** [D5 §4.8](#48-band-i--design----ship): static |
@@ -715,7 +757,7 @@ Each v0 item (DESIGN.md §5 at commit `f2c53c5`) is either **Resolved → rule**
 | Q1 | **Geist Mono trial (D2):** keep or fall back to Onest after the live check? |
 | Q2 | **Other accent uses:** v0 also uses `--accent` for the LinkedIn `.soc.a` background and the modal `.mh .k` dot. D1 lists only links, the focus ring and the band word. Keep these, or move them to `--ink`/`--text`? |
 | Q3 | **Holo-tinted icons:** brand icon (`--holo-2` on ink), dark-hero rating stars (`--holo-1`), success badge icon. D1 bans holo as *text*. Are icons allowed, or should they become `--on-ink`? |
-| Q4 | **`--error:#b42318`:** a new status hue proposed to implement T9. Approve it, or express errors without a hue (`--text` border + icon)? |
+| Q4 | ~~`--error` color~~ **Resolved 2026-11-04 (D7):** `#b42318`, 6.57:1 on white. |
 | Q5 | **Hero text contrast over the photo:** to be measured visually in Stage 3. |
 | Q6 | **`--dur-surface` 450ms** for card/row hover: T6 sets micro-hover to 300ms but says nothing about large surfaces. Keep 450ms or unify to 300ms? |
 | Q7 | **Heading line stagger:** 120ms proposed (v0 used 100 and 120). Confirm. |
@@ -754,7 +796,7 @@ Concrete edits to `prototype/index.html` that bring it to v1. Each item cites th
 9. **Hero background (D6).** `#home{background:var(--ink)}`.
 10. **Holo never as text (D1).** `#nav .nl button:hover small` changes from `--holo-1` to `--on-ink`. Then grep that no `color:var(--holo-*)` remains on a text element (icons per Q3).
 11. **Remove the hero watermark.** Delete `.wm` markup (L401) and CSS (L108–109, L168). Keep the footer `.fwm`, sized in rem only (T7).
-12. **Move Toolkit to About.**
+12. **Move Toolkit to About.** *Done 2026-11-04 (§4.14).*
     - Move the `.partners` markup out of `.hrc` into `#about`.
     - Restyle it for light with `--text-2` and `--text-3` icons.
     - Drop the `data-hero` delay.
@@ -790,7 +832,7 @@ Concrete edits to `prototype/index.html` that bring it to v1. Each item cites th
     - Add `:disabled` / `[aria-disabled]` styles.
     - Add the field error style and messages.
     - Set `disabled` on `#send` while "Sending…".
-21. **Dialogs (T10).** In `openNav` and `openModal`: store the opener, move focus inside, trap Tab, make the background `inert`. In `closeNav` and `closeModal`: restore focus to the opener. Keep `Esc`.
+21. **Dialogs (T10).** *Modal done 2026-11-04 (§4.9); the menu remains.* In `openNav` and `openModal`: store the opener, move focus inside, trap Tab, make the background `inert`. In `closeNav` and `closeModal`: restore focus to the opener. Keep `Esc`.
 22. **`aria-current` (T10).** Update it from an IntersectionObserver on the sections and on `data-go` clicks, in both `.pnav` and `#nav`.
 23. **Carousel keyboard (T10).** Add `←`/`→` handling on `#carousel`. Keep prev/next buttons. Do not let the body click be the only path. Expose position ("1 of 3") to the live region.
 24. **Dead code.** Delete `placeholder()` (L694–699), `holoize()` (L700–712), `.upl` and `#photo` CSS (L150–151), and the light-variant CSS (see #2).
@@ -803,7 +845,7 @@ Concrete edits to `prototype/index.html` that bring it to v1. Each item cites th
 26. **Touch and reduced motion for the brush (D3, T11).**
     - Gate the LiquidReveal `pointermove` and tick on `!coarse` and `pointerType!=='touch'`, keeping the static B/W photo.
     - Under reduced motion, set `.sg .n` to final values on load and skip the scroll listener.
-27. **Loader check (D4).** Reproduce why `000→100` was not visible. Hypotheses to test:
+27. **Loader check (D4).** *2026-11-04: doctype added and inline photos removed; the loader is visible from `000` in local checks.* Remaining: reproduce on the original review setup. Hypotheses to test:
     - a. `prefers-reduced-motion` was on, so `FILL` is 1ms and the fallback is 0ms.
     - b. The preview opened after the 1.3s run.
     - c. A `transitionend` race removed it early.
