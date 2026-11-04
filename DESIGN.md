@@ -17,11 +17,11 @@ How to read the doc:
 
 | # | Area | Decision | Applied in |
 |---|---|---|---|
-| D1 | Accent | `--accent:#4f5bd5` stays the **only** spot accent. Uses: links, focus ring on light backgrounds, last word of the band. Holo colors (`#6fe3e1`, `#b9a7ff`, `#ffc7a3`) are **never** a text color, only backgrounds, gradients and effects. | [§2.1](#21-colors), [§4.8](#48-band-i--design----ship) |
+| D1 | Accent | `--accent:#4f5bd5` stays the **only** spot accent. Uses: links, focus ring on light backgrounds, last word of the band. Holo colors (`#6fe3e1`, `#b9a7ff`, `#ffc7a3`) are **never** a text color, only backgrounds, gradients and effects. | [§2.1](#21-colors), [§4.8](#48-band-research--design----ship) |
 | D2 | Fonts | **Onest** is the primary family. **Geist Mono** (status: *trial*, decision after a live check) is for the eyebrow, the header clock, case meta (role, dates, platform) and stats digits. Mono is never larger than the eyebrow size, except for the stats digits. Digits must not change width during count-up. | [§2.2](#22-typography) |
 | D3 | Effects | Every effect stays. **LiquidReveal** in the hero (B/W → color). The **glass holo droplet cursor** works on every page, including the hero and case pages. In the hero the droplet sits **above** the brush, its diameter is **smaller than brushRadius 143**, and the revealed color shows through the glass. On touch / `pointer:coarse` and with `prefers-reduced-motion` there is no droplet and no brush; the hero shows a static B/W photo. | [§5](#5-effects-rules) |
 | D4 | Loader | The `000→100` loader stays. **Note:** it was not visible during the review; find the cause in Stage 3. | [§4.12](#412-loader), backlog #27 |
-| D5 | Band "I / Design / → / Ship" | The last word uses `--accent`. The words are temporary (placeholder). The pills are **static**: no hover, no cursor change, not links or buttons. | [§4.8](#48-band-i--design----ship) |
+| D5 | Band "I / Design / → / Ship" | The last word uses `--accent`. The words are temporary (placeholder; first word changed to "Research" on 2026-11-04). The pills are **static**: no hover, no cursor change, not links or buttons. | [§4.8](#48-band-research--design----ship) |
 | D6 | Theme | There is no dark theme. The page background is always light; dark only appears as `--ink` blocks (hero, case cards, footer, menu, loader). The **light variant of the hero and header is removed** from the system. | [§2.1](#21-colors), [§4.7](#47-header-with-clock), [§4.13](#413-hero) |
 | D7 | Contact modal (2026-11-04) | "Let's talk" opens a contact modal: Telegram and LinkedIn link pills, an "or send an email" divider, and a Name / Email / Message form sent via Formspree (demo mode while the endpoint is empty). States are shown strictly one at a time. `--error:#b42318` is approved as the error color. | [§4.9](#49-contact-modal), [§2.1](#21-colors) |
 
@@ -410,17 +410,13 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
 - **Droplet:** `data-holo="lg"` (magnet).
 
 ### 4.5 List row `.srow`
-- **Spec:**
+- **Status:** Since 2026-11-04 the "What I do best" rows are disclosure buttons, specified in [§4.16 Accordion row](#416-accordion-row-acc--srow). The rows no longer link anywhere and no longer show an inline description or an arrow; the description moved into the expanded panel.
+- **Shared spec (still valid, used by §4.16):**
   - Index `.ix` in `--text-2` (it is `.875rem` text)
-  - Description in `--text-2`
-  - Divider `--line`
-- **States:**
-
-  | State | Behaviour |
-  |---|---|
-  | Hover / focus | `--surface` bg + padding shift (`--dur-surface`); arrow `translateX(5px)` (`--dur-micro`) |
-  | Focus ring | `--ring-light` |
-  | Active | Hover visual |
+  - Title sizes `1.5rem` → `1.875rem` (640) → `2.25rem` (768), 500, `-.01em`
+  - Divider `--line` between rows (`border-top`, none on the first)
+  - `--r-card-sm`, padding `1.5rem` (`2rem` block at ≥640)
+  - Hover / focus: `--surface` bg + padding shift (`--dur-surface`); focus ring `--ring-light`
 
 ### 4.6 Numbers panel `.stats`
 - **Spec:**
@@ -449,13 +445,13 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
 
 - **`aria-current`:** updates to the section in view and on nav click (T10).
 
-### 4.8 Band "I / Design / → / Ship"
-- **Status:** Placeholder words (D5).
+### 4.8 Band "Research / Design / → / Ship"
+- **Status:** Placeholder words (D5). The first word changed from "I" to "Research" on 2026-11-04.
 - **Fills:**
 
   | Pill | Fill | Text |
   |---|---|---|
-  | `I` | `--surface` | `--text` |
+  | `Research` | `--surface` | `--text` |
   | `Design` | `--holo-gradient` | `--text` |
   | `→` | `--ink` | `--on-ink` |
   | Last word (`Ship`) | `--surface-soft` | **`--accent`**, 5.21:1 on SS |
@@ -593,7 +589,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 ### 4.16 Accordion row `.acc` / `.srow`
 "What I do best" list. Replaces the link rows of §4.5: each row is a disclosure button. (v1, 2026-11-04)
 
-- **Markup:** `ul.acc > li > h3 > button.srow[aria-expanded][aria-controls]` + `div.sp[role=region][aria-labelledby]`. The button holds the index `.ix`, the title `.st` and the `+` badge `.ar` (`aria-hidden`). Title sizes as §4.5 h3 (`1.5rem` → `1.875rem` → `2.25rem`).
+- **Markup:** `ul.acc > li > h3 > button.srow[aria-expanded][aria-controls]` + `div.sp[role=region][aria-labelledby]`. The button holds the index `.ix`, the title `.st` and the `+` badge `.ar` (`aria-hidden`). Index, title sizes, dividers and hover follow the shared spec in §4.5.
 - **Panel content:** two lines of text (`1rem`, `--text-2`, `max-width:30rem`) and one case link `.cl` ("<Case> case study →", `.875rem`/500, `--accent`, D1). Indented to the title column: `padding-left:4.25rem` → `5.5rem` (640) = row padding + index width + gap; bottom `2rem`.
 - **Behaviour:**
   - Click, `Enter` or `Space` toggles the row (native button)
@@ -780,7 +776,7 @@ Each v0 item (DESIGN.md §5 at commit `f2c53c5`) is either **Resolved → rule**
 | 32 | No error state | **Resolved →** [§3](#3-interaction-states), [§4.9](#49-contact-modal) |
 | 33 | Dialog focus management | **Resolved →** [T10 §6](#6-accessibility-rules) |
 | 34 | Carousel not keyboard-operable | **Resolved →** [T10 §6](#6-accessibility-rules) |
-| 35 | Band pills have hover but aren't interactive | **Resolved →** [D5 §4.8](#48-band-i--design----ship): static |
+| 35 | Band pills have hover but aren't interactive | **Resolved →** [D5 §4.8](#48-band-research--design----ship): static |
 
 **5.6 Hover and touch**
 
@@ -803,7 +799,7 @@ Each v0 item (DESIGN.md §5 at commit `f2c53c5`) is either **Resolved → rule**
 | `.55/.5/.45/.4` ink text on white | **Resolved →** [`--text-2`/`--text-3` §2.1](#21-colors) |
 | `--muted` | **Resolved →** retired |
 | `--line` field borders 1.26 | **Resolved →** [`--border-ctl` T4](#24-radii-borders-shadows-blur-z-index) |
-| "Ship" 2.26 | **Resolved →** [D5](#48-band-i--design----ship): `--accent` on `--surface-soft`, 5.21 |
+| "Ship" 2.26 | **Resolved →** [D5](#48-band-research--design----ship): `--accent` on `--surface-soft`, 5.21 |
 | White `.45/.4/.3` on ink | **Resolved →** [`--on-ink-2`/`--on-ink-3` §2.1](#21-colors) |
 | Text and glass **over the hero photo** | **Open** — needs a visual check ([backlog #28](#8-stage-3-backlog)) |
 
