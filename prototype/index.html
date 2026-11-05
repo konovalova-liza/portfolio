@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../shared/components.css">
 <style>
 /* Layout: Lumora-style rem grid; white surfaces, ink cards, holographic accent; liquid brush reveal in hero, glass droplet cursor below */
 :root{
@@ -23,7 +24,7 @@
   --muted:#8d8d8d; --line:#e6e5e2; --surface:#f1f0ee; --surface-2:#e3e2df;
   --accent:#4f5bd5; --holo-1:#6fe3e1; --holo-2:#b9a7ff; --holo-3:#ffc7a3;
   --hero-to:#c9c9c9;
-  --r-card:2rem; --r-card-sm:1.25rem; --r-ctl:.875rem;
+  --r-card:2rem; --r-card-sm:1.25rem; --r-ctl:.875rem; --r-pill:9999px;
   --font:"Onest", "Helvetica Neue", Arial, sans-serif;
   --ease-line:cubic-bezier(.215,.61,.355,1); --ease-word:cubic-bezier(.165,.84,.44,1);
   --ease-spring:cubic-bezier(.22,1,.36,1); --ease-hover:cubic-bezier(.2,.8,.2,1);
@@ -64,19 +65,7 @@ img{display:block}
 .w{display:inline-block;opacity:0;transform:translateY(24px);transition:transform .7s var(--ease-word),opacity .7s var(--ease-word)}
 .words.in .w{opacity:1;transform:none}
 
-/* buttons */
-.pill{display:inline-flex;align-items:center;gap:.75rem;border-radius:9999px;font-size:.875rem;font-weight:500;padding:.875rem 1.75rem;transition:transform .35s var(--ease-hover)}
-.pill.arrow{padding:.375rem .375rem .375rem 1.5rem}
-.pill .bd{width:2.25rem;height:2.25rem;display:grid;place-items:center;border-radius:9999px;font-size:1rem;background:var(--ink);color:#fff}
-.pill .bd .ico{transition:transform .35s var(--ease-hover)}
-.pill.dark{background:var(--ink);color:#fff}.pill.dark .bd{background:#fff;color:var(--ink)}
-.pill.light{background:var(--surface);color:var(--foreground)}
-.pill.outline{border:1px solid var(--line);background:transparent}
-@media (hover:hover){
-  .pill:hover{transform:scale(1.04)}
-  .pill:hover .bd .r{transform:translateX(3px)}
-  .pill:hover .bd .ur{transform:translate(2px,-2px)}
-}
+/* buttons: .pill lives in ../shared/components.css (DESIGN.md §4.1) */
 .eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:rgba(17,17,17,.7)}
 .eyebrow::before{content:"";width:.375rem;height:.375rem;border-radius:9999px;background:rgba(17,17,17,.5)}
 .eyebrow.light{color:rgba(255,255,255,.7)}.eyebrow.light::before{background:rgba(255,255,255,.6)}
@@ -437,7 +426,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 <div id="loader" role="status" aria-live="polite">
   <div class="c">
     <div class="brand"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div>
-    <p>Liza Konovalova · UX/UI Designer</p>
+    <p>Liza Konovalova · Middle+ UX/UI Designer</p>
   </div>
   <div class="prog">
     <div class="track"><div class="fill" id="fill"></div></div>
@@ -482,7 +471,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
         </h1>
         <div class="rating rv" data-hero style="--d:650ms">
           <span class="stars"><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg></span>
-          <span>5+ years · 6 enterprise B2B products</span>
+          <span>5+ years · 10+ products</span>
         </div>
         <div class="ctas rv" data-hero style="--d:750ms">
           <button class="pill dark arrow" data-contact data-holo="md">Let's talk<span class="bd"><svg class="ico r"><use href="#i-r"/></svg></span></button>
@@ -827,6 +816,8 @@ function closeNav(){nav.classList.remove('open');if(!modal.classList.contains('o
 $('#openNav').addEventListener('click',openNav);$('#closeNav').addEventListener('click',closeNav);
 $$('[data-go]').forEach(b=>b.addEventListener('click',()=>{const wasOpen=nav.classList.contains('open');if(wasOpen)closeNav();setTimeout(()=>go(b.dataset.go),wasOpen?120:0);}));
 $$('[data-contact]').forEach(b=>b.addEventListener('click',()=>{if(nav.classList.contains('open'))nav.classList.remove('open');openModal();}));
+// case pages link their contact button to index.html#contact (DESIGN.md §4.17)
+if(location.hash==='#contact')onReady(openModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 $('#closeModal').addEventListener('click',closeModal);$('#okClose').addEventListener('click',closeModal);
 addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(modal.classList.contains('open'))closeModal();else if(nav.classList.contains('open'))closeNav();});

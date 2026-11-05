@@ -372,6 +372,7 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
   | `arrow` | adds the `.bd` badge | adds the `.bd` badge |
 
 - **Spec:** `--r-pill`, `.875rem`/500, padding `.875rem 1.75rem`.
+- **Source (2026-11-05):** one file, `shared/components.css`, linked from `prototype/index.html` and every case page (§4.17), so the contact button "Start a conversation" (`.pill.light.arrow`) is the same component on both. It carries the homepage values as they render today: the transform transition stays `.35s` (v0) until backlog #16 moves it to `--dur-micro`, and the §3 focus-visible / active states are still missing on the homepage (backlog #20). Change the pill only in that file, and check the homepage and a case page together.
 - **States:**
 
   | State | Behaviour |
@@ -526,6 +527,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 - **Focus:** Per §6.
 
 ### 4.11 Footer
+- **Where:** the homepage only. Case pages have no footer; they end with the end block (§4.17).
 - **Spec:**
   - `--ink`, sheet corners `--r-card`
   - Tagline and links `--on-ink-2` → `--on-ink` on hover/focus
@@ -607,6 +609,39 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 
 - **Motion:** The panel opens and closes by `grid-template-rows` `0fr ↔ 1fr`, `--dur-overlay` (400ms), `--ease-spring`; `visibility` flips at the end of the close. Under reduced motion every transition is off (§5.4), so the panel switches instantly.
 - **Droplet:** `data-holo="md"` on the button.
+
+### 4.17 Case page
+Every case page shares one shell. (v1, 2026-11-05)
+
+- **Structure:** header → dark intro block → case body (`<main>`) → end block. **No footer on case pages** (§4.11 is the homepage only).
+- **Files:**
+  - `cases/shared/case.css`: the shell (the §2.0 token block, base reset, header, intro, end block). Main tokens only, never `--dg-*` or another case's prefix.
+  - `cases/shared/case.js`: the header clock.
+  - `shared/components.css`: the contact button (`.pill`, §4.1), the same file the homepage uses.
+  - `cases/_template/index.html`: the starter page.
+- **Rules:**
+  - New cases start as a copy of `cases/_template/` at `cases/<slug>/index.html`.
+  - The shell is **never restyled per case**. A change to the header, intro or end block is made in `cases/shared/case.css` and applies to every case.
+  - A case may have its own visual language **only inside `<main>`**, under its own scope class and token prefix (like `.digest` / `--dg-*`), documented as its own §5.x section (Digest: §5.7). Case-body styles that are not part of that scope (e.g. Digest's "How it's built" list) stay in the case's own `<style>` until "Case body components" below defines them.
+  - Load order: case stylesheet(s), then `shared/components.css`, then `case.css`, then the page's own `<style>`.
+- **Header** (`header.top` inside `.ink.case-hero`, §4.7 single on-ink variant):
+  - Logo → `../../prototype/index.html`; `.pnav` Home / Work (`aria-current="page"`) / Approach / About / Numbers → homepage anchors; `.chip` Kyiv clock (`data-time`, `data-date`, filled by `case.js`). No menu button on case pages.
+  - `.shell` row, `justify-content:space-between`, gap `1.5rem`, padding-block `1.25rem` → `1.5rem` (640). `.pnav` from 1024, `.chip` from 768.
+  - States per §4.7: logo `scale(1.04)`; pnav `translateY(-2px)` + `--on-ink`; ring `--ring-ink`.
+- **Dark intro block** (`section.shell.intro`, same `.ink` sheet as the header; sheet corners `0 0 var(--r-card) var(--r-card)`):
+  - Padding `2.5rem 0 5rem`, `3rem 0 7rem` at ≥1024.
+  - In order: `.back` "← All work" (→ `../../prototype/index.html#works`; `.875rem`/500, `--on-ink-2` → `--on-ink`, hover/focus `translateX(-4px)`, `--dur-micro` `--ease-hover`); `.eyebrow` "Case study" (on ink, `margin-top:3rem`); `h1#intro-title` (`tabindex="-1"` so scripts can focus it; h1 scale `2.25rem` → `3rem` (640) → `3.75rem` (768), 600, `.98`, `-.02em`, `max-width:18ch`; no ring on programmatic focus, `--ring-ink` on keyboard focus); `.sum` (`1rem`, `--on-ink-2`, `max-width:40rem`, `margin-top:1.5rem`); `ul.tags` fact chips (`li` = `<b>` label + value: `1px --line-on-ink`, `--r-pill`, `.5rem 1rem`, `.875rem` `--on-ink-2`; label mono `.75rem`/500 uppercase `.025em` `--on-ink-3`; gap `.5rem`, `margin-top:2rem`); `.ctx` context paragraph (`.875rem`, line-height `1.6`, `--on-ink-2`, `max-width:40rem`, `margin-top:3rem`).
+- **End block** (`section.ink.case-end`, `aria-label="Next"`):
+  - Full-bleed `--ink` sheet across the whole viewport, top corners `var(--r-card) var(--r-card) 0 0` (mirrors the intro sheet). Content sits in `.shell`, so it uses the standard side gutter (§2.3).
+  - Padding-block `5rem`, `6rem` at ≥1024 (the footer's top rhythm, §2.3).
+  - **Left: next case.** `a.cend-next` → `../<next-slug>/index.html`: `.k` "Next case →" (mono `.875rem`/500, `--on-ink-2` → `--on-ink`) above `.t` the next case's title (h2 scale `2.25rem` → `3rem` (640), 600, line-height `1.05`, `-.02em`, `--on-ink`), gap `1rem`.
+  - **No next case yet (fallback, Digest today):** the same link with only `.t` "← All work" → `../../prototype/index.html#works`.
+  - **Right: contact button.** The shared `.pill.light.arrow` "Start a conversation" with the `↗` badge, the same component, text and size as the homepage footer CTA. It links to `../../prototype/index.html#contact`; the homepage opens the contact modal (§4.9) once the loader is done when the URL hash is `#contact`.
+  - **Layout:** below 1024 stacked (column, gap `2rem`), both items full width; at ≥1024 one row, `align-items:center`, `justify-content:space-between` (the homepage `.fcta` breakpoint).
+  - **States:** `.cend-next` hover/focus-visible: `.k` → `--on-ink`, the arrow nudges `translateX(4px)` (→) or `translateX(-4px)` (←), `--dur-micro` `--ease-hover`. The pill follows §4.1. Focus ring `--ring-ink` (2px, offset 2px) on both. Both are `data-holo="md"`.
+  - The end block replaces any per-case "Back to all work" button: the left slot already covers it.
+- **Droplet:** the glass droplet (§5.2) is on Digest only for now (`digest.js`, CSS in its page `<style>`). It is added to `cases/_template/` after backlog #25.
+- **Case body components:** **TODO.** Defined with the first deep case (Romper) and reused by every later case.
 
 ---
 
@@ -701,7 +736,7 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dg-cam-pad` | `48px` | Inset the camera keeps when a section is larger than the viewport |
 | `--dg-cam-pad-top` | `88px` | Top inset of the camera: room for the floating tab bar. Sections centre in the space below it |
 | `--dg-bar-bg` | `#2c2c2c` | Digest tab bar (Figma-style floating toolbar), `--dg-bar-r` `12px`, `--dg-bar-shadow` `0 4px 16px rgba(0,0,0,.16), 0 1px 3px rgba(0,0,0,.12)`, `--dg-bar-top` `16px` from the board top |
-| `--dg-bar-active` | `#0d99ff` | Active tab pill (Figma blue), white text. **Open:** white on `#0d99ff` is 2.99:1, below AA for 14px text (kept on request to match Figma) |
+| `--dg-bar-active` | `#0d99ff` | Active tab pill (Figma blue), white text. **Deliberate exception:** white on `#0d99ff` is 2.99:1, below AA for 14px text. Liza's decision on 2026-11-05: it stays as is to match Figma. Do not "fix" it |
 | `--dg-bar-text` | `rgba(255,255,255,.7)` | Inactive tabs (`#ffffffb3`), 7.7:1 on the bar; `aria-disabled`, no hover |
 | `--dg-bar-gap` | `32px` | Bar → close ✕ |
 | `--dg-wwd-scale` / `--dg-wwd-lift` / `--dg-wwd-delay` | `.62` / `168px` / `60ms` | What We Do hover: image scale (origin top centre), title rise, description delay |
@@ -1000,7 +1035,7 @@ Concrete edits to `prototype/index.html` that bring it to v1. Each item cites th
     - In `zone()`, return `hero` (16) / `heroHolo` (30) instead of `0` inside `#home`.
     - Assert `2*radius < FX.brush.radius`.
     - Confirm the droplet draws above the `#lrc` brush and the revealed color shows through.
-    - Include the droplet script on case pages.
+    - Include the droplet script on case pages: add it to `cases/_template/` (§4.17), not per case.
 26. **Touch and reduced motion for the brush (D3, T11).**
     - Gate the LiquidReveal `pointermove` and tick on `!coarse` and `pointerType!=='touch'`, keeping the static B/W photo.
     - Under reduced motion, set `.sg .n` to final values on load and skip the scroll listener.
