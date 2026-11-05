@@ -14,7 +14,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%230a0a0a' d='M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../shared/type.css">
 <link rel="stylesheet" href="../shared/components.css">
 <style>
 /* Layout: Lumora-style rem grid; white surfaces, ink cards, holographic accent; liquid brush reveal in hero, glass droplet cursor below */
@@ -36,11 +37,7 @@
   --on-ink:#ffffff; --on-ink-2:rgba(255,255,255,.7); --line-on-ink:rgba(255,255,255,.1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;-webkit-font-smoothing:antialiased}
-@media (max-width:1920px){html{font-size:.833333vw}}
-@media (max-width:1440px){html{font-size:1.111111vw}}
-@media (max-width:1024px){html{font-size:1.5625vw}}
-@media (max-width:640px){html{font-size:4.444444vw}}
+html{font-size:clamp(16px, calc(5.3333px + .5555vw), 21.3333px);-webkit-font-smoothing:antialiased}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 .lenis.lenis-stopped{overflow:hidden}
@@ -54,7 +51,7 @@ img{display:block}
 @media (min-width:640px){.shell{padding-left:max(2rem, env(safe-area-inset-left, 0px));padding-right:max(2rem, env(safe-area-inset-right, 0px))}}
 .ico{width:1em;height:1em;display:inline-block;flex:none}
 .skip{position:absolute;left:-999px}
-.skip:focus{position:fixed;left:1rem;top:1rem;z-index:130;border-radius:var(--r-ctl);background:var(--ink);padding:.5rem 1rem;font-size:.875rem;color:#fff}
+.skip:focus{position:fixed;left:1rem;top:1rem;z-index:130;border-radius:var(--r-ctl);background:var(--ink);padding:.5rem 1rem;color:#fff}
 
 /* reveals */
 .rv{opacity:0;transform:translate3d(0,var(--y,16px),0) scale(var(--s,1));transition:opacity .8s var(--ease-spring),transform .8s var(--ease-spring);transition-delay:var(--d,0ms)}
@@ -66,7 +63,7 @@ img{display:block}
 .words.in .w{opacity:1;transform:none}
 
 /* buttons: .pill lives in ../shared/components.css (DESIGN.md §4.1) */
-.eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:rgba(17,17,17,.7)}
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;color:rgba(17,17,17,.7)}
 .eyebrow::before{content:"";width:.375rem;height:.375rem;border-radius:9999px;background:rgba(17,17,17,.5)}
 .eyebrow.light{color:rgba(255,255,255,.7)}.eyebrow.light::before{background:rgba(255,255,255,.6)}
 
@@ -75,14 +72,14 @@ img{display:block}
 #loader.out{transform:translateY(-100%)}
 #loader .c{display:flex;flex-direction:column;align-items:center;gap:1.25rem;text-align:center;transition:opacity .6s var(--ease-spring),transform .6s var(--ease-spring)}
 #loader.out .c{opacity:0;transform:translateY(-12px)}
-#loader .brand{display:flex;align-items:center;gap:.6rem;font-weight:600;font-size:1.875rem}
+#loader .brand{display:flex;align-items:center;gap:.6rem;font-weight:600;font-size:1.875rem;letter-spacing:-.01em}
 #loader .brand .ico{font-size:1.875rem;color:var(--holo-2)}
-#loader p{max-width:24ch;font-size:.875rem;color:rgba(255,255,255,.55)}
+#loader p{max-width:24ch;color:rgba(255,255,255,.55)}
 .prog{width:min(22rem,72vw);display:flex;flex-direction:column;gap:.75rem}
 .track{height:1px;background:rgba(255,255,255,.15)}
 .fill{height:100%;width:0;background:linear-gradient(90deg,var(--holo-1),var(--holo-2),var(--holo-3))}
-.prog .row{display:flex;justify-content:space-between;font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,.45)}
-.prog .row b{font-weight:500;color:rgba(255,255,255,.8);font-variant-numeric:tabular-nums}
+.prog .row{display:flex;justify-content:space-between;color:rgba(255,255,255,.45)}
+.prog .row b{font-weight:inherit;color:rgba(255,255,255,.8)}
 
 /* header */
 header.top{position:absolute;inset-inline:0;top:0;z-index:50}
@@ -91,16 +88,16 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .logo{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600;letter-spacing:-.01em;transition:transform .35s var(--ease-hover)}
 .logo .ico{font-size:1.25rem;color:var(--accent)}
 @media (hover:hover){.logo:hover{transform:scale(1.04)}}
-.pnav{display:none;gap:2rem;font-size:.875rem;font-weight:500}
+.pnav{display:none;gap:2rem}
 .pnav button{opacity:.8;transition:transform .3s var(--ease-hover),opacity .3s}
 .pnav button[aria-current]{opacity:1}
 @media (hover:hover){.pnav button:hover{transform:translateY(-2px);opacity:1}}
 @media (min-width:1024px){.pnav{display:flex}}
 .hr{display:flex;align-items:center;gap:.75rem}
-.chip{display:none;align-items:center;gap:.75rem;border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);border-radius:var(--r-ctl);padding:.5rem .75rem;font-size:.75rem;color:rgba(17,17,17,.7)}
-.chip .lbl{color:rgba(17,17,17,.45)}.chip .t{min-width:3.5rem;font-variant-numeric:tabular-nums;font-weight:500;color:#111}.chip .sep{color:rgba(17,17,17,.3)}.chip .dt{font-weight:500}
+.chip{display:none;align-items:center;gap:.75rem;border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);border-radius:var(--r-ctl);padding:.5rem .75rem;color:rgba(17,17,17,.7)}
+.chip .lbl{color:rgba(17,17,17,.45)}.chip .t{min-width:3.5rem;color:#111}.chip .sep{color:rgba(17,17,17,.3)}
 @media (min-width:768px){.chip{display:flex}}
-.menu-btn{border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);border-radius:var(--r-ctl);display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em;transition:background .3s}
+.menu-btn{border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);border-radius:var(--r-ctl);display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;transition:background .3s}
 .menu-btn .ico{font-size:.875rem}
 @media (hover:hover){.menu-btn:hover{background:rgba(255,255,255,.7)}}
 @media (max-width:639px){.menu-btn .word{display:none}}
@@ -118,10 +115,8 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .hl{display:flex;flex-direction:column;gap:1.75rem}
 @media (min-width:1024px){.hl{grid-column:span 7}}
 .hero-eb{--y:10px}
-#home h1{max-width:18ch;font-size:2.25rem;font-weight:600;line-height:.98;letter-spacing:-.02em}
-@media (min-width:640px){#home h1{font-size:3rem}}
-@media (min-width:768px){#home h1{font-size:3.75rem}}
-.rating{display:flex;align-items:center;gap:.75rem;font-size:.875rem;font-weight:500;color:rgba(17,17,17,.7)}
+#home h1{max-width:18ch}
+.rating{display:flex;align-items:center;gap:.75rem;color:rgba(17,17,17,.7)}
 .rating .stars{display:flex;font-size:1rem;color:var(--accent)}
 .ctas{display:flex;flex-wrap:wrap;gap:.75rem}
 .hrc{display:flex;flex-direction:column;align-items:flex-start;gap:2rem}
@@ -133,8 +128,8 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .pane{flex:1;border-radius:var(--r-ctl);background:rgba(241,240,238,.7);padding:.75rem;display:flex;flex-direction:column;justify-content:space-between;gap:.5rem}
 .slot{position:relative;min-height:3.25rem;overflow:hidden}
 .item{position:absolute;inset:0;transition:transform .5s var(--ease-spring),opacity .5s var(--ease-spring)}
-.item small{display:block;font-size:.65rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:rgba(17,17,17,.45)}
-.item span{display:block;max-width:8rem;font-size:.875rem;font-weight:500;line-height:1.35}
+.item small{display:block;color:rgba(17,17,17,.45)}
+.item span{display:block;max-width:8rem}
 .cbar{display:flex;align-items:center;justify-content:space-between}
 .dots{display:flex;gap:.25rem}
 .dots i{height:.25rem;width:.375rem;border-radius:9999px;background:rgba(17,17,17,.2);transition:all .3s}
@@ -142,7 +137,7 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .nb{display:flex;gap:.25rem}
 .nb button{width:1.75rem;height:1.75rem;display:grid;place-items:center;border-radius:9999px;background:#fff;color:rgba(17,17,17,.7);box-shadow:0 0 0 1px var(--line);font-size:.75rem}
 .nb button:hover{color:#111}
-.status{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:.75rem;border-top:1px solid rgba(17,17,17,.1);padding-block:1.25rem;font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:rgba(17,17,17,.6);--y:0px}
+.status{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:.75rem;border-top:1px solid rgba(17,17,17,.1);padding-block:1.25rem;color:rgba(17,17,17,.6);--y:0px}
 .status .mid{display:none}
 @media (min-width:640px){.status .mid{display:block}}
 .upl{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
@@ -178,27 +173,24 @@ header.top.dark .menu-btn{color:#fff}
 .globe .big{margin-left:-1rem;font-size:12rem;color:rgba(17,17,17,.1)}
 @media (min-width:640px){.globe .big{font-size:16rem}}
 @media (min-width:1024px){.globe .big{margin-left:-1.5rem;font-size:20rem}}
-/* eyebrow cap line = cap line of the statement's first line. Onest metrics: ascent .97, descent .3, cap .707 em;
-   cap top in a line box of height L = ((L + .97 - .3)/2 - .707) em → h2 (L 1.35) .303em, eyebrow (L normal) .263em */
-.globe .eyebrow{padding-top:calc(.303 * 1.5rem - .263 * .875rem)}
-@media (min-width:640px){.globe .eyebrow{padding-top:calc(.303 * 1.875rem - .263 * .875rem)}}
-.globe .note{display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:rgba(17,17,17,.7);--y:12px}
+/* eyebrow cap line = cap line of the statement's first line. Cap top in a line box of height L = ((L + asc - desc)/2 - cap) em.
+   Onest asc .97, desc .3, cap .707 → statement .t-h4 (L 1.3) .278em; Geist Mono asc 1.01, desc .29, cap .71 → eyebrow .t-mono (L 1.25) .275em */
+.globe .eyebrow{padding-top:calc(.278 * var(--t-h4-size) - .275 * var(--t-mono-size))}
+.globe .note{display:flex;align-items:center;gap:.75rem;color:rgba(17,17,17,.7);--y:12px}
 .globe .note .ico{font-size:1.5rem;color:#111}
 .globe .note span{max-width:14rem}
 .toolkit{--y:12px}
-.toolkit p{margin-bottom:.75rem;font-size:.75rem;font-weight:500;color:var(--text-2)}
+.toolkit p{margin-bottom:.75rem;color:var(--text-2)}
 .toolkit ul{display:grid;grid-template-columns:repeat(2,1fr);column-gap:1rem;row-gap:.75rem}
 @media (min-width:640px){.toolkit ul{grid-template-columns:repeat(3,1fr)}}
-.toolkit li{display:flex;align-items:center;gap:.375rem;font-size:.875rem;color:var(--text-2)}
+.toolkit li{display:flex;align-items:center;gap:.375rem;color:var(--text-2)}
 .toolkit li .ico{font-size:.875rem;color:var(--text-3)}
 .stmt{display:flex;flex-direction:column;gap:2.5rem}
-.stmt h2{font-size:1.5rem;font-weight:500;line-height:1.35;letter-spacing:-.01em}
-@media (min-width:640px){.stmt h2{font-size:1.875rem}}
 .stmt h2 .g{color:var(--muted)}
 .sfoot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1.5rem;border-top:1px solid var(--line);padding-top:1.5rem;--y:12px;--d:200ms}
-.sfoot p{font-size:.875rem;color:rgba(17,17,17,.45);margin-bottom:.5rem}
+.sfoot p{color:rgba(17,17,17,.45);margin-bottom:.5rem}
 .socials{display:flex;gap:.5rem}
-.soc{width:2.25rem;height:2.25rem;display:grid;place-items:center;border-radius:9999px;font-size:.8rem;font-weight:600;background:var(--surface);color:rgba(17,17,17,.7)}
+.soc{width:2.25rem;height:2.25rem;display:grid;place-items:center;border-radius:9999px;background:var(--surface);color:rgba(17,17,17,.7)}
 .soc.a{background:var(--accent);color:#fff}
 .soc>*{transition:transform .3s var(--ease-hover)}
 @media (hover:hover){.soc:hover>*{transform:scale(1.18)}}
@@ -207,8 +199,8 @@ header.top.dark .menu-btn{color:#fff}
 .band{display:flex;flex-direction:column;gap:.75rem;padding-block:2.5rem}
 @media (min-width:640px){.band{flex-direction:row;gap:1rem}}
 .band li{flex:1;--y:28px}
-.bt{display:grid;place-items:center;height:6rem;border-radius:9999px;font-size:1.875rem;font-weight:500;cursor:default}
-@media (min-width:640px){.bt{height:10rem;font-size:2.25rem}}
+.bt{display:grid;place-items:center;height:6rem;border-radius:9999px;cursor:default}
+@media (min-width:640px){.bt{height:10rem}}
 .bt.l{background:var(--surface)}
 .bt.h{background:linear-gradient(135deg,var(--holo-1),var(--holo-2) 55%,var(--holo-3));color:#111}
 .bt.d{background:var(--ink);color:#fff}.bt.d .ico{font-size:2.25rem}
@@ -220,38 +212,32 @@ header.top.dark .menu-btn{color:#fff}
 @media (min-width:1024px){.sec{padding-bottom:7rem}}
 .center{display:flex;flex-direction:column;align-items:center;text-align:center}
 .eb-pill{border:1px solid var(--line);border-radius:9999px;padding:.375rem 1rem}
-.h2{font-size:2.25rem;font-weight:600;letter-spacing:-.02em;line-height:1.05}
-@media (min-width:640px){.h2{font-size:3rem}}
-.center .h2{margin:1.25rem 0 3rem;width:fit-content}
+.center .t-h2{margin:1.25rem 0 3rem;width:fit-content}
 .cards{display:grid;grid-template-columns:1fr;gap:1.5rem}
 @media (min-width:768px){.cards{grid-template-columns:1fr 1fr}}
 .cards li{--y:48px}
 .wc{position:relative;display:block;min-height:22rem;overflow:hidden;border-radius:var(--r-card);background:var(--ink);padding:1.5rem;color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.05);transition:transform .45s var(--ease-hover)}
 @media (min-width:640px){.wc{min-height:26rem;padding:2rem}}
-.wc .meta{display:flex;justify-content:space-between;align-items:flex-start;font-size:.75rem;text-transform:uppercase;letter-spacing:.025em;color:rgba(255,255,255,.45)}
+.wc .meta{display:flex;justify-content:space-between;align-items:flex-start;color:rgba(255,255,255,.45)}
 .wc .badge{width:2.75rem;height:2.75rem;display:grid;place-items:center;border-radius:9999px;background:rgba(255,255,255,.1);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.15);font-size:1rem;transition:transform .4s var(--ease-hover)}
 .wc .mark{position:absolute;inset:0 0 42% 0;display:grid;place-items:center;pointer-events:none}
-.wc .mark span{font-size:4.5rem;font-weight:700;letter-spacing:-.04em;background:linear-gradient(135deg,var(--holo-1),var(--holo-2),var(--holo-3));-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9}
+.wc .mark span{background:linear-gradient(135deg,var(--holo-1),var(--holo-2),var(--holo-3));-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9}
 .wc .bot{position:absolute;inset-inline:1.5rem;bottom:1.5rem}
 @media (min-width:640px){.wc .bot{inset-inline:2rem;bottom:2rem}}
-.wc h3{font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
-@media (min-width:640px){.wc h3{font-size:1.875rem}}
-.wc p{margin-top:.5rem;max-width:28rem;font-size:.875rem;color:rgba(255,255,255,.55)}
+.wc p{margin-top:.5rem;max-width:28rem;color:rgba(255,255,255,.55)}
 .tags{margin-top:1.25rem;display:flex;flex-wrap:wrap;gap:.5rem}
-.tags span{display:inline-flex;border:1px solid rgba(255,255,255,.25);border-radius:9999px;padding:.5rem 1rem;font-size:.875rem}
+.tags span{display:inline-flex;border:1px solid rgba(255,255,255,.25);border-radius:9999px;padding:.5rem 1rem}
 @media (hover:hover){.wc:hover{transform:translateY(-8px) scale(1.012)}.wc:hover .badge{transform:rotate(45deg) scale(1.08)}}
 
 /* other projects: small project card (DESIGN.md §4.15) */
 .op{margin-top:5rem}
-.op h3{margin-bottom:2rem;text-align:center;font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
-@media (min-width:640px){.op h3{font-size:1.875rem}}
+.op h3{margin-bottom:2rem;text-align:center}
 .pcards{display:grid;grid-template-columns:1fr;gap:1.5rem}
 @media (min-width:640px){.pcards{grid-template-columns:1fr 1fr}}
 @media (min-width:1024px){.pcards{grid-template-columns:repeat(3,1fr)}}
 .pcards li{--y:24px}
 .pc{display:flex;flex-direction:column;height:100%;min-height:14rem;border-radius:var(--r-card-sm);background:var(--ink);padding:1.5rem;color:var(--on-ink);box-shadow:0 0 0 1px var(--line-on-ink);transition:transform var(--dur-surface) var(--ease-hover)}
-.pc h4{font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
-.pc p{margin-top:.5rem;font-size:.875rem;color:var(--on-ink-2)}
+.pc p{margin-top:.5rem;color:var(--on-ink-2)}
 .pc .tags{margin-top:auto;padding-top:1.25rem}
 .pc .tags span{border-color:var(--line-on-ink);color:var(--on-ink-2)}
 @media (hover:hover){.pc:hover{transform:translateY(-8px) scale(1.012)}}
@@ -265,11 +251,9 @@ header.top.dark .menu-btn{color:#fff}
 /* accordion row (DESIGN.md §4.16): one open at a time */
 .srow{width:100%;display:flex;align-items:center;gap:1rem;border-radius:var(--r-card-sm);padding:1.5rem;text-align:left;transition:background var(--dur-surface) var(--ease-spring),padding var(--dur-surface) var(--ease-spring)}
 @media (min-width:640px){.srow{gap:1.5rem;padding-block:2rem}}
-.srow .ix{width:1.75rem;flex:none;font-size:.875rem;font-weight:500;color:var(--text-2)}
+.srow .ix{width:1.75rem;flex:none;color:var(--text-2)}
 @media (min-width:640px){.srow .ix{width:2.5rem}}
-.srow .st{flex:1;font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
-@media (min-width:640px){.srow .st{font-size:1.875rem}}
-@media (min-width:768px){.srow .st{font-size:2.25rem}}
+.srow .st{flex:1}
 .srow .ar{width:2.5rem;height:2.5rem;flex:none;display:grid;place-items:center;border-radius:9999px;background:var(--ink);color:var(--on-ink);font-size:1rem;transition:transform var(--dur-micro) var(--ease-hover)}
 .srow .ar .ico{transition:transform var(--dur-micro) var(--ease-hover)}
 @media (min-width:640px){.srow .ar{width:3rem;height:3rem}}
@@ -280,11 +264,11 @@ header.top.dark .menu-btn{color:#fff}
 .sp{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows var(--dur-overlay) var(--ease-spring),visibility 0s var(--dur-overlay)}
 .svc li.open .sp{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows var(--dur-overlay) var(--ease-spring)}
 .sp>div{min-height:0;overflow:hidden}
-.acc h3{font-size:1rem;font-weight:400}
+.acc h3{font:inherit}
 .sp .spi{display:flex;flex-direction:column;align-items:flex-start;gap:1rem;padding:0 1.5rem 2rem 4.25rem}
 @media (min-width:640px){.sp .spi{padding-left:5.5rem}}
-.sp p{max-width:30rem;font-size:1rem;color:var(--text-2)}
-.cl{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:var(--accent)}
+.sp p{max-width:30rem;color:var(--text-2)}
+.cl{display:inline-flex;align-items:center;gap:.5rem;color:var(--accent)}
 .cl .ico{transition:transform var(--dur-micro) var(--ease-hover)}
 @media (hover:hover){.cl:hover .ico{transform:translateX(3px)}}
 .cl:focus-visible .ico{transform:translateX(3px)}
@@ -293,15 +277,11 @@ header.top.dark .menu-btn{color:#fff}
 .stats{border-radius:var(--r-card);background:var(--ink);padding:3rem 1.5rem;color:#fff;--y:40px;--s:.99}
 @media (min-width:640px){.stats{padding:4rem 2rem}}
 @media (min-width:768px){.stats{padding-inline:4rem}}
-.stats h2{margin-top:1rem;max-width:20ch;font-size:1.875rem;font-weight:500;letter-spacing:-.01em;line-height:1.15}
-@media (min-width:768px){.stats h2{font-size:2.25rem}}
+.stats h2{margin-top:1rem;max-width:20ch}
 .sg{margin-top:3.5rem;display:grid;grid-template-columns:repeat(2,1fr);column-gap:2rem;row-gap:3rem}
 @media (min-width:1024px){.sg{grid-template-columns:repeat(4,1fr)}}
 .sg li{--y:20px}
-.sg .n{font-size:3rem;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
-@media (min-width:640px){.sg .n{font-size:3.75rem}}
-@media (min-width:768px){.sg .n{font-size:4.5rem}}
-.sg p{margin-top:.75rem;font-size:.875rem;color:rgba(255,255,255,.55);max-width:18ch}
+.sg p{margin-top:.75rem;color:rgba(255,255,255,.55);max-width:18ch}
 
 /* footer */
 footer{position:relative;overflow:hidden;border-radius:2rem 2rem 0 0;background:var(--ink);color:#fff}
@@ -309,20 +289,18 @@ footer .shell{position:relative;z-index:10;padding-top:5rem;padding-bottom:2.5re
 @media (min-width:1024px){footer .shell{padding-top:6rem}}
 .fcta{display:flex;flex-direction:column;gap:2rem;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:4rem}
 @media (min-width:1024px){.fcta{flex-direction:row;align-items:center;justify-content:space-between}}
-.fcta h2{max-width:16ch;font-size:2.25rem;font-weight:600;letter-spacing:-.02em;line-height:1.02}
-@media (min-width:640px){.fcta h2{font-size:3rem}}
-@media (min-width:768px){.fcta h2{font-size:3.75rem}}
+.fcta h2{max-width:16ch}
 .fcols{display:grid;grid-template-columns:1fr;gap:3rem;padding-block:4rem}
 @media (min-width:768px){.fcols{grid-template-columns:1fr 1fr}}
 @media (min-width:1024px){.fcols{grid-template-columns:repeat(3,1fr)}}
-.fcols .b{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600}
+.fcols .b{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600;letter-spacing:-.01em}
 .fcols .b .ico{font-size:1.25rem;color:var(--holo-2)}
-.fcols .tg{margin-top:1rem;max-width:20rem;font-size:.875rem;color:rgba(255,255,255,.55)}
-.fcols h4{font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:rgba(255,255,255,.4);margin-bottom:1rem}
-.fcols ul{display:flex;flex-direction:column;gap:.75rem;font-size:.875rem}
+.fcols .tg{margin-top:1rem;max-width:20rem;color:rgba(255,255,255,.55)}
+.fcols h4{color:rgba(255,255,255,.4);margin-bottom:1rem}
+.fcols ul{display:flex;flex-direction:column;gap:.75rem}
 .al{display:inline-flex}.al span{opacity:.65;transition:transform .3s var(--ease-hover),opacity .3s}
 @media (hover:hover){.al:hover span{transform:translateX(4px);opacity:1}}
-.legal{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;font-size:.75rem;color:rgba(255,255,255,.45)}
+.legal{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;color:rgba(255,255,255,.45)}
 @media (min-width:640px){.legal{flex-direction:row}}
 .fwm{position:absolute;inset-inline:0;bottom:-1.5rem;z-index:0;text-align:center;pointer-events:none;user-select:none;font-weight:700;line-height:1;font-size:min(13rem,16vw);letter-spacing:-.03em;color:rgba(255,255,255,.05)}
 
@@ -330,21 +308,20 @@ footer .shell{position:relative;z-index:10;padding-top:5rem;padding-bottom:2.5re
 #nav{position:fixed;inset:0;z-index:115;display:flex;flex-direction:column;background:var(--ink);color:#fff;opacity:0;visibility:hidden;transition:opacity .45s var(--ease-spring),visibility 0s .45s}
 #nav.open{opacity:1;visibility:visible;transition:opacity .45s var(--ease-spring)}
 #nav .tb{display:flex;align-items:center;justify-content:space-between;padding-block:1.25rem}
-#nav .tb .b{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600}
+#nav .tb .b{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600;letter-spacing:-.01em}
 #nav .tb .b .ico{font-size:1.25rem;color:var(--holo-2)}
-.xbtn{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.15);border-radius:var(--r-ctl);padding:.5rem 1rem;font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,.7)}
+.xbtn{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.15);border-radius:var(--r-ctl);padding:.5rem 1rem;color:rgba(255,255,255,.7)}
 .xbtn:hover{border-color:rgba(255,255,255,.4);color:#fff}
 #nav .nl{flex:1;display:flex;flex-direction:column;justify-content:center}
 #nav .nl ul{display:flex;flex-direction:column;gap:.25rem}
-#nav .nl button{display:flex;align-items:baseline;gap:1rem;padding-block:.5rem;text-align:left;font-size:2.25rem;font-weight:600;letter-spacing:-.02em;transform:translateY(1rem);opacity:0;transition:all .5s ease-out}
-@media (min-width:640px){#nav .nl button{font-size:3.75rem}}
+#nav .nl button{display:flex;align-items:baseline;gap:1rem;padding-block:.5rem;text-align:left;transform:translateY(1rem);opacity:0;transition:all .5s ease-out}
 #nav.open .nl button{transform:none;opacity:1}
-#nav .nl small{font-size:1rem;font-weight:400;color:rgba(255,255,255,.3);transition:color .3s}
+#nav .nl small{color:rgba(255,255,255,.3);transition:color .3s}
 #nav .nl span{color:rgba(255,255,255,.7);transition:color .3s}
 #nav .nl button:hover small{color:var(--holo-1)}#nav .nl button:hover span{color:#fff}
-#nav .bb{display:flex;flex-direction:column;gap:.75rem;border-top:1px solid rgba(255,255,255,.1);padding-block:1.5rem;font-size:.75rem;text-transform:uppercase;letter-spacing:.025em;color:rgba(255,255,255,.45)}
+#nav .bb{display:flex;flex-direction:column;gap:.75rem;border-top:1px solid rgba(255,255,255,.1);padding-block:1.5rem;color:rgba(255,255,255,.45)}
 @media (min-width:640px){#nav .bb{flex-direction:row;justify-content:space-between}}
-#nav .bb button{color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.025em}
+#nav .bb button{color:rgba(255,255,255,.7)}
 #nav .bb button:hover{color:#fff;text-decoration:underline}
 
 /* contact modal (DESIGN.md §4.9) */
@@ -359,39 +336,36 @@ footer .shell{position:relative;z-index:10;padding-top:5rem;padding-bottom:2.5re
 @media (hover:hover){.mx:hover{background:var(--surface-2);color:var(--text)}}
 .mx:focus-visible{background:var(--surface-2);color:var(--text)}
 .mh{margin-bottom:1.5rem;display:flex;flex-direction:column;gap:.375rem;padding-right:2.5rem}
-.mh .k{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:var(--text-2)}
+.mh .k{display:inline-flex;align-items:center;gap:.5rem;color:var(--text-2)}
 .mh .k::before{content:"";width:.375rem;height:.375rem;border-radius:9999px;background:var(--accent)}
-.mh h2,.ok h2{font-size:1.5rem;font-weight:600;letter-spacing:-.01em}
-@media (min-width:640px){.mh h2{font-size:1.875rem}}
 .mh h2:focus,.ok h2:focus{outline:none}
 .mlinks{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.75rem}
 .mlinks .pill{justify-content:space-between}
 .panel .pill:focus-visible{transform:scale(1.04)}
 .panel .pill:active:not(:disabled){transform:scale(.98)}
 .panel .pill:disabled{cursor:not-allowed;transform:none}
-.or{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0 1.25rem;font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--text-2)}
+.or{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0 1.25rem;color:var(--text-2)}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 form{display:flex;flex-direction:column;gap:1rem}
 form label{display:flex;flex-direction:column;gap:.375rem}
-form label>span{font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--text-2)}
-form input,form textarea{width:100%;border:1px solid var(--border-ctl);background:var(--surface-soft);border-radius:var(--r-ctl);padding:.75rem 1rem;font:inherit;font-size:.875rem;color:var(--text);transition:border-color var(--dur-micro) var(--ease-hover),background var(--dur-micro) var(--ease-hover),opacity var(--dur-micro) var(--ease-hover)}
+form label>span{color:var(--text-2)}
+form input,form textarea{width:100%;border:1px solid var(--border-ctl);background:var(--surface-soft);border-radius:var(--r-ctl);padding:.75rem 1rem;color:var(--text);transition:border-color var(--dur-micro) var(--ease-hover),background var(--dur-micro) var(--ease-hover),opacity var(--dur-micro) var(--ease-hover)}
 form textarea{resize:none}
 form input:focus,form textarea:focus{border-color:var(--text);background:var(--background)}
 form [aria-invalid="true"],form [aria-invalid="true"]:focus{border-color:var(--error)}
 form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
-.err{font-size:.75rem;font-weight:500;color:var(--error)}
+.err{color:var(--error)}
 .err:empty{display:none}
 .hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
 .fb{margin-top:.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.fb small{font-size:.75rem;color:var(--text-2)}
+.fb small{color:var(--text-2)}
 #send[aria-busy="true"]{cursor:progress}
 .spin{width:1rem;height:1rem;border-radius:9999px;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ok{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem;padding-block:2rem}
 .ok .bdg{width:3.5rem;height:3.5rem;display:grid;place-items:center;border-radius:9999px;background:var(--ink);color:var(--holo-2);font-size:1.5rem}
 .ok .bdg.bad{background:var(--surface);color:var(--error)}
-.ok p{max-width:32ch;font-size:.875rem;color:var(--text-2)}
-.ok .demo{font-size:.75rem}
+.ok p{max-width:32ch;color:var(--text-2)}
 .ok .acts{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
@@ -421,23 +395,23 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
   <symbol id="i-menu" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></symbol>
 </svg>
 
-<a class="skip" href="#main">Skip to content</a>
+<a class="skip t-label" href="#main">Skip to content</a>
 
 <div id="loader" role="status" aria-live="polite">
   <div class="c">
     <div class="brand"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div>
-    <p>Liza Konovalova · Middle+ UX/UI Designer</p>
+    <p class="t-body-sm">Liza Konovalova · Middle+ UX/UI Designer</p>
   </div>
   <div class="prog">
     <div class="track"><div class="fill" id="fill"></div></div>
-    <div class="row"><span>Loading</span><b id="cnt">000</b></div>
+    <div class="row t-mono"><span>Loading</span><b id="cnt">000</b></div>
   </div>
 </div>
 
 <header class="top dark rv" id="hdr" data-hero style="--y:-14px;--d:150ms">
   <div class="shell">
     <button class="logo" data-go="home" aria-label="Liza Konovalova, back to top"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</button>
-    <nav aria-label="Primary"><ul class="pnav">
+    <nav aria-label="Primary"><ul class="pnav t-label">
       <li><button data-go="home" aria-current="page">Home</button></li>
       <li><button data-go="works">Work</button></li>
       <li><button data-go="services">Approach</button></li>
@@ -446,8 +420,8 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
       <li><button data-contact>Contact</button></li>
     </ul></nav>
     <div class="hr">
-      <div class="chip"><span class="lbl">Kyiv time</span><span class="t" data-time>9:41am</span><span class="sep">•</span><span class="dt" data-date>2 November, 2026</span></div>
-      <button class="menu-btn" id="openNav" data-holo="md"><svg class="ico"><use href="#i-menu"/></svg><span class="word">Menu</span></button>
+      <div class="chip t-caption"><span class="lbl">Kyiv time</span><span class="t t-mono" data-time>9:41am</span><span class="sep">•</span><span class="dt t-mono" data-date>2 November, 2026</span></div>
+      <button class="menu-btn t-mono" id="openNav" data-holo="md"><svg class="ico"><use href="#i-menu"/></svg><span class="word">Menu</span></button>
     </div>
   </div>
 </header>
@@ -463,13 +437,13 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 
     <div class="shell hgrid">
       <div class="hl">
-        <span class="eyebrow hero-eb rv" data-hero style="--d:200ms">Open to work · Middle+ UX/UI</span>
-        <h1 class="lines" data-hero style="--d:250ms">
+        <span class="eyebrow t-mono hero-eb rv" data-hero style="--d:200ms">Open to work · Middle+ UX/UI</span>
+        <h1 class="t-h1 lines" data-hero style="--d:250ms">
           <span class="ln"><span style="--d:250ms">Clear interfaces</span></span>
           <span class="ln"><span style="--d:370ms">for complicated</span></span>
           <span class="ln"><span style="--d:490ms">things.</span></span>
         </h1>
-        <div class="rating rv" data-hero style="--d:650ms">
+        <div class="rating t-label rv" data-hero style="--d:650ms">
           <span class="stars"><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg></span>
           <span>5+ years · 10+ products</span>
         </div>
@@ -493,7 +467,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
         </div>
       </div>
     </div>
-    <div class="shell status rv" data-hero style="--d:900ms">
+    <div class="shell status t-mono rv" data-hero style="--d:900ms">
       <span>Designing since 2021</span>
       <span class="mid">Kyiv · remote, worldwide</span>
       <span>Scroll to explore ↓</span>
@@ -503,15 +477,15 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
   <section id="about">
     <div class="shell about">
       <div class="globe">
-        <span class="eyebrow">About</span>
+        <span class="eyebrow t-mono">About</span>
         <svg class="ico big" aria-hidden="true"><use href="#i-globe"/></svg>
-        <div class="note rv"><svg class="ico"><use href="#i-globe"/></svg><span>Based in Kyiv, working with teams across time zones.</span></div>
+        <div class="note t-body-sm rv"><svg class="ico"><use href="#i-globe"/></svg><span>Based in Kyiv, working with teams across time zones.</span></div>
       </div>
       <div class="stmt">
-        <h2 class="words" data-words>I design enterprise B2B products where data is complex and decisions are expensive. <span class="g">From discovery and usability tests to design systems and prototypes that run in code.</span></h2>
+        <h2 class="t-h4 words" data-words>I design enterprise B2B products where data is complex and decisions are expensive. <span class="g">From discovery and usability tests to design systems and prototypes that run in code.</span></h2>
         <div class="toolkit rv">
-          <p>Toolkit</p>
-          <ul>
+          <p class="t-mono">Toolkit</p>
+          <ul class="t-body-sm">
               <li><svg class="ico" aria-hidden="true"><use href="#i-dot"/></svg>Research</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-dot"/></svg>Design systems</li>
               <li><svg class="ico" aria-hidden="true"><use href="#i-dot"/></svg>UI design in Figma</li>
@@ -522,10 +496,10 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
         </div>
         <div class="sfoot rv">
           <div>
-            <p>Find me online</p>
+            <p class="t-body-sm">Find me online</p>
             <div class="socials">
-              <a class="soc a" href="https://www.linkedin.com/in/liza-konovalova-35927a20b" aria-label="LinkedIn" data-holo="md"><span>in</span></a>
-              <a class="soc" href="https://t.me/nvrfrgtlz" aria-label="Telegram" data-holo="md"><span>tg</span></a>
+              <a class="soc a t-label" href="https://www.linkedin.com/in/liza-konovalova-35927a20b" aria-label="LinkedIn" data-holo="md"><span>in</span></a>
+              <a class="soc t-label" href="https://t.me/nvrfrgtlz" aria-label="Telegram" data-holo="md"><span>tg</span></a>
             </div>
           </div>
           <a class="pill outline arrow" href="#about" data-holo="md">About me<span class="bd"><svg class="ico r"><use href="#i-r"/></svg></span></a>
@@ -536,50 +510,50 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 
   <section aria-label="Principle">
     <ul class="shell band">
-      <li class="rv" style="--d:0ms"><div class="bt l">Research</div></li>
-      <li class="rv" style="--d:120ms"><div class="bt h">Design</div></li>
+      <li class="rv" style="--d:0ms"><div class="bt l t-h3">Research</div></li>
+      <li class="rv" style="--d:120ms"><div class="bt h t-h3">Design</div></li>
       <li class="rv" style="--d:240ms"><div class="bt d"><svg class="ico"><use href="#i-r"/></svg></div></li>
-      <li class="rv" style="--d:360ms"><div class="bt g">Ship</div></li>
+      <li class="rv" style="--d:360ms"><div class="bt g t-h3">Ship</div></li>
     </ul>
   </section>
 
   <section id="works">
     <div class="shell sec">
       <div class="center">
-        <span class="eyebrow eb-pill rv">Case studies</span>
-        <h2 class="h2 lines"><span class="ln"><span style="--d:120ms">Selected work</span></span></h2>
+        <span class="eyebrow t-mono eb-pill rv">Case studies</span>
+        <h2 class="t-h2 lines"><span class="ln"><span style="--d:120ms">Selected work</span></span></h2>
       </div>
       <ul class="cards">
         <li class="rv" style="--d:0ms"><a class="wc" href="#works" data-holo="lg">
-          <div class="meta"><span>Idea management — Research</span><span class="badge"><svg class="ico"><use href="#i-ur"/></svg></span></div>
-          <div class="mark"><span>Romper</span></div>
-          <div class="bot"><h3>Romper</h3><p>A team tool for choosing the strongest ideas through step-by-step selection, with admin and teammate roles.</p><div class="tags"><span>User interviews</span><span>Idea testing</span><span>Product design</span></div></div>
+          <div class="meta t-mono"><span>Idea management — Research</span><span class="badge"><svg class="ico"><use href="#i-ur"/></svg></span></div>
+          <div class="mark"><span class="t-display">Romper</span></div>
+          <div class="bot"><h3 class="t-h4">Romper</h3><p class="t-body-sm">A team tool for choosing the strongest ideas through step-by-step selection, with admin and teammate roles.</p><div class="tags t-body-sm"><span>User interviews</span><span>Idea testing</span><span>Product design</span></div></div>
         </a></li>
         <li class="rv" style="--d:90ms"><a class="wc" href="#works" data-holo="lg">
-          <div class="meta"><span>ERP — Financial reporting</span><span class="badge"><svg class="ico"><use href="#i-ur"/></svg></span></div>
-          <div class="mark"><span>GAAPT</span></div>
-          <div class="bot"><h3>GAAPT</h3><p>Chart and table views for P&amp;L, headcount and levels inside a large reporting suite.</p><div class="tags"><span>Data visualisation</span><span>Tables</span><span>Design system</span></div></div>
+          <div class="meta t-mono"><span>ERP — Financial reporting</span><span class="badge"><svg class="ico"><use href="#i-ur"/></svg></span></div>
+          <div class="mark"><span class="t-display">GAAPT</span></div>
+          <div class="bot"><h3 class="t-h4">GAAPT</h3><p class="t-body-sm">Chart and table views for P&amp;L, headcount and levels inside a large reporting suite.</p><div class="tags t-body-sm"><span>Data visualisation</span><span>Tables</span><span>Design system</span></div></div>
         </a></li>
         <li class="rv" style="--d:180ms"><a class="wc" href="#works" data-holo="lg">
-          <div class="meta"><span>Enterprise platform</span><span class="badge"><svg class="ico"><use href="#i-ur"/></svg></span></div>
-          <div class="mark"><span>NXP</span></div>
-          <div class="bot"><h3>Next Experience Platform</h3><p>Redesign of a multi-role enterprise platform.</p><div class="tags"><span>Product design</span><span>Design system</span></div></div>
+          <div class="meta t-mono"><span>Enterprise platform</span><span class="badge"><svg class="ico"><use href="#i-ur"/></svg></span></div>
+          <div class="mark"><span class="t-display">NXP</span></div>
+          <div class="bot"><h3 class="t-h4">Next Experience Platform</h3><p class="t-body-sm">Redesign of a multi-role enterprise platform.</p><div class="tags t-body-sm"><span>Product design</span><span>Design system</span></div></div>
         </a></li>
         <li class="rv" style="--d:270ms"><a class="wc" href="../cases/design-digest/index.html" data-holo="lg">
-          <div class="meta"><span>Interactive — Design engineering</span><span class="badge"><svg class="ico"><use href="#i-ur"/></svg></span></div>
-          <div class="mark"><span>Digest</span></div>
-          <div class="bot"><h3>Design Digest</h3><p>An illustrated, freely scrollable team canvas, rebuilt as a live page in code.</p><div class="tags"><span>Illustration</span><span>Motion</span><span>Front-end</span></div></div>
+          <div class="meta t-mono"><span>Interactive — Design engineering</span><span class="badge"><svg class="ico"><use href="#i-ur"/></svg></span></div>
+          <div class="mark"><span class="t-display">Digest</span></div>
+          <div class="bot"><h3 class="t-h4">Design Digest</h3><p class="t-body-sm">An illustrated, freely scrollable team canvas, rebuilt as a live page in code.</p><div class="tags t-body-sm"><span>Illustration</span><span>Motion</span><span>Front-end</span></div></div>
         </a></li>
       </ul>
       <div class="op">
-        <h3 class="rv">Other projects</h3>
+        <h3 class="t-h4 rv">Other projects</h3>
         <ul class="pcards">
-        <li class="rv" style="--d:0ms"><a class="pc" href="#" data-holo="lg"><h4>TAX Pulse</h4><p>Enterprise tax platform: dashboards, flows and a design system, taken through to client presentation.</p><div class="tags"><span>Enterprise dashboard</span></div></a></li>
-        <li class="rv" style="--d:80ms"><a class="pc" href="#" data-holo="lg"><h4>DataOps Performance Suite</h4><p>UX audit and dashboard redesign for a data operations suite, within tight system constraints.</p><div class="tags"><span>Dashboard redesign</span></div></a></li>
-        <li class="rv" style="--d:160ms"><a class="pc" href="#" data-holo="lg"><h4>Cloud Spend Dashboard</h4><p>Accessible redesign of a cloud cost dashboard, built within Power BI&#39;s limits.</p><div class="tags"><span>Power BI</span></div></a></li>
-        <li class="rv" style="--d:240ms"><a class="pc" href="#" data-holo="lg"><h4>Recruiting platform</h4><p>Hiring platform shaped by in-depth interviews and journey mapping, through to adaptive UI.</p><div class="tags"><span>Research-led</span></div></a></li>
-        <li class="rv" style="--d:320ms"><a class="pc" href="#" data-holo="lg"><h4>TrashOut</h4><p>Mobile app that helps people sort household waste, built on a full double-diamond process.</p><div class="tags"><span>Mobile app</span></div></a></li>
-        <li class="rv" style="--d:400ms"><a class="pc" href="#" data-holo="lg"><h4>Appmatrix</h4><p>Description TBD</p><div class="tags"><span>Tag</span></div></a> <!-- TBD: Appmatrix description and tag --></li>
+        <li class="rv" style="--d:0ms"><a class="pc" href="#" data-holo="lg"><h4 class="t-h5">TAX Pulse</h4><p class="t-body-sm">Enterprise tax platform: dashboards, flows and a design system, taken through to client presentation.</p><div class="tags t-body-sm"><span>Enterprise dashboard</span></div></a></li>
+        <li class="rv" style="--d:80ms"><a class="pc" href="#" data-holo="lg"><h4 class="t-h5">DataOps Performance Suite</h4><p class="t-body-sm">UX audit and dashboard redesign for a data operations suite, within tight system constraints.</p><div class="tags t-body-sm"><span>Dashboard redesign</span></div></a></li>
+        <li class="rv" style="--d:160ms"><a class="pc" href="#" data-holo="lg"><h4 class="t-h5">Cloud Spend Dashboard</h4><p class="t-body-sm">Accessible redesign of a cloud cost dashboard, built within Power BI&#39;s limits.</p><div class="tags t-body-sm"><span>Power BI</span></div></a></li>
+        <li class="rv" style="--d:240ms"><a class="pc" href="#" data-holo="lg"><h4 class="t-h5">Recruiting platform</h4><p class="t-body-sm">Hiring platform shaped by in-depth interviews and journey mapping, through to adaptive UI.</p><div class="tags t-body-sm"><span>Research-led</span></div></a></li>
+        <li class="rv" style="--d:320ms"><a class="pc" href="#" data-holo="lg"><h4 class="t-h5">TrashOut</h4><p class="t-body-sm">Mobile app that helps people sort household waste, built on a full double-diamond process.</p><div class="tags t-body-sm"><span>Mobile app</span></div></a></li>
+        <li class="rv" style="--d:400ms"><a class="pc" href="#" data-holo="lg"><h4 class="t-h5">Appmatrix</h4><p class="t-body-sm">Description TBD</p><div class="tags t-body-sm"><span>Tag</span></div></a> <!-- TBD: Appmatrix description and tag --></li>
         </ul>
       </div>
     </div>
@@ -587,24 +561,24 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 
   <section id="services">
     <div class="shell sec svc">
-      <span class="eyebrow rv">Approach</span>
-      <h2 class="h2 lines"><span class="ln"><span style="--d:120ms">What I do best</span></span></h2>
+      <span class="eyebrow t-mono rv">Approach</span>
+      <h2 class="t-h2 lines"><span class="ln"><span style="--d:120ms">What I do best</span></span></h2>
       <ul class="acc">
         <li class="rv" style="--d:0ms">
-          <h3><button class="srow" id="sv1" aria-expanded="false" aria-controls="sv1-p" data-holo="md"><span class="ix">01</span><span class="st">Product &amp; UX design</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
-          <div class="sp" id="sv1-p" role="region" aria-labelledby="sv1"><div><div class="spi"><p>Research, flows and interfaces for complex products, from first interview to tested UI.</p><a class="cl" href="#works">Romper case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
+          <h3><button class="srow" id="sv1" aria-expanded="false" aria-controls="sv1-p" data-holo="md"><span class="ix t-label">01</span><span class="st t-h3">Product &amp; UX design</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
+          <div class="sp" id="sv1-p" role="region" aria-labelledby="sv1"><div><div class="spi"><p class="t-body">Research, flows and interfaces for complex products, from first interview to tested UI.</p><a class="cl t-label" href="#works">Romper case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
         </li>
         <li class="rv" style="--d:80ms">
-          <h3><button class="srow" id="sv2" aria-expanded="false" aria-controls="sv2-p" data-holo="md"><span class="ix">02</span><span class="st">Data-heavy interfaces</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
-          <div class="sp" id="sv2-p" role="region" aria-labelledby="sv2"><div><div class="spi"><p>Tables, dashboards and reporting that stay readable when the data gets big.</p><a class="cl" href="#works">GAAPT case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
+          <h3><button class="srow" id="sv2" aria-expanded="false" aria-controls="sv2-p" data-holo="md"><span class="ix t-label">02</span><span class="st t-h3">Data-heavy interfaces</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
+          <div class="sp" id="sv2-p" role="region" aria-labelledby="sv2"><div><div class="spi"><p class="t-body">Tables, dashboards and reporting that stay readable when the data gets big.</p><a class="cl t-label" href="#works">GAAPT case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
         </li>
         <li class="rv" style="--d:160ms">
-          <h3><button class="srow" id="sv3" aria-expanded="false" aria-controls="sv3-p" data-holo="md"><span class="ix">03</span><span class="st">Design systems</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
-          <div class="sp" id="sv3-p" role="region" aria-labelledby="sv3"><div><div class="spi"><p>Components, tokens and rules that keep large products consistent.</p><a class="cl" href="#works">Next Experience Platform case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
+          <h3><button class="srow" id="sv3" aria-expanded="false" aria-controls="sv3-p" data-holo="md"><span class="ix t-label">03</span><span class="st t-h3">Design systems</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
+          <div class="sp" id="sv3-p" role="region" aria-labelledby="sv3"><div><div class="spi"><p class="t-body">Components, tokens and rules that keep large products consistent.</p><a class="cl t-label" href="#works">Next Experience Platform case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
         </li>
         <li class="rv" style="--d:240ms">
-          <h3><button class="srow" id="sv4" aria-expanded="false" aria-controls="sv4-p" data-holo="md"><span class="ix">04</span><span class="st">Design engineering</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
-          <div class="sp" id="sv4-p" role="region" aria-labelledby="sv4"><div><div class="spi"><p>Prototypes and interfaces built in code, so ideas get tested in the real medium.</p><a class="cl" href="#works">Design Digest case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
+          <h3><button class="srow" id="sv4" aria-expanded="false" aria-controls="sv4-p" data-holo="md"><span class="ix t-label">04</span><span class="st t-h3">Design engineering</span><span class="ar" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span></button></h3>
+          <div class="sp" id="sv4-p" role="region" aria-labelledby="sv4"><div><div class="spi"><p class="t-body">Prototypes and interfaces built in code, so ideas get tested in the real medium.</p><a class="cl t-label" href="#works">Design Digest case study<svg class="ico" aria-hidden="true"><use href="#i-r"/></svg></a></div></div></div>
         </li>
       </ul>
     </div>
@@ -613,13 +587,13 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
   <section id="stats">
     <div class="shell" style="padding-bottom:5rem">
       <div class="stats rv" data-read>
-        <span class="eyebrow light">By the numbers</span>
-        <h2 class="lines"><span class="ln"><span style="--d:120ms">Proof in the work,</span></span><span class="ln"><span style="--d:220ms">not the words.</span></span></h2>
+        <span class="eyebrow t-mono light">By the numbers</span>
+        <h2 class="t-h3 lines"><span class="ln"><span style="--d:120ms">Proof in the work,</span></span><span class="ln"><span style="--d:220ms">not the words.</span></span></h2>
         <ul class="sg">
-          <li class="rv" style="--d:0ms"><div class="n" data-count="5" data-suf="+">0</div><p>Years in UI/UX design</p></li>
-          <li class="rv" style="--d:90ms"><div class="n" data-count="10" data-suf="+">0</div><p>Products designed</p></li>
-          <li class="rv" style="--d:180ms"><div class="n" data-count="12">0</div><p>Usability sessions run</p></li>
-          <li class="rv" style="--d:270ms"><div class="n" data-count="8" data-suf="×">0</div><p>Faster concept to prototype</p></li>
+          <li class="rv" style="--d:0ms"><div class="n t-stat" data-count="5" data-suf="+">0</div><p class="t-body-sm">Years in UI/UX design</p></li>
+          <li class="rv" style="--d:90ms"><div class="n t-stat" data-count="10" data-suf="+">0</div><p class="t-body-sm">Products designed</p></li>
+          <li class="rv" style="--d:180ms"><div class="n t-stat" data-count="12">0</div><p class="t-body-sm">Usability sessions run</p></li>
+          <li class="rv" style="--d:270ms"><div class="n t-stat" data-count="8" data-suf="×">0</div><p class="t-body-sm">Faster concept to prototype</p></li>
         </ul>
       </div>
     </div>
@@ -629,62 +603,62 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
 <footer>
   <div class="shell">
     <div class="fcta">
-      <h2 class="lines"><span class="ln"><span style="--d:0ms">Hiring a designer?</span></span><span class="ln"><span style="--d:100ms">My DMs are open.</span></span></h2>
+      <h2 class="t-h1 lines"><span class="ln"><span style="--d:0ms">Hiring a designer?</span></span><span class="ln"><span style="--d:100ms">My DMs are open.</span></span></h2>
       <button class="pill light arrow" data-contact data-holo="md">Start a conversation<span class="bd"><svg class="ico ur"><use href="#i-ur"/></svg></span></button>
     </div>
     <div class="fcols">
-      <div><div class="b"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div><p class="tg">Middle+ UX/UI designer and UI design engineer for enterprise B2B products.</p></div>
-      <div><h4>Work</h4><ul><li><a class="al" href="#works"><span>Romper</span></a></li><li><a class="al" href="#works"><span>GAAPT</span></a></li><li><a class="al" href="#works"><span>Next Experience</span></a></li><li><a class="al" href="#works"><span>Design Digest</span></a></li></ul></div>
-      <div><h4>Contact</h4><ul><li><a class="al" href="https://www.linkedin.com/in/liza-konovalova-35927a20b"><span>LinkedIn</span></a></li><li><a class="al" href="https://t.me/nvrfrgtlz"><span>Telegram @nvrfrgtlz</span></a></li><li><a class="al" href="https://konovalova.store"><span>konovalova.store</span></a></li></ul></div>
+      <div><div class="b"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div><p class="tg t-body-sm">Middle+ UX/UI designer and UI design engineer for enterprise B2B products.</p></div>
+      <div><h4 class="t-mono">Work</h4><ul class="t-body-sm"><li><a class="al" href="#works"><span>Romper</span></a></li><li><a class="al" href="#works"><span>GAAPT</span></a></li><li><a class="al" href="#works"><span>Next Experience</span></a></li><li><a class="al" href="#works"><span>Design Digest</span></a></li></ul></div>
+      <div><h4 class="t-mono">Contact</h4><ul class="t-body-sm"><li><a class="al" href="https://www.linkedin.com/in/liza-konovalova-35927a20b"><span>LinkedIn</span></a></li><li><a class="al" href="https://t.me/nvrfrgtlz"><span>Telegram @nvrfrgtlz</span></a></li><li><a class="al" href="https://konovalova.store"><span>konovalova.store</span></a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 Liza Konovalova. Demo build.</span><span>Kyiv, Ukraine</span></div>
+    <div class="legal t-caption"><span>© 2026 Liza Konovalova. Demo build.</span><span>Kyiv, Ukraine</span></div>
   </div>
   <div class="fwm" aria-hidden="true">KONOVALOVA</div>
 </footer>
 
 <div id="nav" role="dialog" aria-modal="true" aria-label="Menu">
-  <div class="shell tb"><div class="b"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div><button class="xbtn" id="closeNav"><svg class="ico"><use href="#i-x"/></svg>Close</button></div>
+  <div class="shell tb"><div class="b"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div><button class="xbtn t-mono" id="closeNav"><svg class="ico"><use href="#i-x"/></svg>Close</button></div>
   <nav class="shell nl"><ul>
-    <li><button data-go="home" style="transition-delay:80ms"><small>01</small><span>Home</span></button></li>
-    <li><button data-go="works" style="transition-delay:125ms"><small>02</small><span>Work</span></button></li>
-    <li><button data-go="services" style="transition-delay:170ms"><small>03</small><span>Approach</span></button></li>
-    <li><button data-go="about" style="transition-delay:215ms"><small>04</small><span>About</span></button></li>
-    <li><button data-go="stats" style="transition-delay:260ms"><small>05</small><span>Numbers</span></button></li>
-    <li><button data-contact style="transition-delay:305ms"><small>06</small><span>Contact</span></button></li>
+    <li><button data-go="home" class="t-h1" style="transition-delay:80ms"><small class="t-body">01</small><span>Home</span></button></li>
+    <li><button data-go="works" class="t-h1" style="transition-delay:125ms"><small class="t-body">02</small><span>Work</span></button></li>
+    <li><button data-go="services" class="t-h1" style="transition-delay:170ms"><small class="t-body">03</small><span>Approach</span></button></li>
+    <li><button data-go="about" class="t-h1" style="transition-delay:215ms"><small class="t-body">04</small><span>About</span></button></li>
+    <li><button data-go="stats" class="t-h1" style="transition-delay:260ms"><small class="t-body">05</small><span>Numbers</span></button></li>
+    <li><button data-contact class="t-h1" style="transition-delay:305ms"><small class="t-body">06</small><span>Contact</span></button></li>
   </ul></nav>
-  <div class="shell bb"><span>Kyiv time — <span data-time>9:41am</span></span><button data-contact>Start a conversation →</button></div>
+  <div class="shell bb t-mono"><span>Kyiv time — <span data-time>9:41am</span></span><button class="t-mono" data-contact>Start a conversation →</button></div>
 </div>
 
 <div id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
   <div class="panel" id="panel">
     <button class="mx" id="closeModal" aria-label="Close"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
     <div id="mform">
-      <div class="mh"><span class="k">Let's talk</span><h2 id="mtitle" tabindex="-1">Tell me about your product.</h2></div>
+      <div class="mh"><span class="k t-mono">Let's talk</span><h2 class="t-h4" id="mtitle" tabindex="-1">Tell me about your product.</h2></div>
       <div class="mlinks">
         <a class="pill light arrow" href="https://t.me/nvrfrgtlz" target="_blank" rel="noopener noreferrer">Telegram<span class="sr"> (opens in a new tab)</span><span class="bd"><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></a>
         <a class="pill light arrow" href="https://www.linkedin.com/in/liza-konovalova-35927a20b" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr"> (opens in a new tab)</span><span class="bd"><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></a>
       </div>
-      <div class="or" role="separator">or send an email</div>
+      <div class="or t-mono" role="separator">or send an email</div>
       <form id="form" novalidate>
-        <label><span>Name</span><input id="f-name" name="name" autocomplete="name" placeholder="Your name" aria-describedby="e-name"><small class="err" id="e-name"></small></label>
-        <label><span>Email</span><input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@company.com" aria-describedby="e-email"><small class="err" id="e-email"></small></label>
-        <label><span>Message</span><textarea id="f-msg" name="message" rows="4" placeholder="A few words about the product, team and timeline." aria-describedby="e-message"></textarea><small class="err" id="e-message"></small></label>
+        <label><span class="t-mono">Name</span><input class="t-body-sm" id="f-name" name="name" autocomplete="name" placeholder="Your name" aria-describedby="e-name"><small class="err t-caption" id="e-name"></small></label>
+        <label><span class="t-mono">Email</span><input class="t-body-sm" id="f-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@company.com" aria-describedby="e-email"><small class="err t-caption" id="e-email"></small></label>
+        <label><span class="t-mono">Message</span><textarea class="t-body-sm" id="f-msg" name="message" rows="4" placeholder="A few words about the product, team and timeline." aria-describedby="e-message"></textarea><small class="err t-caption" id="e-message"></small></label>
         <div class="hp" aria-hidden="true"><label>Leave this field empty<input name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
         <input type="hidden" name="_subject" value="Portfolio: new message">
-        <div class="fb"><small id="fnote"></small><button class="pill dark arrow" type="submit" id="send" aria-busy="false"><span class="lbl">Send</span><span class="bd"><span class="spin" hidden></span><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></button></div>
+        <div class="fb"><small class="t-caption" id="fnote"></small><button class="pill dark arrow" type="submit" id="send" aria-busy="false"><span class="lbl">Send</span><span class="bd"><span class="spin" hidden></span><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></button></div>
       </form>
     </div>
     <div class="ok" id="mok" hidden>
       <div class="bdg"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg></div>
-      <h2 tabindex="-1">Message sent</h2>
-      <p>Thanks, your message has been sent to my inbox. I'll reply to the email you left.</p>
-      <p class="demo" id="mdemo" hidden>Demo mode: this preview simulates sending, nothing was delivered.</p>
+      <h2 class="t-h5" tabindex="-1">Message sent</h2>
+      <p class="t-body-sm">Thanks, your message has been sent to my inbox. I'll reply to the email you left.</p>
+      <p class="demo t-caption" id="mdemo" hidden>Demo mode: this preview simulates sending, nothing was delivered.</p>
       <button class="pill dark" id="okClose">Close</button>
     </div>
     <div class="ok" id="merr" hidden>
       <div class="bdg bad"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></div>
-      <h2 tabindex="-1">Couldn't send</h2>
-      <p>Your message didn't go through. It's still here, so you can try again or reach me directly.</p>
+      <h2 class="t-h5" tabindex="-1">Couldn't send</h2>
+      <p class="t-body-sm">Your message didn't go through. It's still here, so you can try again or reach me directly.</p>
       <div class="acts">
         <button class="pill dark" id="retry">Retry</button>
         <a class="pill outline" href="https://t.me/nvrfrgtlz" target="_blank" rel="noopener noreferrer">Telegram<span class="sr"> (opens in a new tab)</span></a>
@@ -706,11 +680,6 @@ const FORM_ENDPOINT='';
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse=matchMedia('(pointer: coarse)').matches;
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
-
-/* ---------- adaptive grid scale-up ---------- */
-function grid(){const B=16,W=1920,k=.6666,w=innerWidth;const red=((W-w)/W)*100;const s=B-(B*(red*k))/100;
-  if(s>B)document.documentElement.style.fontSize=s+'px';else document.documentElement.style.removeProperty('font-size');}
-grid();addEventListener('resize',grid);
 
 /* ---------- effects config + one shared rAF loop (DESIGN.md §5.3, §5.6) ---------- */
 const FX={
@@ -800,7 +769,7 @@ tick();setInterval(tick,1000);
 /* ---------- hero carousel ---------- */
 const items=[{c:'UX research',t:'Research before pixels.'},{c:'Data-heavy UI',t:'Made for power users.'},{c:'Design engineering',t:'Shipped in code.'}];
 const slot=$('#slot'),dots=$$('#dots i');let ci=0,cur=null;
-function show(i,dir){const el=document.createElement('div');el.className='item';el.innerHTML=`<small>${items[i].c}</small><span>${items[i].t}</span>`;
+function show(i,dir){const el=document.createElement('div');el.className='item';el.innerHTML=`<small class="t-mono">${items[i].c}</small><span class="t-label">${items[i].t}</span>`;
   el.style.transform=`translateY(${dir*14}px)`;el.style.opacity='0';slot.appendChild(el);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{el.style.transform='none';el.style.opacity='1';}));
   if(cur){const o=cur;o.style.transform=`translateY(${-dir*14}px)`;o.style.opacity='0';setTimeout(()=>o.remove(),500);}

@@ -1,7 +1,7 @@
 /* Case page shell (DESIGN.md §4.17): header → dark intro block → case body (<main>) → end block. No footer.
    Main DESIGN.md tokens only, never --dg-* or another case's prefix. Every case links this file and never restyles it;
    a case's own look lives inside <main> under its own scope class (e.g. .digest, §5.7).
-   Needs ../../shared/components.css for the contact button (.pill, §4.1). */
+   Needs ../../shared/type.css (text styles, §2.2) and ../../shared/components.css (contact button .pill, §4.1). */
 
 /* tokens: DESIGN.md §2.0 (v1) */
 :root{
@@ -43,10 +43,10 @@ ul,ol{list-style:none}
 .ico{width:1em;height:1em;display:inline-block;flex:none}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .skip{position:absolute;left:-999px}
-.skip:focus{position:fixed;left:1rem;top:1rem;z-index:var(--z-skip);border-radius:var(--r-ctl);background:var(--ink);padding:.5rem 1rem;font-size:.875rem;color:var(--on-ink)}
+.skip:focus{position:fixed;left:1rem;top:1rem;z-index:var(--z-skip);border-radius:var(--r-ctl);background:var(--ink);padding:.5rem 1rem;color:var(--on-ink)}
 
 /* eyebrow (§4.2) */
-.eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.875rem;font-weight:500;color:var(--text-2)}
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;color:var(--text-2)}
 .eyebrow::before{content:"";width:.375rem;height:.375rem;border-radius:var(--r-pill);background:var(--text-3)}
 .ink .eyebrow{color:var(--on-ink-2)}.ink .eyebrow::before{background:var(--on-ink-3)}
 
@@ -62,42 +62,39 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .logo .ico{font-size:1.25rem;color:var(--holo-2)}
 @media (hover:hover){.logo:hover{transform:scale(1.04)}}
 .logo:focus-visible{transform:scale(1.04)}
-.pnav{display:none;gap:2rem;font-size:.875rem;font-weight:500}
+.pnav{display:none;gap:2rem}
 .pnav a{display:inline-block;color:var(--on-ink-2);transition:transform var(--dur-micro) var(--ease-hover),color var(--dur-micro) var(--ease-hover)}
 .pnav a[aria-current]{color:var(--on-ink)}
 @media (hover:hover){.pnav a:hover{transform:translateY(-2px);color:var(--on-ink)}}
 .pnav a:focus-visible{transform:translateY(-2px);color:var(--on-ink)}
 @media (min-width:1024px){.pnav{display:flex}}
-.chip{display:none;align-items:center;gap:.75rem;border:1px solid var(--border-on-ink);background:var(--glass-rest);backdrop-filter:var(--blur-ctl);-webkit-backdrop-filter:var(--blur-ctl);border-radius:var(--r-ctl);padding:.5rem .75rem;font-size:.75rem;color:var(--on-ink-2)}
-.chip .t,.chip .dt{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-weight:500}
+.chip{display:none;align-items:center;gap:.75rem;border:1px solid var(--border-on-ink);background:var(--glass-rest);backdrop-filter:var(--blur-ctl);-webkit-backdrop-filter:var(--blur-ctl);border-radius:var(--r-ctl);padding:.5rem .75rem;color:var(--on-ink-2)}
 .chip .t{min-width:3.5rem;color:var(--on-ink)}.chip .sep{color:var(--on-ink-3)}
 @media (min-width:768px){.chip{display:flex}}
 
 /* dark intro block: ← All work, eyebrow, title, summary, fact chips, context */
 .intro{padding-top:2.5rem;padding-bottom:5rem}
 @media (min-width:1024px){.intro{padding-top:3rem;padding-bottom:7rem}}
-.back{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:var(--on-ink-2);transition:color var(--dur-micro) var(--ease-hover),transform var(--dur-micro) var(--ease-hover)}
+.back{display:inline-flex;align-items:center;gap:.5rem;color:var(--on-ink-2);transition:color var(--dur-micro) var(--ease-hover),transform var(--dur-micro) var(--ease-hover)}
 @media (hover:hover){.back:hover{color:var(--on-ink);transform:translateX(-4px)}}
 .back:focus-visible{color:var(--on-ink);transform:translateX(-4px)}
 .intro .eyebrow{margin-top:3rem}
-.intro h1{margin-top:1.25rem;max-width:18ch;font-size:2.25rem;font-weight:600;line-height:.98;letter-spacing:-.02em}
-@media (min-width:640px){.intro h1{font-size:3rem}}
-@media (min-width:768px){.intro h1{font-size:3.75rem}}
+.intro h1{margin-top:1.25rem;max-width:18ch}
 .intro h1:focus{outline:none}
 .intro h1:focus-visible{outline:2px solid var(--ring-ink)}
-.intro .sum{margin-top:1.5rem;max-width:40rem;font-size:1rem;color:var(--on-ink-2)}
+.intro .sum{margin-top:1.5rem;max-width:40rem;color:var(--on-ink-2)}
 .tags{margin-top:2rem;display:flex;flex-wrap:wrap;gap:.5rem}
-.tags li{display:inline-flex;gap:.5rem;border:1px solid var(--line-on-ink);border-radius:var(--r-pill);padding:.5rem 1rem;font-size:.875rem;color:var(--on-ink-2)}
-.tags b{font-family:var(--font-mono);font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--on-ink-3);align-self:center}
-.intro .ctx{margin-top:3rem;max-width:40rem;font-size:.875rem;line-height:1.6;color:var(--on-ink-2)}
+.tags li{display:inline-flex;gap:.5rem;border:1px solid var(--line-on-ink);border-radius:var(--r-pill);padding:.5rem 1rem;color:var(--on-ink-2)}
+.tags b{color:var(--on-ink-3);align-self:center}
+.intro .ctx{margin-top:3rem;max-width:40rem;color:var(--on-ink-2)}
 
 /* end block: full-bleed ink sheet; left = next case (or ← All work), right = the shared contact button */
 .case-end{border-radius:var(--r-card) var(--r-card) 0 0}
 .case-end .shell{display:flex;flex-direction:column;gap:2rem;padding-top:2.5rem;padding-bottom:2.5rem}
 @media (min-width:1024px){.case-end .shell{flex-direction:row;align-items:center;justify-content:space-between;padding-top:3rem;padding-bottom:3rem}}
 .cend-next{display:flex;flex-direction:column;gap:1rem;color:var(--on-ink)}
-.cend-next .k{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.875rem;font-weight:500;color:var(--on-ink-2);transition:color var(--dur-micro) var(--ease-hover)}
-.cend-next .t{display:inline-flex;align-items:center;gap:.75rem;font-size:1.875rem;font-weight:600;line-height:1.05;letter-spacing:-.02em}
+.cend-next .k{display:inline-flex;align-items:center;gap:.5rem;color:var(--on-ink-2);transition:color var(--dur-micro) var(--ease-hover)}
+.cend-next .t{display:inline-flex;align-items:center;gap:.75rem}
 .cend-next .ico{transition:transform var(--dur-micro) var(--ease-hover)}
 @media (hover:hover){.cend-next:hover .k{color:var(--on-ink)}.cend-next:hover .r{transform:translateX(4px)}.cend-next:hover .l{transform:translateX(-4px)}}
 .cend-next:focus-visible .k{color:var(--on-ink)}.cend-next:focus-visible .r{transform:translateX(4px)}.cend-next:focus-visible .l{transform:translateX(-4px)}

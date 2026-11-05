@@ -1,8 +1,8 @@
 /* Shared components, linked from prototype/index.html and every case page (DESIGN.md §4.1, §4.17).
-   Values are the homepage's, so both pages render the same button. Tokens come from the page's :root. */
+   Values are the homepage's, so both pages render the same button. Tokens come from the page's :root and ../shared/type.css (§2.2). */
 
 /* pill button (§4.1), incl. the contact button "Start a conversation" (.pill.light.arrow) */
-.pill{display:inline-flex;align-items:center;gap:.75rem;border-radius:var(--r-pill);font-size:.875rem;font-weight:500;padding:.875rem 1.75rem;transition:transform .35s var(--ease-hover)}
+.pill{display:inline-flex;align-items:center;gap:.75rem;border-radius:var(--r-pill);font-family:var(--font);font-size:var(--t-label-size);font-weight:var(--t-label-w);line-height:var(--t-label-lh);letter-spacing:var(--t-label-ls);padding:.875rem 1.75rem;transition:transform .35s var(--ease-hover)}
 .pill.arrow{padding:.375rem .375rem .375rem 1.5rem}
 .pill .bd{width:2.25rem;height:2.25rem;display:grid;place-items:center;border-radius:var(--r-pill);font-size:1rem;background:var(--ink);color:var(--on-ink)}
 .pill .bd .ico{transition:transform .35s var(--ease-hover)}

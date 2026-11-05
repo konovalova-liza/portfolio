@@ -8,8 +8,9 @@
 <meta name="theme-color" content="#0a0a0a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Geist+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="digest.css">
+<link rel="stylesheet" href="../../shared/type.css">
 <link rel="stylesheet" href="../../shared/components.css">
 <link rel="stylesheet" href="../shared/case.css">
 <style>
@@ -36,40 +37,40 @@
   <symbol id="i-print" viewBox="0 0 18 18"><g fill="currentColor"><path d="M9 7.6c2.6 0 4.8 2.9 4.8 5.2 0 1.8-1.5 2.4-2.6 2.1-1-.3-1.5-.6-2.2-.6s-1.2.3-2.2.6c-1.1.3-2.6-.3-2.6-2.1 0-2.3 2.2-5.2 4.8-5.2Z"/><ellipse cx="3.2" cy="7.4" rx="1.6" ry="2"/><ellipse cx="6.6" cy="3.6" rx="1.6" ry="2.1"/><ellipse cx="11.4" cy="3.6" rx="1.6" ry="2.1"/><ellipse cx="14.8" cy="7.4" rx="1.6" ry="2"/></g></symbol>
 </svg>
 
-<a class="skip" href="#main">Skip to content</a>
+<a class="skip t-label" href="#main">Skip to content</a>
 
 <div class="ink case-hero">
   <header class="top" id="hdr">
     <div class="shell">
       <a class="logo" href="../../prototype/index.html" aria-label="Liza Konovalova, home" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg>Konovalova</a>
-      <nav aria-label="Primary"><ul class="pnav">
+      <nav aria-label="Primary"><ul class="pnav t-label">
         <li><a href="../../prototype/index.html#home">Home</a></li>
         <li><a href="../../prototype/index.html#works" aria-current="page">Work</a></li>
         <li><a href="../../prototype/index.html#services">Approach</a></li>
         <li><a href="../../prototype/index.html#about">About</a></li>
         <li><a href="../../prototype/index.html#stats">Numbers</a></li>
       </ul></nav>
-      <div class="chip"><span class="lbl">Kyiv time</span><span class="t" data-time>9:41am</span><span class="sep">•</span><span class="dt" data-date>4 November, 2026</span></div>
+      <div class="chip t-caption"><span class="lbl">Kyiv time</span><span class="t t-mono" data-time>9:41am</span><span class="sep">•</span><span class="dt t-mono" data-date>4 November, 2026</span></div>
     </div>
   </header>
 
   <section class="shell intro" id="intro" aria-labelledby="intro-title">
-    <a class="back" href="../../prototype/index.html#works" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-l"/></svg>All work</a>
-    <div><span class="eyebrow">Case study</span></div>
-    <h1 id="intro-title" tabindex="-1">Design Digest</h1>
-    <p class="sum">An interactive year-in-review for the DX:Enterprise design team, rebuilt from a Figma canvas into a live page.</p>
-    <ul class="tags" aria-label="Project facts">
-      <li><b>Role</b>Concept, illustration, motion</li>
-      <li><b>Team</b>4 designers + 1 art lead</li>
-      <li><b>Year</b>2025</li>
-      <li><b>Tools</b>Figma, Claude Code</li>
+    <a class="back t-label" href="../../prototype/index.html#works" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-l"/></svg>All work</a>
+    <div><span class="eyebrow t-mono">Case study</span></div>
+    <h1 class="t-h1" id="intro-title" tabindex="-1">Design Digest</h1>
+    <p class="sum t-body">An interactive year-in-review for the DX:Enterprise design team, rebuilt from a Figma canvas into a live page.</p>
+    <ul class="tags t-body-sm" aria-label="Project facts">
+      <li><b class="t-mono">Role</b>Concept, illustration, motion</li>
+      <li><b class="t-mono">Team</b>4 designers + 1 art lead</li>
+      <li><b class="t-mono">Year</b>2025</li>
+      <li><b class="t-mono">Tools</b>Figma, Claude Code</li>
     </ul>
-    <p class="ctx">Design Digest 2025 is the annual digest of DX:Enterprise, the enterprise design team at Trinetix, shared with the team and the whole company. Each designer took a tab; I designed the DX:Enterprise page end to end: concept, sketchy illustrations, copy and an interactive Figma prototype styled like a Figma canvas. This version rebuilds that page in code, so the hovers, quiz and camera moves work in a browser, not only in a prototype.</p>
+    <p class="ctx t-body">Design Digest 2025 is the annual digest of DX:Enterprise, the enterprise design team at Trinetix, shared with the team and the whole company. Each designer took a tab; I designed the DX:Enterprise page end to end: concept, sketchy illustrations, copy and an interactive Figma prototype styled like a Figma canvas. This version rebuilds that page in code, so the hovers, quiz and camera moves work in a browser, not only in a prototype.</p>
   </section>
 </div>
 
 <main id="main">
-  <a class="skip" href="#case-end">Skip the board</a>
+  <a class="skip t-label" href="#case-end">Skip the board</a>
 
   <div class="digest" id="digest">
     <nav class="dg-nav" aria-label="Digest issues">
@@ -251,7 +252,7 @@
 <!-- end block (DESIGN.md §4.17): no next case yet, so the left slot is ← All work -->
 <section class="ink case-end" id="case-end" aria-label="Next">
   <div class="shell">
-    <a class="cend-next" href="../../prototype/index.html#works" data-holo="md"><span class="t"><svg class="ico l" aria-hidden="true"><use href="#i-l"/></svg>All work</span></a>
+    <a class="cend-next" href="../../prototype/index.html#works" data-holo="md"><span class="t t-h4"><svg class="ico l" aria-hidden="true"><use href="#i-l"/></svg>All work</span></a>
     <a class="pill light arrow" href="../../prototype/index.html#contact" data-holo="md">Start a conversation<span class="bd"><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></a>
   </div>
 </section>

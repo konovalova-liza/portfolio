@@ -18,7 +18,7 @@ How to read the doc:
 | # | Area | Decision | Applied in |
 |---|---|---|---|
 | D1 | Accent | `--accent:#4f5bd5` stays the **only** spot accent. Uses: links, focus ring on light backgrounds, last word of the band. Holo colors (`#6fe3e1`, `#b9a7ff`, `#ffc7a3`) are **never** a text color, only backgrounds, gradients and effects. | [§2.1](#21-colors), [§4.8](#48-band-research--design----ship) |
-| D2 | Fonts | **Onest** is the primary family. **Geist Mono** (status: *trial*, decision after a live check) is for the eyebrow, the header clock, case meta (role, dates, platform) and stats digits. Mono is never larger than the eyebrow size, except for the stats digits. Digits must not change width during count-up. | [§2.2](#22-typography) |
+| D2 | Fonts | **Onest** is the primary family. **Geist Mono** (kept after the live check, 2026-11-05; Q1 closed) is for every small uppercase label (the `mono` style: eyebrow, header clock, case meta, form labels) and the stats digits (`stat`). Mono is never larger than 12px, except for the stats digits. Digits must not change width during count-up. | [§2.2](#22-typography) |
 | D3 | Effects | Every effect stays. **LiquidReveal** in the hero (B/W → color). The **glass holo droplet cursor** works on every page, including the hero and case pages. In the hero the droplet sits **above** the brush, its diameter is **smaller than brushRadius 143**, and the revealed color shows through the glass. On touch / `pointer:coarse` and with `prefers-reduced-motion` there is no droplet and no brush; the hero shows a static B/W photo. | [§5](#5-effects-rules) |
 | D4 | Loader | The `000→100` loader stays. **Note:** it was not visible during the review; find the cause in Stage 3. | [§4.12](#412-loader), backlog #27 |
 | D5 | Band "I / Design / → / Ship" | The last word uses `--accent`. The words are temporary (placeholder; first word changed to "Research" on 2026-11-04). The pills are **static**: no hover, no cursor change, not links or buttons. | [§4.8](#48-band-research--design----ship) |
@@ -95,7 +95,7 @@ Contrast ratios are WCAG 2.x, computed after alpha-compositing over the stated b
 
   /* Type (D2) */
   --font:"Onest", "Helvetica Neue", Arial, sans-serif;
-  --font-mono:"Geist Mono", ui-monospace, Menlo, monospace;  /* (v1, trial) */
+  --font-mono:"Geist Mono", ui-monospace, Menlo, monospace;  /* (v1); the --t-* type tokens live in shared/type.css (§2.2) */
 
   /* Radii */
   --r-card:2rem;                                         /* also loader/hero/footer sheet corners (T5) */
@@ -187,47 +187,40 @@ Not computable from tokens: any text over the hero photo. This needs a visual ch
 
 ### 2.2 Typography
 
+**v1 scale, approved by Liza on 2026-11-05.** Twelve styles in `shared/type.css`: per style the tokens `--t-<name>-size` / `-w` / `-lh` / `-ls` and the class `.t-<name>`. The homepage and every case page link it before `shared/components.css`.
+
+**Rules**
+- **Text uses `.t-*` classes or `--t-*` tokens only.** Markup takes the class; a shared component (`.pill`, §4.1) reads the tokens in its own rule. **No new sizes without adding a row here first.**
+- **Small + uppercase = mono; sentence case = Onest.** Every small uppercase label is `.t-mono`; no Onest text is uppercase.
+- Sizes are rem with steps at 640 / 768. The root `clamp` (T8, §2.3) makes rem fluid above 1920px; text sizes never use `vw` (T7).
+- **Not in the scale** (component styles, kept as they are): the watermark (`.wm`, `.fwm`, §4.11, §4.13); the logo (`.logo`, `1.125rem`/600/`-.01em`, also `.fcols .b` and `#nav .tb .b`; the loader brand is the same logo at `1.875rem`, §4.12); icon sizes set with `font-size` (`.ico`, `.globe .big`, `.tile`, `.bd`, `.badge`, `.ar`, `.ok .bdg`, `.stars`).
+- Case body text under a case scope follows §4.17 "Case fonts", not this table.
+
 **Families (D2)**
-- `--font` (Onest, weights 400/500/600/700): everything not listed below.
-- `--font-mono` (Geist Mono, **trial**): used only for:
+- `--font` Onest 400 / 500 / 600; 700 only for `display`. The homepage requests 400–700, case pages 400–600.
+- `--font-mono` Geist Mono 500 (`mono`) and 600 (`stat`, homepage only).
+- **Stable digits:** `.t-stat` and `.t-mono` set `tabular-nums`, so the clock and the count-up never change width per digit. `.sg .n` is a block in a fixed grid cell, so count-up never reflows the layout.
 
-  | Element | Size |
-  |---|---|
-  | Eyebrow (`.eyebrow`, `.mh .k`) | `.875rem` |
-  | Header clock (`.chip .t`, `.chip .dt`) | `.75rem` |
-  | Case meta (role, dates, platform; `.wc .meta`) | `.75rem` |
-  | Stats digits (`.sg .n`) | per scale below |
+**Scale**
 
-- **Mono size cap:** mono text is never larger than the eyebrow size (`.875rem`). The only exception is `.sg .n`.
-- **Stable digits:** `.sg .n` and the clock use `font-variant-numeric:tabular-nums`, which also covers the Onest fallback if the trial is rejected. `.sg .n` reserves the width of its final value, including the suffix (`min-width` in `ch` equal to the final string length), so count-up never shifts the layout.
-- **If the trial is rejected:** the same elements fall back to `--font` with `tabular-nums`. The size rules do not change.
-
-**Scale (v0 sizes; the rem is continuous per §2.3)**
-
-| Role | Family | Size (→ 640 → 768) | Weight | LH | Tracking |
-|---|---|---|---|---|---|
-| digits (stats) | mono (trial) | `3rem` → `3.75rem` → `4.5rem` | 600 | 1 | `-.02em` |
-| display / card wordmark | Onest | `4.5rem` | 700 | — | `-.04em` (holo gradient text) |
-| watermark (hero, footer) | Onest | rem-only size, value set in Stage 3 (T7; v0 was `min(13rem,16vw)`) | 700 | 1 | `-.03em` |
-| h1 (hero, footer CTA) | Onest | `2.25rem` → `3rem` → `3.75rem` | 600 | `.98` / `1.02` | `-.02em` |
-| nav overlay link | Onest | `2.25rem` → `3.75rem` | 600 | — | `-.02em` |
-| h2 | Onest | `2.25rem` → `3rem` | 600 | `1.05` | `-.02em` |
-| h2 (stats) | Onest | `1.875rem` → — → `2.25rem` | 500 | `1.15` | `-.01em` |
-| h2 (statement) | Onest | `1.5rem` → `1.875rem` | 500 | `1.35` | `-.01em` |
-| h3 (row) | Onest | `1.5rem` → `1.875rem` → `2.25rem` | 500 | — | `-.01em` |
-| h3 (card, modal) | Onest | `1.5rem` → `1.875rem` | 500 / 600 | — | `-.01em` |
-| band label | Onest | `1.875rem` → `2.25rem` | 500 | — | — |
-| case end link (`.cend-next .t`) | Onest | `1.875rem` (fixed) | 600 | `1.05` | `-.02em` — the compact case end block (§4.17) |
-| brand | Onest | `1.875rem` (loader), `1.125rem` (header/footer/nav) | 600 | — | `-.01em` |
-| body | Onest | `.875rem` | 400/500 | — | — |
-| body-lg | Onest | `1rem` | 400 | — | — |
-| **eyebrow** | mono (trial) | `.875rem` | 500 | — | — |
-| small / meta | Onest; mono for clock and case meta | `.75rem` | 400/500 | — | `.025em` uppercase (meta, labels, status, footer h4) |
-| micro | Onest | `.65rem` | 500 | — | `.05em` uppercase |
+| Name | Font | Size 1440 / 375 (px) | rem: base → 640 → 768 | Weight | LH | Tracking | Use |
+|---|---|---|---|---|---|---|---|
+| `display` | Onest | 72 / 48 | `3` → `3.75` → `4.5` | 700 | 1 | `-.04em` | work-card marks (`.wc .mark span`, holo gradient text) |
+| `stat` | Geist Mono, tabular | 72 / 48 | `3` → `3.75` → `4.5` | 600 | 1 | `-.02em` | stat digits `.sg .n` |
+| `h1` | Onest | 60 / 36 | `2.25` → `3` → `3.75` | 600 | 1 | `-.02em` | hero h1, footer CTA, case title, menu links |
+| `h2` | Onest | 48 / 36 | `2.25` → `3` | 600 | 1 | `-.02em` | section headings |
+| `h3` | Onest | 36 / 30 | `1.875` → — → `2.25` | 500 | 1.1 | `-.01em` | service rows, band, stats heading |
+| `h4` | Onest | 30 / 24 | `1.5` → `1.875` | 500 | 1.3 | `-.01em` | work-card titles, About statement, "Other projects", modal title, case end "All work" / next case |
+| `h5` | Onest | 24 / 24 | `1.5` | 500 | 1.3 | `-.01em` | Other projects cards, modal result ("Message sent", "Couldn't send") |
+| `body` | Onest | 16 | `1` | 400 | 1.5 | 0 | paragraphs, case text (service panels, case summary and context), menu index |
+| `body-sm` | Onest | 14 | `.875` | 400 | 1.5 | 0 | card descriptions, tags and fact chips, stat captions, About note and toolkit, footer text and lists, loader line, form fields |
+| `label` | Onest | 14 | `.875` | 500 | 1.25 | 0 | buttons, pills, nav, links, rating, row index, carousel title, skip links, socials |
+| `caption` | Onest | 12 | `.75` | 400 | 1.4 | 0 | legal, header chip, form note and errors, demo note |
+| `mono` | Geist Mono, uppercase, tabular | 12 | `.75` | 500 | 1.25 | `.025em` | eyebrow, clock, case meta, form labels, fact-chip labels, hero status bar, footer column heads, menu meta and buttons, loader counter, carousel kicker, "Next case" |
 
 ### 2.3 Spacing, scale and grid
 
-**Root scale (T8, proposed formula).** It replaces the four `vw` media queries (L22–25) and the JS `grid()` (L608–610):
+**Root scale (T8).** Live on the homepage and every case page since 2026-11-05 (backlog #18), so `1rem` is the same px on both. It replaced the four `vw` media queries and the JS `grid()`:
 
 ```css
 html{font-size:clamp(16px, calc(5.3333px + .5555vw), 21.3333px)}
@@ -372,7 +365,7 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
   | `outline` | `--border-ctl` | `--border-on-ink` |
   | `arrow` | adds the `.bd` badge | adds the `.bd` badge |
 
-- **Spec:** `--r-pill`, `.875rem`/500, padding `.875rem 1.75rem`.
+- **Spec:** `--r-pill`, `label` type (§2.2, via the `--t-label-*` tokens), padding `.875rem 1.75rem`.
 - **Source (2026-11-05):** one file, `shared/components.css`, linked from `prototype/index.html` and every case page (§4.17), so the contact button "Start a conversation" (`.pill.light.arrow`) is the same component on both. It carries the homepage values as they render today: the transform transition stays `.35s` (v0) until backlog #16 moves it to `--dur-micro`, and the §3 focus-visible / active states are still missing on the homepage (backlog #20). Change the pill only in that file, and check the homepage and a case page together.
 - **States:**
 
@@ -386,18 +379,18 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
   Durations: `--dur-micro`.
 
 ### 4.2 Eyebrow `.eyebrow`
-- **Spec:** `--font-mono` (trial), `.875rem`/500, `--text-2` with a `.375rem` dot in `--text-3`. On ink: `--on-ink-2` with an `--on-ink-3` dot.
+- **Spec:** `.t-mono` (Geist Mono 12px/500, uppercase, `.025em`), `--text-2` with a `.375rem` dot in `--text-3`. On ink: `--on-ink-2` with an `--on-ink-3` dot.
 - **Variants:** `.eb-pill` (outline `--line`). Modal `.mh .k` (dot color: [§7 Q2](#71-open-questions)).
 - **States:** Static.
 
 ### 4.3 Tag `.tags span`
-- **Spec:** on ink, `1px solid var(--line-on-ink)`, `--r-pill`, `.5rem 1rem`, `.875rem`, `--on-ink-2`.
+- **Spec:** on ink, `1px solid var(--line-on-ink)`, `--r-pill`, `.5rem 1rem`, `.t-body-sm` (set on the `.tags` container), `--on-ink-2`.
 - **States:** Static, non-interactive.
 
 ### 4.4 Case card `.wc`
 - **Spec:**
   - `--ink`, `--r-card`, ring `--line-on-ink`
-  - Meta row in `--font-mono` `.75rem` uppercase `.025em`, `--on-ink-2`. Content: role, dates, platform (D2)
+  - Meta row `.t-mono`, `--on-ink-2`. Mark `.t-display`, title `.t-h4`, description `.t-body-sm`. Content: role, dates, platform (D2)
   - Wordmark uses `--holo-gradient` as background-clip text. That is a gradient fill, allowed by D1
   - Description in `--on-ink-2`
 - **States:**
@@ -414,8 +407,8 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
 ### 4.5 List row `.srow`
 - **Status:** Since 2026-11-04 the "What I do best" rows are disclosure buttons, specified in [§4.16 Accordion row](#416-accordion-row-acc--srow). The rows no longer link anywhere and no longer show an inline description or an arrow; the description moved into the expanded panel.
 - **Shared spec (still valid, used by §4.16):**
-  - Index `.ix` in `--text-2` (it is `.875rem` text)
-  - Title sizes `1.5rem` → `1.875rem` (640) → `2.25rem` (768), 500, `-.01em`
+  - Index `.ix` `.t-label` in `--text-2`
+  - Title `.st` `.t-h3`
   - Divider `--line` between rows (`border-top`, none on the first)
   - `--r-card-sm`, padding `1.5rem` (`2rem` block at ≥640)
   - Hover / focus: `--surface` bg + padding shift (`--dur-surface`); focus ring `--ring-light`
@@ -423,7 +416,7 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
 ### 4.6 Numbers panel `.stats`
 - **Spec:**
   - `--ink` block (pending [§7 Q10](#71-open-questions))
-  - Digits `.sg .n` in `--font-mono` (trial), tabular, width reserved for the final value (D2)
+  - Heading `.t-h3`; digits `.sg .n` `.t-stat` (Geist Mono 600, tabular, D2); captions `.t-body-sm`
   - Captions in `--on-ink-2`
 - **Motion:** Scroll-linked count-up. Under reduced motion the final values show immediately (T11).
 - **Droplet:** `data-read` (radius 5).
@@ -434,7 +427,7 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
   - Logo icon: [§7 Q3](#71-open-questions)
   - `.pnav`: `--on-ink-2` → `--on-ink` for `aria-current` and hover/focus
   - `.chip` and `.menu-btn`: `--glass-rest` bg, `--border-on-ink` border, `--blur-ctl`
-  - Clock in `--font-mono` `.75rem`, tabular
+  - Chip `.t-caption`; clock `.chip .t` / `.chip .dt` `.t-mono` (tabular); nav `.t-label`; menu button `.t-mono`
 - **States:**
 
   | State | Behaviour |
@@ -467,14 +460,14 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 - **Layout (top to bottom):**
   - Eyebrow `.mh .k` "Let's talk" + title `h2#mtitle`
   - `.mlinks`: two `.pill.light.arrow` links, **Telegram** and **LinkedIn**. They open in a new tab (`target="_blank" rel="noopener noreferrer"`) and carry a visually hidden "(opens in a new tab)". Grid `repeat(auto-fit,minmax(9rem,1fr))`, gap `.75rem`
-  - Divider `.or` "or send an email": `.75rem`/500 uppercase `.025em`, `--text-2`, lines `--line`
+  - Divider `.or` "or send an email": `.t-mono`, `--text-2`, lines `--line`
   - Form: Name, Email, Message, plus honeypot `_gotcha` (off-screen, `tabindex="-1"`, `aria-hidden`) and hidden `_subject`
   - Footer `.fb`: mode note (`--text-2`) + Send `.pill.dark.arrow`
 - **Spec:**
   - Scrim `rgba(17,17,17,.3)` + `--blur-overlay`. The scrim color is not a text color, so T1 does not apply; it is kept (v0)
   - Panel `--background`, `--r-card`, shadow per §2.4, max `32rem`; `max-height:calc(100dvh - 2rem)` with internal scroll on small screens
   - Fields: `--surface-soft` bg, `1px` `--border-ctl` border (3.52:1 on SS), `--r-ctl`, text `--text`
-  - Labels `.75rem` uppercase in `--text-2`
+  - Kicker `.mh .k` and labels `.t-mono` in `--text-2`; title `.t-h4`; fields `.t-body-sm`; errors and the form note `.t-caption`; result headings `.t-h5` with `.t-body-sm` text
 - **Transport:** `FORM_ENDPOINT` constant at the top of the script.
   - **Empty → demo mode:** simulated send of ~1000ms. Success by default; `?formstate=error` simulates a network error.
   - **Set → Formspree:** `POST` `FormData` with `Accept: application/json`; 15s timeout → error.
@@ -487,7 +480,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
   | idle | form | Empty or kept values, no errors; Send enabled | — |
   | invalid | form | Errors under the failing fields, borders `--error`; focus on the first failing field | `aria-invalid`, `aria-describedby`; live: "N fields need attention." |
   | sending | form | Send `disabled` + `aria-busy`, label "Sending…", spinner replaces the arrow; fields `disabled` at opacity `.6`; no error text | live: "Sending your message…" |
-  | success | `#mok` | Badge (`--ink`), "Message sent", confirmation that it reached the inbox, Close. Demo mode adds a `.75rem` note that nothing was delivered. Form is cleared | Focus on the heading; live: "Message sent." |
+  | success | `#mok` | Badge (`--ink`), "Message sent", confirmation that it reached the inbox, Close. Demo mode adds a `.t-caption` note that nothing was delivered. Form is cleared | Focus on the heading; live: "Message sent." |
   | error | `#merr` | Badge (`--surface` + `--error` icon), "Couldn't send", explanation, **Retry** (`.pill.dark`) + Telegram and LinkedIn (`.pill.outline`). Values are kept | Focus on the heading; live: "Couldn't send…" |
 
 - **Validation:**
@@ -524,6 +517,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
   - Label `--on-ink-2` → `--on-ink`
   - `.xbtn`: `--border-on-ink`
   - Bottom bar `--on-ink-2`, divider `--line-on-ink`
+  - Type: links `.t-h1` with the index `small` in `.t-body`; `.xbtn`, the bottom bar and its button `.t-mono`
 - **Motion:** Fade `--dur-overlay`. Links enter over `--dur-overlay` with `--ease-spring`, staggered `--stagger-list`.
 - **Focus:** Per §6.
 
@@ -539,7 +533,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 ### 4.12 Loader
 - **Spec:**
   - `--ink`, `--z-loader`, sheet corners `--r-card`
-  - Brand gap `.5rem` (T7)
+  - Brand gap `.5rem` (T7); the brand is the logo component at `1.875rem`/600/`-.01em` (§2.2); line `.t-body-sm`; counter row `.t-mono`
   - Progress width rem-only (T7)
   - Fill uses `--holo-gradient`
   - Counter `000→100` in `--on-ink-2`, tabular
@@ -563,7 +557,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 ### 4.14 About — Toolkit
 - `.toolkit` in About, under the statement `h2`, above "Find me online".
 - Items: Research, Design systems, UI design in Figma, AI-assisted design, Prototyping in code, Image & video generation.
-- Label `.75rem`/500 and items `.875rem` in `--text-2`; dot icons in `--text-3` (decorative).
+- Label `.t-mono` and items `.t-body-sm` in `--text-2`; dot icons in `--text-3` (decorative).
 - Grid 2 columns, 3 at ≥640, column-gap `1rem`, row-gap `.75rem`.
 - Hover `translateY(-2px)` only if the items become links; otherwise the list is static.
 
@@ -571,12 +565,12 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 "Other projects" block in `#works`, below the Selected work `.cards`. Smaller sibling of the case card (§4.4). (v1, 2026-11-04)
 
 - **Layout:**
-  - Block heading `h3` "Other projects", centred, h3 (card) scale `1.5rem` → `1.875rem` (640), 500, `-.01em`, `margin-bottom:2rem`. Block `margin-top:5rem` after `.cards`.
+  - Block heading `h3` "Other projects", centred, `.t-h4`, `margin-bottom:2rem`. Block `margin-top:5rem` after `.cards`.
   - Grid `.pcards`: 1 column → 2 (640) → 3 (1024), gap `1.5rem`. Six cards = 3×2 on desktop.
 - **Spec:**
   - `<a class="pc" href="…">` (currently `#`), flex column, `min-height:14rem`, `height:100%` so cards in a row match
   - `--ink`, `--r-card-sm`, padding `1.5rem`, ring `0 0 0 1px var(--line-on-ink)`
-  - Content, in order: title `h4` `1.5rem`/500/`-.01em` in `--on-ink`; one-sentence description `.875rem` in `--on-ink-2` (`margin-top:.5rem`); exactly one tag (§4.3, `--line-on-ink` border, `--on-ink-2`) pushed to the bottom (`margin-top:auto`, `padding-top:1.25rem`)
+  - Content, in order: title `h4` `.t-h5` in `--on-ink`; one-sentence description `.t-body-sm` in `--on-ink-2` (`margin-top:.5rem`); exactly one tag (§4.3, `--line-on-ink` border, `--on-ink-2`) pushed to the bottom (`margin-top:auto`, `padding-top:1.25rem`)
   - No wordmark, no holo gradient text, no meta row, no badge (these stay case-card only)
 - **States:**
 
@@ -594,7 +588,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 "What I do best" list. Replaces the link rows of §4.5: each row is a disclosure button. (v1, 2026-11-04)
 
 - **Markup:** `ul.acc > li > h3 > button.srow[aria-expanded][aria-controls]` + `div.sp[role=region][aria-labelledby]`. The button holds the index `.ix`, the title `.st` and the `+` badge `.ar` (`aria-hidden`). Index, title sizes, dividers and hover follow the shared spec in §4.5.
-- **Panel content:** two lines of text (`1rem`, `--text-2`, `max-width:30rem`) and one case link `.cl` ("<Case> case study →", `.875rem`/500, `--accent`, D1). Indented to the title column: `padding-left:4.25rem` → `5.5rem` (640) = row padding + index width + gap; bottom `2rem`.
+- **Panel content:** two lines of text (`.t-body`, `--text-2`, `max-width:30rem`) and one case link `.cl` ("<Case> case study →", `.t-label`, `--accent`, D1). Indented to the title column: `padding-left:4.25rem` → `5.5rem` (640) = row padding + index width + gap; bottom `2rem`.
 - **Behaviour:**
   - Click, `Enter` or `Space` toggles the row (native button)
   - **One open at a time:** opening a row closes the others; activating the open row closes it. All rows start closed
@@ -618,6 +612,7 @@ Every case page shares one shell. (v1, 2026-11-05)
 - **Files:**
   - `cases/shared/case.css`: the shell (the §2.0 token block, base reset, header, intro, end block). Main tokens only, never `--dg-*` or another case's prefix.
   - `cases/shared/case.js`: the header clock.
+  - `shared/type.css`: the type scale (§2.2), the same file the homepage uses.
   - `shared/components.css`: the contact button (`.pill`, §4.1), the same file the homepage uses.
   - `cases/_template/index.html`: the starter page.
 - **Rules:**
@@ -625,19 +620,20 @@ Every case page shares one shell. (v1, 2026-11-05)
   - The shell is **never restyled per case**. A change to the header, intro or end block is made in `cases/shared/case.css` and applies to every case.
   - A case may have its own visual language **only inside `<main>`**, under its own scope class and token prefix (like `.digest` / `--dg-*`), documented as its own §5.x section (Digest: §5.7). Case-body styles that are not part of that scope stay in the case's own `<style>` until "Case body components" below defines them.
   - **No process-meta section.** Case pages have no "How it's built", "Under the hood" or similar section about how the page was made. A case ends with its body, then the end block. (2026-11-05: removed from Digest.)
-  - Load order: case stylesheet(s), then `shared/components.css`, then `case.css`, then the page's own `<style>`.
+  - Load order: case stylesheet(s), then `shared/type.css`, then `shared/components.css`, then `case.css`, then the page's own `<style>`.
+  - **Case fonts (2026-11-05).** A case body may use its project's own font plus at most one more font proposed in that case's chat: **two own fonts per case at most**. They are used only inside `<main>` under the case scope class (like `.digest`), never in the shell. The case's own sizes go into a short case token scale under its prefix (like `--dg-*`), documented in its §5.x section. **Minimum 12px for any text, 14px for reading text** (paragraphs, list items, answers).
 - **Header** (`header.top` inside `.ink.case-hero`, §4.7 single on-ink variant):
   - Logo → `../../prototype/index.html`; `.pnav` Home / Work (`aria-current="page"`) / Approach / About / Numbers → homepage anchors; `.chip` Kyiv clock (`data-time`, `data-date`, filled by `case.js`). No menu button on case pages.
   - `.shell` row, `justify-content:space-between`, gap `1.5rem`, padding-block `1.25rem` → `1.5rem` (640). `.pnav` from 1024, `.chip` from 768.
   - States per §4.7: logo `scale(1.04)`; pnav `translateY(-2px)` + `--on-ink`; ring `--ring-ink`.
 - **Dark intro block** (`section.shell.intro`, same `.ink` sheet as the header; sheet corners `0 0 var(--r-card) var(--r-card)`):
   - Padding `2.5rem 0 5rem`, `3rem 0 7rem` at ≥1024.
-  - In order: `.back` "← All work" (→ `../../prototype/index.html#works`; `.875rem`/500, `--on-ink-2` → `--on-ink`, hover/focus `translateX(-4px)`, `--dur-micro` `--ease-hover`); `.eyebrow` "Case study" (on ink, `margin-top:3rem`); `h1#intro-title` (`tabindex="-1"` so scripts can focus it; h1 scale `2.25rem` → `3rem` (640) → `3.75rem` (768), 600, `.98`, `-.02em`, `max-width:18ch`; no ring on programmatic focus, `--ring-ink` on keyboard focus); `.sum` (`1rem`, `--on-ink-2`, `max-width:40rem`, `margin-top:1.5rem`); `ul.tags` fact chips (`li` = `<b>` label + value: `1px --line-on-ink`, `--r-pill`, `.5rem 1rem`, `.875rem` `--on-ink-2`; label mono `.75rem`/500 uppercase `.025em` `--on-ink-3`; gap `.5rem`, `margin-top:2rem`); `.ctx` context paragraph (`.875rem`, line-height `1.6`, `--on-ink-2`, `max-width:40rem`, `margin-top:3rem`).
+  - In order: `.back` "← All work" (→ `../../prototype/index.html#works`; `.t-label`, `--on-ink-2` → `--on-ink`, hover/focus `translateX(-4px)`, `--dur-micro` `--ease-hover`); `.eyebrow.t-mono` "Case study" (on ink, `margin-top:3rem`); `h1#intro-title` (`tabindex="-1"` so scripts can focus it; `.t-h1`, `max-width:18ch`; no ring on programmatic focus, `--ring-ink` on keyboard focus); `.sum` (`.t-body`, `--on-ink-2`, `max-width:40rem`, `margin-top:1.5rem`); `ul.tags` fact chips (`li` = `<b>` label + value: `1px --line-on-ink`, `--r-pill`, `.5rem 1rem`, `.t-body-sm` on the `ul`, `--on-ink-2`; label `<b class="t-mono">` `--on-ink-3`; gap `.5rem`, `margin-top:2rem`); `.ctx` context paragraph (`.t-body`, case text, `--on-ink-2`, `max-width:40rem`, `margin-top:3rem`).
 - **End block** (`section.ink.case-end#case-end`, `aria-label="Next"`; the board's "Skip the board" link targets `#case-end`):
   - Full-bleed `--ink` sheet across the whole viewport, top corners `var(--r-card) var(--r-card) 0 0` (mirrors the intro sheet). Content sits in `.shell`, so it uses the standard side gutter (§2.3).
   - **Compact (2026-11-05):** padding-block `2.5rem`, `3rem` at ≥1024 (half the earlier `5rem` / `6rem`). At 1440: 242 → 144px.
-  - **Left: next case.** `a.cend-next` → `../<next-slug>/index.html`: `.k` "Next case →" (mono `.875rem`/500, `--on-ink-2` → `--on-ink`) above `.t` the next case's title, gap `1rem`.
-  - `.t` type: `1.875rem` (30px) at every width, the existing §2.2 step used by the band label and loader brand; 600, line-height `1.05`, `-.02em`, `--on-ink`. The arrow icon is `1em`, so it scales with the text.
+  - **Left: next case.** `a.cend-next` → `../<next-slug>/index.html`: `.k` "Next case →" (`.t-mono`, `--on-ink-2` → `--on-ink`) above `.t` the next case's title, gap `1rem`.
+  - `.t` type: `.t-h4` (30px at ≥640, 24px below), `--on-ink`. The arrow icon is `1em`, so it scales with the text.
   - **No next case yet (fallback, Digest today):** the same link with only `.t` "← All work" → `../../prototype/index.html#works`.
   - **Right: contact button.** The shared `.pill.light.arrow` "Start a conversation" with the `↗` badge, the same component, text and size as the homepage footer CTA. It links to `../../prototype/index.html#contact`; the homepage opens the contact modal (§4.9) once the loader is done when the URL hash is `#contact`.
   - **Layout:** below 1024 stacked (column, gap `2rem`), both items full width; at ≥1024 one row, `align-items:center`, `justify-content:space-between` (the homepage `.fcta` breakpoint).
@@ -767,6 +763,8 @@ Values introduced by the Design Digest case page (`cases/design-digest/`, added 
 | `--dg-fs-h` / `--dg-fs-xl` / `--dg-fs-lg` / `--dg-fs-md` | `40` / `64` / `22` / `18px` | Board text: section headings / "That's all, folks" / card labels, group headings, recipe list / roles, notes, pill. Mobile: headings 28px, folks 40px |
 
 **Font.** Shantell Sans (SIL OFL 1.1), self-hosted at `assets/fonts/shantell-sans-latin-wght.woff2` with `OFL.txt` beside it. One variable file, `wght 400–600`, latin subset, `font-display:swap`. Weights used: 400 (options, hero subtitle), 600 (quiz title, questions, score, hero title). Figma Hand, used in the Figma file, is free only inside Figma products and **not** licensed for web. Text inside the board uses **board px** fitted to `board.png`, not the §2.2 rem scale (rem grows with the viewport, the board doesn't): quiz title `24px`, questions and options `18px` (line `24px`); hero title `60px`, subtitle `30px`, both scaled with the section via `cqw` so the mobile stack keeps the layout. Score and "Try again" stay `.875rem`.
+
+**Type follow-up (2026-11-05).** The board renders 17 text styles. A follow-up reduces them to 7 Digest tokens: `dg-xl` (64 / 40px), `dg-hero`, `dg-h` (40 / 28px), `dg-lg` (22px, 30px line), `dg-md` (18px, 24px line), `dg-sm` (16px, 24px line) and a Shantell `label` (`.875rem`). It also fixes the mobile hero, where the `cqw` sizes fall to 14px (title) and 7px (subtitle, "Follow the paws") at 375. Until then the board keeps its own sizes, outside §2.2.
 
 **Colors.** The D1/D7 rule that reserves `--accent` and `--error` applies to the **portfolio shell only**. Inside `.digest` the canvas keeps its own palette, so the quiz uses Digest-scope `--dg-quiz-correct` (green check) and `--dg-quiz-wrong` (red sad face). They never leave `.digest`.
 
@@ -951,7 +949,7 @@ Each v0 item (DESIGN.md §5 at commit `f2c53c5`) is either **Resolved → rule**
 
 | # | Question |
 |---|---|
-| Q1 | **Geist Mono trial (D2):** keep or fall back to Onest after the live check? |
+| Q1 | ~~Geist Mono trial (D2)~~ **Resolved 2026-11-05:** Geist Mono stays, for `mono` and `stat` (§2.2). |
 | Q2 | **Other accent uses:** v0 also uses `--accent` for the LinkedIn `.soc.a` background and the modal `.mh .k` dot. D1 lists only links, the focus ring and the band word. Keep these, or move them to `--ink`/`--text`? |
 | Q3 | **Holo-tinted icons:** brand icon (`--holo-2` on ink), dark-hero rating stars (`--holo-1`), success badge icon. D1 bans holo as *text*. Are icons allowed, or should they become `--on-ink`? |
 | Q4 | ~~`--error` color~~ **Resolved 2026-11-04 (D7):** `#b42318`, 6.57:1 on white. |
@@ -1003,7 +1001,7 @@ Concrete edits to `prototype/index.html` that bring it to v1. Each item cites th
     - Remove `.bt:hover` and the `data-holo` attributes on `.bt`.
     - Ensure `cursor:default`.
     - Keep the words as placeholders.
-14. **Fonts (D2).**
+14. **Fonts (D2).** *Done 2026-11-05 (§2.2):* Geist Mono 500/600 loads on the homepage; mono is on the eyebrow, `.mh .k`, the clock, `.wc .meta` and `.sg .n`; mono is 12px except `stat`. Still open: the case-meta copy (role · dates · platform).
     - Load Geist Mono from Google Fonts.
     - Add `--font-mono` to `.eyebrow`, `.mh .k`, `.chip .t`/`.chip .dt`, `.wc .meta` and `.sg .n`.
     - Rewrite the case meta content as role · dates · platform.
@@ -1020,7 +1018,7 @@ Concrete edits to `prototype/index.html` that bring it to v1. Each item cites th
 17. **Stagger (T6).**
     - Lists at 80ms steps: cards and stats (0/80/160/240), band (0/80/160/240), nav links (0/80/160/240/320/400), services (already 80).
     - Heading lines at 120ms (Q7).
-18. **Root scale (T8).** Replace the media queries at L22–25 with the `clamp` from §2.3 and delete `grid()` with its resize listener (L607–610).
+18. **Root scale (T8).** *Done 2026-11-05:* homepage and case pages share the clamp; `grid()` is deleted. Replace the media queries at L22–25 with the `clamp` from §2.3 and delete `grid()` with its resize listener (L607–610).
 19. **Spacing and units (T7).** `#loader .brand` gap `.6rem` → `.5rem`. `.prog` width `min(22rem,72vw)` → rem-only (e.g. `width:100%; max-width:22rem`).
 20. **States (T9).**
     - Wrap `.nb button:hover`, `.xbtn:hover`, `#nav .nl button:hover`, `#nav .bb button:hover`, `.mx:hover` (and any remaining hover) in `@media (hover:hover)`.

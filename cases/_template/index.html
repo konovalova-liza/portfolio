@@ -13,7 +13,8 @@
 <meta name="theme-color" content="#0a0a0a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Geist+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../../shared/type.css">
 <link rel="stylesheet" href="../../shared/components.css">
 <link rel="stylesheet" href="../shared/case.css">
 </head>
@@ -26,35 +27,35 @@
   <symbol id="i-ur" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
 </svg>
 
-<a class="skip" href="#main">Skip to content</a>
+<a class="skip t-label" href="#main">Skip to content</a>
 
 <div class="ink case-hero">
   <header class="top" id="hdr">
     <div class="shell">
       <a class="logo" href="../../prototype/index.html" aria-label="Liza Konovalova, home" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg>Konovalova</a>
-      <nav aria-label="Primary"><ul class="pnav">
+      <nav aria-label="Primary"><ul class="pnav t-label">
         <li><a href="../../prototype/index.html#home">Home</a></li>
         <li><a href="../../prototype/index.html#works" aria-current="page">Work</a></li>
         <li><a href="../../prototype/index.html#services">Approach</a></li>
         <li><a href="../../prototype/index.html#about">About</a></li>
         <li><a href="../../prototype/index.html#stats">Numbers</a></li>
       </ul></nav>
-      <div class="chip"><span class="lbl">Kyiv time</span><span class="t" data-time>9:41am</span><span class="sep">•</span><span class="dt" data-date>5 November, 2026</span></div>
+      <div class="chip t-caption"><span class="lbl">Kyiv time</span><span class="t t-mono" data-time>9:41am</span><span class="sep">•</span><span class="dt t-mono" data-date>5 November, 2026</span></div>
     </div>
   </header>
 
   <section class="shell intro" id="intro" aria-labelledby="intro-title">
-    <a class="back" href="../../prototype/index.html#works" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-l"/></svg>All work</a>
-    <div><span class="eyebrow">Case study</span></div>
-    <h1 id="intro-title" tabindex="-1">[Case title]</h1>
-    <p class="sum">[One-sentence summary: what the product is and what changed.]</p>
-    <ul class="tags" aria-label="Project facts">
-      <li><b>Role</b>[Role]</li>
-      <li><b>Team</b>[Team]</li>
-      <li><b>Year</b>[Year]</li>
-      <li><b>Tools</b>[Tools]</li>
+    <a class="back t-label" href="../../prototype/index.html#works" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-l"/></svg>All work</a>
+    <div><span class="eyebrow t-mono">Case study</span></div>
+    <h1 class="t-h1" id="intro-title" tabindex="-1">[Case title]</h1>
+    <p class="sum t-body">[One-sentence summary: what the product is and what changed.]</p>
+    <ul class="tags t-body-sm" aria-label="Project facts">
+      <li><b class="t-mono">Role</b>[Role]</li>
+      <li><b class="t-mono">Team</b>[Team]</li>
+      <li><b class="t-mono">Year</b>[Year]</li>
+      <li><b class="t-mono">Tools</b>[Tools]</li>
     </ul>
-    <p class="ctx">[Context paragraph: the client, the problem and my part in it.]</p>
+    <p class="ctx t-body">[Context paragraph: the client, the problem and my part in it.]</p>
   </section>
 </div>
 
@@ -63,11 +64,11 @@
 </main>
 
 <!-- End block (DESIGN.md §4.17). With a next case, replace the left link with:
-  <a class="cend-next" href="../[next-slug]/index.html" data-holo="md"><span class="k">Next case<svg class="ico r" aria-hidden="true"><use href="#i-r"/></svg></span><span class="t">[Next case title]</span></a>
+  <a class="cend-next" href="../[next-slug]/index.html" data-holo="md"><span class="k t-mono">Next case<svg class="ico r" aria-hidden="true"><use href="#i-r"/></svg></span><span class="t t-h4">[Next case title]</span></a>
 -->
 <section class="ink case-end" id="case-end" aria-label="Next">
   <div class="shell">
-    <a class="cend-next" href="../../prototype/index.html#works" data-holo="md"><span class="t"><svg class="ico l" aria-hidden="true"><use href="#i-l"/></svg>All work</span></a>
+    <a class="cend-next" href="../../prototype/index.html#works" data-holo="md"><span class="t t-h4"><svg class="ico l" aria-hidden="true"><use href="#i-l"/></svg>All work</span></a>
     <a class="pill light arrow" href="../../prototype/index.html#contact" data-holo="md">Start a conversation<span class="bd"><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></a>
   </div>
 </section>
