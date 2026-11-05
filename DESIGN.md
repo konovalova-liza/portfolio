@@ -217,6 +217,7 @@ Not computable from tokens: any text over the hero photo. This needs a visual ch
 | h3 (row) | Onest | `1.5rem` → `1.875rem` → `2.25rem` | 500 | — | `-.01em` |
 | h3 (card, modal) | Onest | `1.5rem` → `1.875rem` | 500 / 600 | — | `-.01em` |
 | band label | Onest | `1.875rem` → `2.25rem` | 500 | — | — |
+| case end link (`.cend-next .t`) | Onest | `1.875rem` (fixed) | 600 | `1.05` | `-.02em` — the compact case end block (§4.17) |
 | brand | Onest | `1.875rem` (loader), `1.125rem` (header/footer/nav) | 600 | — | `-.01em` |
 | body | Onest | `.875rem` | 400/500 | — | — |
 | body-lg | Onest | `1rem` | 400 | — | — |
@@ -622,7 +623,8 @@ Every case page shares one shell. (v1, 2026-11-05)
 - **Rules:**
   - New cases start as a copy of `cases/_template/` at `cases/<slug>/index.html`.
   - The shell is **never restyled per case**. A change to the header, intro or end block is made in `cases/shared/case.css` and applies to every case.
-  - A case may have its own visual language **only inside `<main>`**, under its own scope class and token prefix (like `.digest` / `--dg-*`), documented as its own §5.x section (Digest: §5.7). Case-body styles that are not part of that scope (e.g. Digest's "How it's built" list) stay in the case's own `<style>` until "Case body components" below defines them.
+  - A case may have its own visual language **only inside `<main>`**, under its own scope class and token prefix (like `.digest` / `--dg-*`), documented as its own §5.x section (Digest: §5.7). Case-body styles that are not part of that scope stay in the case's own `<style>` until "Case body components" below defines them.
+  - **No process-meta section.** Case pages have no "How it's built", "Under the hood" or similar section about how the page was made. A case ends with its body, then the end block. (2026-11-05: removed from Digest.)
   - Load order: case stylesheet(s), then `shared/components.css`, then `case.css`, then the page's own `<style>`.
 - **Header** (`header.top` inside `.ink.case-hero`, §4.7 single on-ink variant):
   - Logo → `../../prototype/index.html`; `.pnav` Home / Work (`aria-current="page"`) / Approach / About / Numbers → homepage anchors; `.chip` Kyiv clock (`data-time`, `data-date`, filled by `case.js`). No menu button on case pages.
@@ -631,10 +633,11 @@ Every case page shares one shell. (v1, 2026-11-05)
 - **Dark intro block** (`section.shell.intro`, same `.ink` sheet as the header; sheet corners `0 0 var(--r-card) var(--r-card)`):
   - Padding `2.5rem 0 5rem`, `3rem 0 7rem` at ≥1024.
   - In order: `.back` "← All work" (→ `../../prototype/index.html#works`; `.875rem`/500, `--on-ink-2` → `--on-ink`, hover/focus `translateX(-4px)`, `--dur-micro` `--ease-hover`); `.eyebrow` "Case study" (on ink, `margin-top:3rem`); `h1#intro-title` (`tabindex="-1"` so scripts can focus it; h1 scale `2.25rem` → `3rem` (640) → `3.75rem` (768), 600, `.98`, `-.02em`, `max-width:18ch`; no ring on programmatic focus, `--ring-ink` on keyboard focus); `.sum` (`1rem`, `--on-ink-2`, `max-width:40rem`, `margin-top:1.5rem`); `ul.tags` fact chips (`li` = `<b>` label + value: `1px --line-on-ink`, `--r-pill`, `.5rem 1rem`, `.875rem` `--on-ink-2`; label mono `.75rem`/500 uppercase `.025em` `--on-ink-3`; gap `.5rem`, `margin-top:2rem`); `.ctx` context paragraph (`.875rem`, line-height `1.6`, `--on-ink-2`, `max-width:40rem`, `margin-top:3rem`).
-- **End block** (`section.ink.case-end`, `aria-label="Next"`):
+- **End block** (`section.ink.case-end#case-end`, `aria-label="Next"`; the board's "Skip the board" link targets `#case-end`):
   - Full-bleed `--ink` sheet across the whole viewport, top corners `var(--r-card) var(--r-card) 0 0` (mirrors the intro sheet). Content sits in `.shell`, so it uses the standard side gutter (§2.3).
-  - Padding-block `5rem`, `6rem` at ≥1024 (the footer's top rhythm, §2.3).
-  - **Left: next case.** `a.cend-next` → `../<next-slug>/index.html`: `.k` "Next case →" (mono `.875rem`/500, `--on-ink-2` → `--on-ink`) above `.t` the next case's title (h2 scale `2.25rem` → `3rem` (640), 600, line-height `1.05`, `-.02em`, `--on-ink`), gap `1rem`.
+  - **Compact (2026-11-05):** padding-block `2.5rem`, `3rem` at ≥1024 (half the earlier `5rem` / `6rem`). At 1440: 242 → 144px.
+  - **Left: next case.** `a.cend-next` → `../<next-slug>/index.html`: `.k` "Next case →" (mono `.875rem`/500, `--on-ink-2` → `--on-ink`) above `.t` the next case's title, gap `1rem`.
+  - `.t` type: `1.875rem` (30px) at every width, the existing §2.2 step used by the band label and loader brand; 600, line-height `1.05`, `-.02em`, `--on-ink`. The arrow icon is `1em`, so it scales with the text.
   - **No next case yet (fallback, Digest today):** the same link with only `.t` "← All work" → `../../prototype/index.html#works`.
   - **Right: contact button.** The shared `.pill.light.arrow` "Start a conversation" with the `↗` badge, the same component, text and size as the homepage footer CTA. It links to `../../prototype/index.html#contact`; the homepage opens the contact modal (§4.9) once the loader is done when the URL hash is `#contact`.
   - **Layout:** below 1024 stacked (column, gap `2rem`), both items full width; at ≥1024 one row, `align-items:center`, `justify-content:space-between` (the homepage `.fcta` breakpoint).

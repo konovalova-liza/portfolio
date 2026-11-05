@@ -13,18 +13,7 @@
 <link rel="stylesheet" href="../../shared/components.css">
 <link rel="stylesheet" href="../shared/case.css">
 <style>
-/* Case body outside the board (DESIGN.md §4.17). The shell is cases/shared/case.css; board styles live in digest.css under .digest */
-
-/* how it's built (static list, §4.5 look without hover) */
-.sec{padding-top:5rem;padding-bottom:7rem}
-.sec h2{margin-top:1.25rem;font-size:2.25rem;font-weight:600;line-height:1.05;letter-spacing:-.02em}
-@media (min-width:640px){.sec h2{font-size:3rem}}
-.pts{margin-top:3rem;border-top:1px solid var(--line)}
-.pts li{display:flex;align-items:baseline;gap:1rem;padding:1.5rem;border-bottom:1px solid var(--line)}
-.pts .ix{width:1.75rem;font-family:var(--font-mono);font-size:.875rem;font-weight:500;color:var(--text-2)}
-.pts h3{flex:1;font-size:1.5rem;font-weight:500;letter-spacing:-.01em}
-.pts p{display:none;max-width:20rem;font-size:.875rem;color:var(--text-2)}
-@media (min-width:768px){.pts h3{font-size:1.875rem}.pts p{display:block}}
+/* Page extras outside the shell (DESIGN.md §4.17). The shell is cases/shared/case.css; board styles live in digest.css under .digest */
 
 /* glass droplet cursor (§5.2); moves into the case template after backlog #25 */
 #drop{position:fixed;left:0;top:0;z-index:var(--z-cursor);pointer-events:none;will-change:transform}
@@ -80,7 +69,7 @@
 </div>
 
 <main id="main">
-  <a class="skip" href="#built">Skip the board</a>
+  <a class="skip" href="#case-end">Skip the board</a>
 
   <div class="digest" id="digest">
     <nav class="dg-nav" aria-label="Digest issues">
@@ -257,21 +246,10 @@
 
   </div>
 
-  <section class="shell sec" id="built" aria-labelledby="built-title">
-    <span class="eyebrow">Under the hood</span>
-    <h2 id="built-title">How it’s built</h2>
-    <ol class="pts">
-      <li><span class="ix">01</span><h3>Free-scroll board</h3><p>One transform-driven camera with wheel, drag and arrow keys; a plain vertical stack on mobile.</p></li>
-      <li><span class="ix">02</span><h3>Intro choreography</h3><p>Staggered stickers and a loop line that draws itself with stroke-dashoffset.</p></li>
-      <li><span class="ix">03</span><h3>Asset diet</h3><p>~36 MB of traced Figma SVGs became ~200 KB of WebP; simple line art was redrawn as tiny inline SVGs.</p></li>
-      <li><span class="ix">04</span><h3>Accessible by default</h3><p>Keyboard camera, a real radio-button quiz with live feedback, reduced-motion fallbacks.</p></li>
-      <li><span class="ix">05</span><h3>Built with Claude Code</h3><p>From Figma references, with a scoped style layer so the Digest look never leaks into the portfolio.</p></li>
-    </ol>
-  </section>
 </main>
 
 <!-- end block (DESIGN.md §4.17): no next case yet, so the left slot is ← All work -->
-<section class="ink case-end" aria-label="Next">
+<section class="ink case-end" id="case-end" aria-label="Next">
   <div class="shell">
     <a class="cend-next" href="../../prototype/index.html#works" data-holo="md"><span class="t"><svg class="ico l" aria-hidden="true"><use href="#i-l"/></svg>All work</span></a>
     <a class="pill light arrow" href="../../prototype/index.html#contact" data-holo="md">Start a conversation<span class="bd"><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></a>

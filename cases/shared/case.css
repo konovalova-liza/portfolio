@@ -93,12 +93,11 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 
 /* end block: full-bleed ink sheet; left = next case (or ← All work), right = the shared contact button */
 .case-end{border-radius:var(--r-card) var(--r-card) 0 0}
-.case-end .shell{display:flex;flex-direction:column;gap:2rem;padding-top:5rem;padding-bottom:5rem}
-@media (min-width:1024px){.case-end .shell{flex-direction:row;align-items:center;justify-content:space-between;padding-top:6rem;padding-bottom:6rem}}
+.case-end .shell{display:flex;flex-direction:column;gap:2rem;padding-top:2.5rem;padding-bottom:2.5rem}
+@media (min-width:1024px){.case-end .shell{flex-direction:row;align-items:center;justify-content:space-between;padding-top:3rem;padding-bottom:3rem}}
 .cend-next{display:flex;flex-direction:column;gap:1rem;color:var(--on-ink)}
 .cend-next .k{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.875rem;font-weight:500;color:var(--on-ink-2);transition:color var(--dur-micro) var(--ease-hover)}
-.cend-next .t{display:inline-flex;align-items:center;gap:.75rem;font-size:2.25rem;font-weight:600;line-height:1.05;letter-spacing:-.02em}
-@media (min-width:640px){.cend-next .t{font-size:3rem}}
+.cend-next .t{display:inline-flex;align-items:center;gap:.75rem;font-size:1.875rem;font-weight:600;line-height:1.05;letter-spacing:-.02em}
 .cend-next .ico{transition:transform var(--dur-micro) var(--ease-hover)}
 @media (hover:hover){.cend-next:hover .k{color:var(--on-ink)}.cend-next:hover .r{transform:translateX(4px)}.cend-next:hover .l{transform:translateX(-4px)}}
 .cend-next:focus-visible .k{color:var(--on-ink)}.cend-next:focus-visible .r{transform:translateX(4px)}.cend-next:focus-visible .l{transform:translateX(-4px)}
