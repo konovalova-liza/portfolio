@@ -12,3 +12,6 @@ prototype/assets/src/
 
 # Design Digest reference files (board.png, screen recordings), never committed
 cases/design-digest/assets/ref/
+
+# Source SVGs dropped at the repo root (team doodles contain real names and photos), never committed
+/*.svg
