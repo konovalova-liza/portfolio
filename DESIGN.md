@@ -653,7 +653,7 @@ Every case page shares one shell. (v1, 2026-11-05)
     | `.cb-ph--16x10` / `--16x9` / `--4x5` | `aspect-ratio` 16/10, 16/9, 4/5 | Template placeholders only (gray boxes standing for screenshots); real images take their ratio from `width`/`height` |
 
   - **Shared rules:**
-    - Section padding-block `2.5rem` → `3.5rem` (1024), so two sections are `5rem` / `7rem` apart (the `.sec` rhythm, §2.3). The summary opens with `5rem` / `7rem`; the last section closes with `5rem` / `7rem` before the end block. Blocks inside a section are `3rem` apart (`.cb-flow`).
+    - Section padding-block `2.5rem` → `3.5rem` (1024), so two sections are `5rem` / `7rem` apart (the `.sec` rhythm, §2.3). The summary opens with `5rem` / `7rem` when it follows the intro directly; after an opening section (e.g. a first wide figure in `.cb-section`) it takes the section padding `2.5rem` / `3.5rem` instead (`.cb-section+.cb-summary`), so the gap above it equals the gap between sections (2026-11-09); the last section closes with `5rem` / `7rem` before the end block. Blocks inside a section are `3rem` apart (`.cb-flow`).
     - Breakpoint for every multi-column layout: **stacks below 1024**, except the rejected alternatives (2 columns from 640).
     - Borders follow T4: decorative `1px solid --line` (summary rules, cards, outcome rows, tags, quote rule); the Todo block is the one dashed exception.
     - Images: `<img>` with a real `alt`, `width` and `height` attributes, and `loading="lazy"` on every image except the first one on the page. Source screenshots are 2880px wide; `width:100%`, `height:auto` scales them.

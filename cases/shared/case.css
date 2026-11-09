@@ -120,6 +120,9 @@ main>.cb-section:last-child{padding-bottom:5rem}
 /* summary: Problem / What I did / Outcome */
 .cb-summary{padding-block:5rem 2.5rem}
 @media (min-width:1024px){.cb-summary{padding-block:7rem 3.5rem}}
+/* a Summary after an opening section (e.g. the first figure) takes normal section spacing: 2.5 + 2.5 = 5rem, 3.5 + 3.5 = 7rem */
+.cb-section+.cb-summary{padding-top:2.5rem}
+@media (min-width:1024px){.cb-section+.cb-summary{padding-top:3.5rem}}
 .cb-summary dl{display:grid;grid-template-columns:1fr;gap:2rem}
 @media (min-width:1024px){.cb-summary dl{grid-template-columns:repeat(3,1fr);gap:2.5rem}}
 .cb-summary dl>div{border-top:1px solid var(--line);padding-top:1rem}
