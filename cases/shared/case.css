@@ -99,6 +99,122 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 @media (hover:hover){.cend-next:hover .k{color:var(--on-ink)}.cend-next:hover .r{transform:translateX(4px)}.cend-next:hover .l{transform:translateX(-4px)}}
 .cend-next:focus-visible .k{color:var(--on-ink)}.cend-next:focus-visible .r{transform:translateX(4px)}.cend-next:focus-visible .l{transform:translateX(-4px)}
 
+/* ---------- case body components (DESIGN.md §4.17 "Case body components"): .cb-* inside <main>, light page ---------- */
+:root{
+  --cb-measure:62ch;          /* prose line length */
+  --cb-col:48rem;             /* text column: section head, prose block, inset figure */
+  --cb-sticky-top:2rem;       /* feature-row text offset; the case header is not sticky, so this is the gap to the viewport top */
+  --cb-crop:16/10;            /* crop figure window for tall screenshots */
+  --cb-step-w:80%;            /* steps strip item width on mobile: the next item peeks as the overflow hint */
+}
+.cb-section{padding-block:2.5rem;scroll-margin-top:var(--cb-sticky-top)}
+@media (min-width:1024px){.cb-section{padding-block:3.5rem}}
+main>.cb-section:last-child{padding-bottom:5rem}
+@media (min-width:1024px){main>.cb-section:last-child{padding-bottom:7rem}}
+.cb-head{max-width:var(--cb-col);margin-bottom:3rem}
+.cb-num{color:var(--text)}
+.cb-head h2{margin-top:1.25rem}
+.cb-lead{margin-top:1.5rem;max-width:var(--cb-measure);color:var(--text-2)}
+.cb-flow>*+*{margin-top:3rem}
+
+/* summary: Problem / What I did / Outcome */
+.cb-summary{padding-block:5rem 2.5rem}
+@media (min-width:1024px){.cb-summary{padding-block:7rem 3.5rem}}
+.cb-summary dl{display:grid;grid-template-columns:1fr;gap:2rem}
+@media (min-width:1024px){.cb-summary dl{grid-template-columns:repeat(3,1fr);gap:2.5rem}}
+.cb-summary dl>div{border-top:1px solid var(--line);padding-top:1rem}
+.cb-summary dt{color:var(--text-2)}
+.cb-summary dd{margin-top:.75rem;max-width:var(--cb-measure)}
+
+/* prose */
+.cb-prose{max-width:var(--cb-col)}
+.cb-prose>*{max-width:var(--cb-measure)}
+.cb-prose>*+*{margin-top:1rem}
+.cb-prose ul,.cb-prose ol{padding-left:1.5rem}
+.cb-prose ul{list-style:disc}
+.cb-prose ol{list-style:decimal}
+.cb-prose li+li{margin-top:.5rem}
+.cb-prose li::marker{color:var(--text-2)}
+
+/* figure: frame + media + caption */
+.cb-figure--inset{max-width:var(--cb-col)}
+.cb-frame{display:flex;flex-direction:column;gap:.75rem;border-radius:var(--r-card-sm);background:var(--surface);padding:.75rem}
+@media (min-width:1024px){.cb-frame{padding:1rem}}
+.cb-media{position:relative;overflow:hidden;border-radius:var(--r-ctl);box-shadow:var(--ring-hairline) var(--line)}
+.cb-media img{display:block;width:100%;height:auto}
+.cb-figure--crop .cb-media{aspect-ratio:var(--cb-crop)}
+.cb-figure--crop .cb-media img{height:100%;object-fit:cover;object-position:top}
+.cb-figure--crop .cb-ph{align-content:start}
+.cb-figure figcaption{margin-top:.75rem;max-width:var(--cb-measure);color:var(--text-2)}
+.cb-pair{display:grid;grid-template-columns:1fr;gap:1.5rem}
+@media (min-width:1024px){.cb-pair{grid-template-columns:1fr 1fr}}
+.cb-stack{display:flex;flex-direction:column;gap:1.5rem}
+/* placeholder image (template only): gray box with its label */
+.cb-ph{display:grid;place-items:center;width:100%;background:var(--surface-2);color:var(--text-2);text-align:center;padding:1rem}
+.cb-ph--16x10{aspect-ratio:16/10}.cb-ph--16x9{aspect-ratio:16/9}.cb-ph--4x5{aspect-ratio:4/5}
+
+/* steps: numbered flow; row on desktop, scroll-snap strip below 1024 */
+.cb-steps{overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;padding-bottom:.75rem}
+.cb-steps:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
+.cb-steps ol{display:grid;grid-auto-flow:column;grid-auto-columns:var(--cb-step-w);gap:1rem}
+.cb-steps li{scroll-snap-align:start}
+.cb-steps .cb-sn{display:block;margin-bottom:.5rem;color:var(--text-2)}
+@media (min-width:1024px){.cb-steps{overflow-x:visible;scroll-snap-type:none;padding-bottom:0}.cb-steps ol{grid-auto-columns:1fr;gap:1.5rem}}
+
+/* tag: neutral label on figures (Before, After, Shipped, Rejected, a role, a level) */
+.cb-tag{align-self:flex-start;display:inline-flex;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--background);padding:.25rem .75rem;color:var(--text-2)}
+
+/* cards */
+.cb-cards{display:grid;grid-template-columns:1fr;gap:1.5rem}
+@media (min-width:1024px){.cb-cards{grid-auto-flow:column;grid-auto-columns:1fr}}
+.cb-card{border:1px solid var(--line);border-radius:var(--r-card-sm);padding:1.5rem}
+.cb-card p{margin-top:.75rem;color:var(--text-2)}
+
+/* decision */
+.cb-decision+.cb-decision{margin-top:5rem;border-top:1px solid var(--line);padding-top:5rem}
+.cb-decision>*+*{margin-top:2rem}
+.cb-decision .cb-dlabel{color:var(--text-2)}
+.cb-decision h3{margin-top:1rem;max-width:var(--cb-col)}
+.cb-dblock{max-width:var(--cb-col)}
+.cb-dblock h4{color:var(--text-2)}
+.cb-dblock p{margin-top:.75rem;max-width:var(--cb-measure)}
+.cb-alts{display:grid;grid-template-columns:1fr;gap:1rem}
+@media (min-width:640px){.cb-alts{grid-template-columns:1fr 1fr}}
+@media (min-width:1024px){.cb-alts{grid-template-columns:repeat(4,1fr)}}
+.cb-alts-text{max-width:var(--cb-col)}
+.cb-alts-text li{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;border-top:1px solid var(--line);padding-block:1rem}
+.cb-alts-text li span:last-child{flex-basis:100%;color:var(--text-2)}
+
+/* feature row: text 4/12 + media 8/12, text sticky on desktop */
+.cb-feature{display:flex;flex-direction:column;gap:2rem}
+.cb-feature+.cb-feature,.cb-feature+.cb-flow{margin-top:5rem}
+.cb-ftext{max-width:var(--cb-measure)}
+.cb-ftext p{margin-top:1rem;color:var(--text-2)}
+@media (min-width:1024px){
+  .cb-feature{display:grid;grid-template-columns:repeat(12,1fr);gap:2.5rem;align-items:start}
+  .cb-ftext{grid-column:1 / span 4;position:sticky;top:var(--cb-sticky-top)}
+  .cb-fmedia{grid-column:5 / span 8}
+  .cb-feature--flip .cb-ftext{grid-column:9 / span 4;grid-row:1}
+  .cb-feature--flip .cb-fmedia{grid-column:1 / span 8;grid-row:1}
+}
+
+/* stats: number style = §2.2 stat */
+.cb-stats{display:grid;grid-template-columns:repeat(2,1fr);column-gap:2rem;row-gap:3rem}
+@media (min-width:1024px){.cb-stats{grid-template-columns:repeat(4,1fr)}}
+.cb-stats dd{margin-top:.75rem;max-width:18ch}
+.cb-stats .cb-src{display:block;margin-top:.5rem;color:var(--text-2)}
+.cb-outcomes{max-width:var(--cb-col)}
+.cb-outcomes li{border-top:1px solid var(--line);padding-block:1rem}
+.cb-note{margin-top:2rem;color:var(--text-2)}
+
+/* quote: role only, no names */
+.cb-quote{max-width:var(--cb-col);border-left:1px solid var(--line);padding-left:1.5rem}
+.cb-quote figcaption{margin-top:1rem;color:var(--text-2)}
+
+/* todo (dev only): a frozen case has none */
+.cb-todo{max-width:var(--cb-col);border:1px dashed var(--border-ctl);border-radius:var(--r-card-sm);background:var(--surface-soft);padding:1.5rem}
+.cb-todo p{margin-top:.5rem;color:var(--text-2)}
+
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }

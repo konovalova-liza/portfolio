@@ -618,7 +618,7 @@ Every case page shares one shell. (v1, 2026-11-05)
 - **Rules:**
   - New cases start as a copy of `cases/_template/` at `cases/<slug>/index.html`.
   - The shell is **never restyled per case**. A change to the header, intro or end block is made in `cases/shared/case.css` and applies to every case.
-  - A case may have its own visual language **only inside `<main>`**, under its own scope class and token prefix (like `.digest` / `--dg-*`), documented as its own §5.x section (Digest: §5.7). Case-body styles that are not part of that scope stay in the case's own `<style>` until "Case body components" below defines them.
+  - A case may have its own visual language **only inside `<main>`**, under its own scope class and token prefix (like `.digest` / `--dg-*`), documented as its own §5.x section (Digest: §5.7). Shared case-body blocks use the `.cb-*` components below; anything else stays in the case's own scope.
   - **No process-meta section.** Case pages have no "How it's built", "Under the hood" or similar section about how the page was made. A case ends with its body, then the end block. (2026-11-05: removed from Digest.)
   - Load order: case stylesheet(s), then `shared/type.css`, then `shared/components.css`, then `case.css`, then the page's own `<style>`.
   - **Case fonts (2026-11-05).** A case body may use its project's own font plus at most one more font proposed in that case's chat: **two own fonts per case at most**. They are used only inside `<main>` under the case scope class (like `.digest`), never in the shell. The case's own sizes go into a short case token scale under its prefix (like `--dg-*`), documented in its §5.x section. **Minimum 12px for any text, 14px for reading text** (paragraphs, list items, answers).
@@ -640,7 +640,79 @@ Every case page shares one shell. (v1, 2026-11-05)
   - **States:** `.cend-next` hover/focus-visible: `.k` → `--on-ink`, the arrow nudges `translateX(4px)` (→) or `translateX(-4px)` (←), `--dur-micro` `--ease-hover`. The pill follows §4.1. Focus ring `--ring-ink` (2px, offset 2px) on both. Both are `data-holo="md"`.
   - The end block replaces any per-case "Back to all work" button: the left slot already covers it.
 - **Droplet:** the glass droplet (§5.2) is on Digest only for now (`digest.js`, CSS in its page `<style>`). It is added to `cases/_template/` after backlog #25.
-- **Case body components:** **TODO.** Defined with the first deep case (Romper) and reused by every later case.
+- **Case body components (v1, 2026-11-09).** The building blocks of every deep case, inside `<main>` on the light page. Styles: `cases/shared/case.css` (prefix `.cb-`); skeleton: `cases/_template/index.html`. Each block sits in `.shell`. Text uses the §2.2 classes only. They are static: no hover, no scroll or entrance animation yet, so there are no transitions and no motion tokens in use.
+  - **New tokens** (`:root` in `case.css`, used only by `.cb-*`):
+
+    | Token | Value | Where / why |
+    |---|---|---|
+    | `--cb-measure` | `62ch` | Max line length of prose, leads, captions, summary items, feature text: a comfortable reading measure |
+    | `--cb-col` | `48rem` | Text column: section head, prose block, inset figure, decision text, outcomes, quote, todo. Wide enough for an inset screenshot, narrower than the 88rem shell |
+    | `--cb-sticky-top` | `2rem` | Feature-row text `top` while sticky, and `scroll-margin-top` of sections. The case header is not sticky (§4.17 Header), so this is only the gap to the viewport top |
+    | `--cb-crop` | `16/10` | Window of the crop figure: shows the top of a tall dashboard at the usual screen ratio |
+    | `--cb-step-w` | `80%` | Steps item width below 1024: the next item peeks by 20%, which is the overflow hint |
+    | `.cb-ph--16x10` / `--16x9` / `--4x5` | `aspect-ratio` 16/10, 16/9, 4/5 | Template placeholders only (gray boxes standing for screenshots); real images take their ratio from `width`/`height` |
+
+  - **Shared rules:**
+    - Section padding-block `2.5rem` → `3.5rem` (1024), so two sections are `5rem` / `7rem` apart (the `.sec` rhythm, §2.3). The summary opens with `5rem` / `7rem`; the last section closes with `5rem` / `7rem` before the end block. Blocks inside a section are `3rem` apart (`.cb-flow`).
+    - Breakpoint for every multi-column layout: **stacks below 1024**, except the rejected alternatives (2 columns from 640).
+    - Borders follow T4: decorative `1px solid --line` (summary rules, cards, outcome rows, tags, quote rule); the Todo block is the one dashed exception.
+    - Images: `<img>` with a real `alt`, `width` and `height` attributes, and `loading="lazy"` on every image except the first one on the page. Source screenshots are 2880px wide; `width:100%`, `height:auto` scales them.
+    - Don'ts (all components): no `--accent`, no holo, no raw colors, no `vw` sizes, no hover effects on non-interactive blocks, no `data-holo`.
+
+  1. **Section** `section.cb-section#<id>` + `.cb-head`.
+     - *Purpose:* one numbered chapter of the case; the `id` is the anchor (`#context`, `#problem` …).
+     - *Content:* `.eyebrow.t-mono` (§4.2) with the number in `.cb-num` (`--text`) before the label ("01 Context & role"); `h2.t-h2` (`margin-top:1.25rem`); optional lead `p.cb-lead.t-h5` in `--text-2`, `max-width:--cb-measure`, `margin-top:1.5rem`. Head `max-width:--cb-col`, `margin-bottom:3rem`.
+     - *Variants:* with or without lead. *States:* static. *Don't:* skip numbers or nest sections.
+  2. **Summary** `section.cb-summary` (`aria-label="Summary"`) with a `dl` of three `div`s.
+     - *Purpose:* the case in three lines, right after the intro: Problem / What I did / Outcome.
+     - *Content:* `dt.t-mono` (`--text-2`), `dd.t-body` one or two lines (`max-width:--cb-measure`, `margin-top:.75rem`); each item has a `1px --line` top rule and `padding-top:1rem`.
+     - *Layout:* 1 column, 3 columns at ≥1024 (gap `2rem` → `2.5rem`). *Don't:* more than three items or more than two lines each.
+  3. **Prose** `.cb-prose.t-body`.
+     - *Purpose:* 1–3 paragraphs of case text. Block `max-width:--cb-col`, each child `max-width:--cb-measure`, paragraphs `1rem` apart.
+     - *Variants:* bullet list (`ul`, disc) and numbered list (`ol`, decimal): `padding-left:1.5rem`, items `.5rem` apart, markers `--text-2`.
+     - *Don't:* more than three paragraphs in a row; put a figure or cards between them instead.
+  4. **Figure** `figure.cb-figure` > `.cb-frame` > (`.cb-tag`?) + `.cb-media` > `img`; `figcaption.t-body-sm`.
+     - *Purpose:* a framed screenshot with an optional caption.
+     - *Frame:* `--surface`, `--r-card-sm`, padding `.75rem` → `1rem` (1024), flex column gap `.75rem` (tag above the image). `.cb-media`: `--r-ctl`, `overflow:hidden`, `var(--ring-hairline) var(--line)`. Caption `--text-2`, `margin-top:.75rem`, `max-width:--cb-measure`.
+     - *Variants:*
+       - **wide** (default): container width.
+       - **inset** `.cb-figure--inset`: `max-width:--cb-col`, the text column.
+       - **pair** `.cb-pair` around two figures: 2-up from 1024, gap `1.5rem`.
+       - **stack** `.cb-stack`: vertical group, gap `1.5rem`.
+       - **crop** `.cb-figure--crop`: `.cb-media` `aspect-ratio:--cb-crop`, `img` `object-fit:cover; object-position:top`, for tall dashboards.
+       - **steps** `.cb-steps` (a focusable `div`, `tabindex="0"`, `role="region"`, `aria-label="<Flow>, N steps"`) around an `ol` of 3–5 small figures, each with `.cb-sn.t-mono` "Step 01". At ≥1024: one row, equal columns, gap `1.5rem`, no scroll. Below 1024: horizontal strip, items `--cb-step-w` wide (the peek is the overflow hint), gap `1rem`, `scroll-snap-type:x mandatory`, items snap to start, `overscroll-behavior-x:contain`, `padding-bottom:.75rem` for the scrollbar. Arrow keys scroll it while it has focus.
+     - *States:* static; `.cb-steps:focus-visible` gets the §3 ring (`2px --ring-light`, offset `2px`).
+     - *Don't:* round the steps strip itself (it clips the first label); put text inside screenshots that the caption should carry.
+  5. **Tag** `.cb-tag.t-mono`.
+     - *Purpose:* a neutral label on a figure: Before, After, Shipped, Rejected, or any short label (a role, a level).
+     - *Spec:* `1px --line` outline, `--r-pill`, `--background` fill, padding `.25rem .75rem`, `--text-2`. Non-interactive (§3).
+     - *Don't:* color-code (meaning is in the text), use `--accent`, or make it a link.
+  6. **Cards** `ul.cb-cards` > `li.cb-card`.
+     - *Purpose:* 2–3 parallel points (findings, principles): `h3.t-h5` + `p.t-body-sm` in `--text-2` (`margin-top:.75rem`).
+     - *Spec:* `1px --line`, `--r-card-sm`, padding `1.5rem`, no fill. 1 column; at ≥1024 one row of equal columns (gap `1.5rem`).
+     - *Don't:* more than three cards, images in cards, hover lift (they are not links).
+  7. **Decision** `article.cb-decision`.
+     - *Purpose:* one key design decision with its evidence.
+     - *Content, in order (`2rem` apart):* `.cb-dlabel.t-mono` "Decision 01" (`--text-2`) + `h3.t-h3` the decision as a statement; `.cb-dblock` "The problem" (`h4.t-mono` `--text-2` + `p.t-body`); the chosen option as a Figure with the **Shipped** tag; `ul.cb-alts` 1–4 rejected alternatives, each a smaller Figure with the **Rejected** tag and a one-line reason as its caption (1 → 2 columns at 640 → 4 at 1024, gap `1rem`); `.cb-dblock` "Why" + paragraph.
+     - *Variant — text only* `ul.cb-alts-text`: no images; each row is the Rejected tag + `b.t-label` name + one-line reason (`t-body-sm`, `--text-2`, own line), rows split by `1px --line`, `max-width:--cb-col`.
+     - Two decisions in a row are split by a `1px --line` rule with `5rem` above and below.
+     - *Don't:* more than four alternatives; a reason longer than one line; mark the chosen option with color.
+  8. **Feature row** `.cb-feature` > `.cb-ftext` + `.cb-fmedia`.
+     - *Purpose:* one feature of the final UI: `h3.t-h4` + `p.t-body` (`--text-2`) beside its screenshots.
+     - *Layout:* at ≥1024 a 12-column grid (gap `2.5rem`, the hero grid gap): text columns 1–4, media 5–12; `.cb-feature--flip` puts media in 1–8 and text in 9–12. The text is `position:sticky; top:var(--cb-sticky-top)`, so it stays in view while tall media scrolls past. Below 1024: static, one column, text first (DOM order), gap `2rem`. Rows are `5rem` apart.
+     - *Don't:* put more than one heading in the text column or make it taller than the viewport (sticky would hide its end).
+  9. **Stats** `dl.cb-stats` > `div` > `dt.t-stat` + `dd.t-body-sm`.
+     - *Purpose:* 2–4 measured results. Numbers use the §2.2 `stat` style (Geist Mono 600, tabular, 72 / 48px), in `--text`. Label `max-width:18ch`; optional source line `span.cb-src.t-caption` (`--text-2`).
+     - *Layout:* 2 columns, 4 at ≥1024 (column gap `2rem`, row gap `3rem`, the `.sg` grid).
+     - *Variants:* **qualitative** `ul.cb-outcomes.t-body`: outcome rows split by `1px --line`, padding-block `1rem`, `max-width:--cb-col`. **Note** `p.cb-note.t-caption` (`--text-2`, `margin-top:2rem`) for "Metrics weren't tracked" / "Under NDA".
+     - *Don't:* count-up animation (no motion in this step), invented or unsourced numbers, more than four items.
+  10. **Quote** `figure.cb-quote` > `blockquote.t-h4` + `figcaption.t-mono`.
+      - *Purpose:* one voice from a stakeholder or user. `1px --line` left rule, `padding-left:1.5rem`, `max-width:--cb-col`; attribution `--text-2`, `margin-top:1rem`.
+      - *Don't:* names or photos: **attribution by role only** ("Product owner").
+  11. **Todo** `aside.cb-todo` (`aria-label="Todo"`), **dev only**.
+      - *Purpose:* marks a missing fact while a case is being written: `span.t-mono` "Todo" + `p.t-body-sm` (`--text-2`).
+      - *Spec:* `1px dashed --border-ctl` (the one exception to "always solid", T4, so it can't be mistaken for content), `--r-card-sm`, `--surface-soft`, padding `1.5rem`, `max-width:--cb-col`.
+      - **A frozen case contains zero Todo blocks.** Check with `grep -c cb-todo cases/<slug>/index.html` before freezing.
 
 ---
 

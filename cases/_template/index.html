@@ -60,7 +60,191 @@
 </div>
 
 <main id="main">
-  <!-- Case body. "Case body components" (DESIGN.md §4.17) are defined with the first deep case (Romper). -->
+  <!-- Case body: the deep-case skeleton built from the .cb-* components (DESIGN.md §4.17 "Case body components").
+       Images: each .cb-ph gray box stands for an <img src alt width height loading="lazy">; the first image on the page drops loading="lazy".
+       Delete every .cb-todo before the case is frozen. -->
+
+  <section class="shell cb-summary" aria-label="Summary">
+    <dl>
+      <div><dt class="t-mono">Problem</dt><dd class="t-body">[Problem: one or two lines.]</dd></div>
+      <div><dt class="t-mono">What I did</dt><dd class="t-body">[What I did: one or two lines.]</dd></div>
+      <div><dt class="t-mono">Outcome</dt><dd class="t-body">[Outcome: one or two lines.]</dd></div>
+    </dl>
+  </section>
+
+  <section class="shell cb-section" id="context" aria-labelledby="context-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">01</span>Context &amp; role</span>
+      <h2 class="t-h2" id="context-h">[Context heading]</h2>
+    </div>
+    <div class="cb-prose t-body">
+      <p>[Context: one paragraph about the client, the product and the team.]</p>
+      <p>[Role: one paragraph about my part, the timeline and who I worked with.]</p>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="problem" aria-labelledby="problem-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">02</span>Problem &amp; users</span>
+      <h2 class="t-h2" id="problem-h">[Problem heading]</h2>
+      <p class="cb-lead t-h5">[Lead: the problem in one sentence.]</p>
+    </div>
+    <div class="cb-flow">
+      <div class="cb-prose t-body">
+        <p>[Problem: who the users are and what got in their way.]</p>
+        <ul>
+          <li>[User group or pain point]</li>
+          <li>[User group or pain point]</li>
+          <li>[User group or pain point]</li>
+        </ul>
+      </div>
+      <div class="cb-pair">
+        <figure class="cb-figure">
+          <div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Before: screen name]">[Before screen · 16:10]</div></div></div>
+          <figcaption class="t-body-sm">[Caption: what was wrong.]</figcaption>
+        </figure>
+        <figure class="cb-figure">
+          <div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[After: screen name]">[After screen · 16:10]</div></div></div>
+          <figcaption class="t-body-sm">[Caption: what changed.]</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="research" aria-labelledby="research-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">03</span>Research</span>
+      <h2 class="t-h2" id="research-h">[Research heading]</h2>
+      <p class="cb-lead t-h5">[Lead: methods and who took part.]</p>
+    </div>
+    <ul class="cb-cards">
+      <li class="cb-card"><h3 class="t-h5">[Finding 1]</h3><p class="t-body-sm">[One or two lines on what we learned.]</p></li>
+      <li class="cb-card"><h3 class="t-h5">[Finding 2]</h3><p class="t-body-sm">[One or two lines on what we learned.]</p></li>
+      <li class="cb-card"><h3 class="t-h5">[Finding 3]</h3><p class="t-body-sm">[One or two lines on what we learned.]</p></li>
+    </ul>
+  </section>
+
+  <section class="shell cb-section" id="decisions" aria-labelledby="decisions-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">04</span>Key decisions</span>
+      <h2 class="t-h2" id="decisions-h">[Decisions heading]</h2>
+    </div>
+    <div class="cb-flow">
+      <article class="cb-decision" aria-labelledby="d1-h">
+        <div><span class="cb-dlabel t-mono">Decision 01</span><h3 class="t-h3" id="d1-h">[Decision as a statement.]</h3></div>
+        <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">[The problem this decision solves.]</p></div>
+        <figure class="cb-figure">
+          <div class="cb-frame"><span class="cb-tag t-mono">Shipped</span><div class="cb-media"><div class="cb-ph cb-ph--16x9 t-mono" role="img" aria-label="[Chosen option: screen name]">[Chosen option · 16:9]</div></div></div>
+          <figcaption class="t-body-sm">[Caption: the chosen option.]</figcaption>
+        </figure>
+        <ul class="cb-alts" aria-label="Rejected alternatives">
+          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Alternative A]">[Alt A]</div></div></div><figcaption class="t-body-sm">[One-line reason it lost.]</figcaption></figure></li>
+          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Alternative B]">[Alt B]</div></div></div><figcaption class="t-body-sm">[One-line reason it lost.]</figcaption></figure></li>
+          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Alternative C]">[Alt C]</div></div></div><figcaption class="t-body-sm">[One-line reason it lost.]</figcaption></figure></li>
+          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Alternative D]">[Alt D]</div></div></div><figcaption class="t-body-sm">[One-line reason it lost.]</figcaption></figure></li>
+        </ul>
+        <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">[Why this option won: evidence, constraints, trade-offs.]</p></div>
+      </article>
+
+      <article class="cb-decision" aria-labelledby="d2-h">
+        <div><span class="cb-dlabel t-mono">Decision 02</span><h3 class="t-h3" id="d2-h">[Decision as a statement.]</h3></div>
+        <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">[The problem this decision solves.]</p></div>
+        <ul class="cb-alts-text" aria-label="Rejected alternatives">
+          <li><span class="cb-tag t-mono">Rejected</span><b class="t-label">[Alternative A]</b><span class="t-body-sm">[One-line reason it lost.]</span></li>
+          <li><span class="cb-tag t-mono">Rejected</span><b class="t-label">[Alternative B]</b><span class="t-body-sm">[One-line reason it lost.]</span></li>
+        </ul>
+        <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">[Why this option won.]</p></div>
+      </article>
+
+      <figure class="cb-figure">
+        <div class="cb-steps" tabindex="0" role="region" aria-label="[Flow name], 4 steps">
+          <ol>
+            <li><span class="cb-sn t-mono">Step 01</span><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Step 1 screen]">[Step 1]</div></div></div></li>
+            <li><span class="cb-sn t-mono">Step 02</span><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Step 2 screen]">[Step 2]</div></div></div></li>
+            <li><span class="cb-sn t-mono">Step 03</span><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Step 3 screen]">[Step 3]</div></div></div></li>
+            <li><span class="cb-sn t-mono">Step 04</span><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Step 4 screen]">[Step 4]</div></div></div></li>
+          </ol>
+        </div>
+        <figcaption class="t-body-sm">[Caption: the flow these steps show.]</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="final-ui" aria-labelledby="final-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">05</span>Final UI</span>
+      <h2 class="t-h2" id="final-h">[Final UI heading]</h2>
+    </div>
+    <div class="cb-feature">
+      <div class="cb-ftext"><h3 class="t-h4">[Feature 1]</h3><p class="t-body">[What it does and why it matters, two or three lines.]</p></div>
+      <div class="cb-fmedia cb-stack">
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Feature 1 screen A]">[Feature 1 · screen A]</div></div></div></figure>
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Feature 1 screen B]">[Feature 1 · screen B]</div></div></div></figure>
+      </div>
+    </div>
+    <div class="cb-feature cb-feature--flip">
+      <div class="cb-ftext"><h3 class="t-h4">[Feature 2]</h3><p class="t-body">[What it does and why it matters, two or three lines.]</p></div>
+      <div class="cb-fmedia">
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Feature 2 screen]">[Feature 2 · screen]</div></div></div></figure>
+      </div>
+    </div>
+    <div class="cb-flow">
+      <figure class="cb-figure">
+        <div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x9 t-mono" role="img" aria-label="[Overview screen]">[Overview · wide · 16:9]</div></div></div>
+        <figcaption class="t-body-sm">[Caption: the whole screen.]</figcaption>
+      </figure>
+      <figure class="cb-figure cb-figure--crop">
+        <div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--4x5 t-mono" role="img" aria-label="[Tall dashboard, top part]">[Tall dashboard · 4:5 source, cropped to 16:10 from the top]</div></div></div>
+        <figcaption class="t-body-sm">[Caption: the top of a long dashboard.]</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="results" aria-labelledby="results-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">06</span>Results</span>
+      <h2 class="t-h2" id="results-h">[Results heading]</h2>
+    </div>
+    <div class="cb-flow">
+      <div>
+        <dl class="cb-stats">
+          <div><dt class="t-stat">[00%]</dt><dd class="t-body-sm">[What the number measures]<span class="cb-src t-caption">[Source: analytics, period]</span></dd></div>
+          <div><dt class="t-stat">[0×]</dt><dd class="t-body-sm">[What the number measures]</dd></div>
+          <div><dt class="t-stat">[00]</dt><dd class="t-body-sm">[What the number measures]</dd></div>
+        </dl>
+        <p class="cb-note t-caption">[Note, if needed: metrics weren't tracked / are under NDA.]</p>
+      </div>
+      <ul class="cb-outcomes t-body">
+        <li>[Qualitative outcome 1]</li>
+        <li>[Qualitative outcome 2]</li>
+        <li>[Qualitative outcome 3]</li>
+      </ul>
+      <figure class="cb-quote">
+        <blockquote class="t-h4"><p>[Quote from a stakeholder or user.]</p></blockquote>
+        <figcaption class="t-mono">[Role, e.g. Product owner]</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="retro" aria-labelledby="retro-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">07</span>What I'd do differently</span>
+      <h2 class="t-h2" id="retro-h">[Retro heading]</h2>
+    </div>
+    <div class="cb-flow">
+      <div class="cb-prose t-body">
+        <ol>
+          <li>[Lesson 1]</li>
+          <li>[Lesson 2]</li>
+          <li>[Lesson 3]</li>
+        </ol>
+      </div>
+      <aside class="cb-todo" aria-label="Todo">
+        <span class="t-mono">Todo</span>
+        <p class="t-body-sm">[Missing fact: what to ask or check before this case is frozen.]</p>
+      </aside>
+    </div>
+  </section>
 </main>
 
 <!-- End block (DESIGN.md §4.17). With a next case, replace the left link with:
