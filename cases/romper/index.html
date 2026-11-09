@@ -59,13 +59,12 @@
 
 <main id="main">
   <!-- Romper case body (DESIGN.md §4.17 "Case body components"). Facts: cases/romper/BRIEF.md only; anything missing is a .cb-todo.
-       Images: each .cb-ph stands for an <img src alt width height loading="lazy">, added only after the cleaned screen export is confirmed.
-       The first image on the page (Final client dashboard) has no loading="lazy". Delete every .cb-todo before the case is frozen. -->
+       Images: cases/romper/assets/*.webp (neutral names), loading="lazy" except the first image on the page. Delete every .cb-todo before the case is frozen. -->
 
   <div class="shell cb-section cb-flow">
     <figure class="cb-figure">
-      <!-- first image on the page: loading="eager" (no lazy) -->
-      <div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="Romper client dashboard: a list of projects, each with three progress bars for Personas, Strategy and Ideas, and client totals on the right.">[Final client dashboard]</div></div></div>
+      <!-- first image on the page: no loading="lazy" -->
+      <div class="cb-frame"><div class="cb-media"><img src="assets/client-dashboard.webp" alt="Romper client dashboard: a list of projects, each with three progress bars for Personas, Strategy and Ideas, and client totals on the right." width="2400" height="1757" decoding="async"></div></div>
       <figcaption class="t-body-sm">Client dashboard. Every project shows how far it has moved through Personas, Strategy and Ideas.</figcaption>
     </figure>
   </div>
@@ -132,14 +131,14 @@
         <div><span class="cb-dlabel t-mono">Decision 01</span><h3 class="t-h3" id="d1-h">A progress view instead of a control panel</h3></div>
         <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">Early versions treated the dashboard as a menu: shortcuts to users, clients and personas, quick actions, counters. They answered "where can I go", while admins came to find out "what is happening".</p></div>
         <figure class="cb-figure">
-          <div class="cb-frame"><span class="cb-tag t-mono">Shipped</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Shipped client dashboard]">[Shipped client dashboard]</div></div></div>
+          <div class="cb-frame"><span class="cb-tag t-mono">Shipped</span><div class="cb-media"><img src="assets/client-dashboard.webp" alt="Shipped client dashboard: each project with Personas, Strategy and Ideas progress bars, and tabs for projects, personas, experts and team." width="2400" height="1757" loading="lazy" decoding="async"></div></div>
           <figcaption class="t-body-sm">Each project shows three bars: Personas, Strategy, Ideas. Management moved into tabs and one "Add new" button.</figcaption>
         </figure>
         <ul class="cb-alts" aria-label="Rejected alternatives">
-          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Rejected option A]">[Option A]</div></div></div><figcaption class="t-body-sm">A hub of shortcuts. Six identical "Add new" buttons and one progress bar per project.</figcaption></figure></li>
-          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Rejected option B]">[Option B]</div></div></div><figcaption class="t-body-sm">A percentage per project doesn't say which stage the project is stuck in.</figcaption></figure></li>
-          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Rejected option C]">[Option C]</div></div></div><figcaption class="t-body-sm">KPIs mixed "my" and "total" numbers, so they were hard to read at a glance.</figcaption></figure></li>
-          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Rejected option D]">[Option D]</div></div></div><figcaption class="t-body-sm">Everything about a client on one page: projects, team, personas, experts, tips. Too much to scan.</figcaption></figure></li>
+          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><img src="assets/rejected-a.webp" alt="Rejected dashboard: a carousel of project cards with one stage bar each, counter blocks with manage buttons, and six identical Add new buttons." width="1200" height="1070" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">A hub of shortcuts. Six identical "Add new" buttons and one progress bar per project.</figcaption></figure></li>
+          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><img src="assets/rejected-b.webp" alt="Rejected dashboard: a project list with a percentage ring per project, quick action links and counter cards." width="1200" height="954" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">A percentage per project doesn't say which stage the project is stuck in.</figcaption></figure></li>
+          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><img src="assets/rejected-c.webp" alt="Rejected dashboard: projects with colored stage tags and four KPI tiles mixing personal and total numbers." width="1200" height="799" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">KPIs mixed "my" and "total" numbers, so they were hard to read at a glance.</figcaption></figure></li>
+          <li><figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Rejected</span><div class="cb-media"><img src="assets/rejected-d.webp" alt="Rejected client dashboard: projects, quick actions, KPI tiles, a tips carousel, team, personas and experts on one page." width="1200" height="1488" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Everything about a client on one page: projects, team, personas, experts, tips. Too much to scan.</figcaption></figure></li>
         </ul>
         <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">Three bars show where a project is and what's left, which a single number can't. Moving management into tabs freed the main view for progress. The final version went through four iterations and was approved with stakeholders.</p></div>
       </article>
@@ -157,14 +156,14 @@
       <figure class="cb-figure">
         <div class="cb-steps" tabindex="0" role="region" aria-label="Persona creation wizard, 5 steps">
           <ol>
-            <li><span class="cb-sn t-mono">Step 01</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Persona details step]">[Details]</div></div></div><figcaption class="t-body-sm">Persona details</figcaption></figure></li>
-            <li><span class="cb-sn t-mono">Step 02</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Core questions step]">[Core questions]</div></div></div><figcaption class="t-body-sm">Core questions: how this person thinks and decides</figcaption></figure></li>
-            <li><span class="cb-sn t-mono">Step 03</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Client step]">[Client]</div></div></div><figcaption class="t-body-sm">Client: who the persona belongs to</figcaption></figure></li>
-            <li><span class="cb-sn t-mono">Step 04</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Image step]">[Image]</div></div></div><figcaption class="t-body-sm">Image: generated from the answers</figcaption></figure></li>
-            <li><span class="cb-sn t-mono">Step 05</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Image ready step]">[Image ready]</div></div></div><figcaption class="t-body-sm">Image ready: refine or upload instead</figcaption></figure></li>
+            <li><span class="cb-sn t-mono">Step 01</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/step-1-details.webp" alt="Create persona, step 1: name, age, behaviour profile, occupation and location." width="1200" height="1065" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Persona details</figcaption></figure></li>
+            <li><span class="cb-sn t-mono">Step 02</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/step-2-questions.webp" alt="Create persona, step 2: core questions about the persona's day, trusted sources and channels." width="1200" height="1065" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Core questions: how this person thinks and decides</figcaption></figure></li>
+            <li><span class="cb-sn t-mono">Step 03</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/step-3-client.webp" alt="Create persona, step 3: assigning the persona to a client." width="1200" height="1065" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Client: who the persona belongs to</figcaption></figure></li>
+            <li><span class="cb-sn t-mono">Step 04</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/step-4-image.webp" alt="Create persona, step 4: generating the persona's image from a description, or uploading one." width="1200" height="1065" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Image: generated from the answers</figcaption></figure></li>
+            <li><span class="cb-sn t-mono">Step 05</span><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/step-5-image-ready.webp" alt="Create persona, step 5: the generated image, ready to save." width="1200" height="1065" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Image ready: refine or upload instead</figcaption></figure></li>
           </ol>
         </div>
-        <figcaption class="t-body-sm">[Caption: the wizard steps; the image step generates a persona image from the answers.]</figcaption>
+        <figcaption class="t-body-sm">Creating a persona: five screens of one modal, from details to a generated image.</figcaption>
       </figure>
     </div>
   </section>
@@ -177,15 +176,15 @@
     </div>
     <div class="cb-feature">
       <div class="cb-ftext"><h3 class="t-h4">One client</h3><p class="t-body">Projects for one client with Personas, Strategy and Ideas progress. Personas, experts and team sit in tabs.</p></div>
-      <div class="cb-fmedia"><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Client dashboard]">[Client dashboard]</div></div></div></figure></div>
+      <div class="cb-fmedia"><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/level-client.webp" alt="Client dashboard, Team tab: team members with roles, emails, activation toggles and edit actions, with client totals on the right." width="2400" height="1757" loading="lazy" decoding="async"></div></div></figure></div>
     </div>
     <div class="cb-feature cb-feature--flip">
       <div class="cb-ftext"><h3 class="t-h4">One project</h3><p class="t-body">Objectives, current status, ideas per phase and who on the team is active.</p></div>
-      <div class="cb-fmedia"><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Project dashboard]">[Project dashboard]</div></div></div></figure></div>
+      <div class="cb-fmedia"><figure class="cb-figure cb-figure--crop"><div class="cb-frame"><div class="cb-media"><img src="assets/level-project.webp" alt="Project dashboard: objectives, current status, ideas and bookmarks per phase, active users by ideas, likes and comments, and activity over five weeks." width="2400" height="2948" loading="lazy" decoding="async"></div></div></figure></div>
     </div>
     <div class="cb-feature">
       <div class="cb-ftext"><h3 class="t-h4">Personas</h3><p class="t-body">Active personas and experts at the top, available ones below. "Set journey" places a persona at a stage of the customer journey: awareness, interest or trial.</p></div>
-      <div class="cb-fmedia"><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Personas page]">[Personas page]</div></div></div></figure></div>
+      <div class="cb-fmedia"><figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/personas.webp" alt="Personas page: active personas and experts at the top with Set journey buttons, available ones below, and the persona chat on the right." width="2400" height="2353" loading="lazy" decoding="async"></div></div></figure></div>
     </div>
   </section>
 
