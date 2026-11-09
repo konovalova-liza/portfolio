@@ -650,6 +650,7 @@ Every case page shares one shell. (v1, 2026-11-05)
     | `--cb-sticky-top` | `2rem` | Feature-row text `top` while sticky, and `scroll-margin-top` of sections. The case header is not sticky (§4.17 Header), so this is only the gap to the viewport top |
     | `--cb-crop` | `16/10` | Window of the crop figure: shows the top of a tall dashboard at the usual screen ratio |
     | `--cb-step-w` | `80%` | Steps item width below 1024: the next item peeks by 20%, which is the overflow hint |
+    | `--cb-step-w-lg` | `40%` | Steps item width at ≥1024: about 2.5 items in view, so form screenshots stay readable (~500px wide at 1440) and the next item peeks in as the overflow hint. Replaces the old equal-columns row (2026-11-09) |
     | `.cb-ph--16x10` / `--16x9` / `--4x5` | `aspect-ratio` 16/10, 16/9, 4/5 | Template placeholders only (gray boxes standing for screenshots); real images take their ratio from `width`/`height` |
 
   - **Shared rules:**
@@ -680,7 +681,7 @@ Every case page shares one shell. (v1, 2026-11-05)
        - **pair** `.cb-pair` around two figures: 2-up from 1024, gap `1.5rem`.
        - **stack** `.cb-stack`: vertical group, gap `1.5rem`.
        - **crop** `.cb-figure--crop`: `.cb-media` `aspect-ratio:--cb-crop`, `img` `object-fit:cover; object-position:top`, for tall dashboards.
-       - **steps** `.cb-steps` (a focusable `div`, `tabindex="0"`, `role="region"`, `aria-label="<Flow>, N steps"`) around an `ol` of 3–5 small figures, each with `.cb-sn.t-mono` "Step 01". At ≥1024: one row, equal columns, gap `1.5rem`, no scroll. Below 1024: horizontal strip, items `--cb-step-w` wide (the peek is the overflow hint), gap `1rem`, `scroll-snap-type:x mandatory`, items snap to start, `overscroll-behavior-x:contain`, `padding-bottom:.75rem` for the scrollbar. Arrow keys scroll it while it has focus.
+       - **steps** `.cb-steps` (a focusable `div`, `tabindex="0"`, `role="region"`, `aria-label="<Flow>, N steps"`) around an `ol` of 3–5 small figures, each with `.cb-sn.t-mono` "Step 01". At every width a horizontal scroll strip: items `--cb-step-w` wide below 1024 (gap `1rem`) and `--cb-step-w-lg` at ≥1024 (gap `1.5rem`); the peek of the next item is the overflow hint. `scroll-snap-type:x mandatory`, items snap to start, `overscroll-behavior-x:contain`, `padding-bottom:.75rem` for the scrollbar. Arrow keys scroll it while it has focus.
      - *States:* static; `.cb-steps:focus-visible` gets the §3 ring (`2px --ring-light`, offset `2px`).
      - *Don't:* round the steps strip itself (it clips the first label); put text inside screenshots that the caption should carry.
   5. **Tag** `.cb-tag.t-mono`.

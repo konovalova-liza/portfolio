@@ -105,7 +105,8 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
   --cb-col:48rem;             /* text column: section head, prose block, inset figure */
   --cb-sticky-top:2rem;       /* feature-row text offset; the case header is not sticky, so this is the gap to the viewport top */
   --cb-crop:16/10;            /* crop figure window for tall screenshots */
-  --cb-step-w:80%;            /* steps strip item width on mobile: the next item peeks as the overflow hint */
+  --cb-step-w:80%;            /* steps strip item width below 1024: the next item peeks as the overflow hint */
+  --cb-step-w-lg:40%;         /* steps strip item width at >=1024: about 2.5 items in view, so form screenshots stay readable and the next one peeks in */
 }
 .cb-section{padding-block:2.5rem;scroll-margin-top:var(--cb-sticky-top)}
 @media (min-width:1024px){.cb-section{padding-block:3.5rem}}
@@ -162,7 +163,7 @@ main>.cb-section:last-child{padding-bottom:5rem}
 .cb-steps ol{display:grid;grid-auto-flow:column;grid-auto-columns:var(--cb-step-w);gap:1rem}
 .cb-steps li{scroll-snap-align:start}
 .cb-steps .cb-sn{display:block;margin-bottom:.5rem;color:var(--text-2)}
-@media (min-width:1024px){.cb-steps{overflow-x:visible;scroll-snap-type:none;padding-bottom:0}.cb-steps ol{grid-auto-columns:1fr;gap:1.5rem}}
+@media (min-width:1024px){.cb-steps ol{grid-auto-columns:var(--cb-step-w-lg);gap:1.5rem}}
 
 /* tag: neutral label on figures (Before, After, Shipped, Rejected, a role, a level) */
 .cb-tag{align-self:flex-start;display:inline-flex;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--background);padding:.25rem .75rem;color:var(--text-2)}
