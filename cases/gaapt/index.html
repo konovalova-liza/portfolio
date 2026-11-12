@@ -14,8 +14,9 @@
 <link rel="stylesheet" href="../../shared/type.css">
 <link rel="stylesheet" href="../../shared/components.css">
 <link rel="stylesheet" href="../shared/case.css">
+<link rel="stylesheet" href="gaapt.css">
 </head>
-<body>
+<body class="case-gaapt">
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-logo" viewBox="0 0 48 48"><path fill="currentColor" d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z"/></symbol>
@@ -56,7 +57,7 @@
   </section>
 </div>
 
-<main id="main">
+<main id="main" class="gaapt">
   <!-- GAAPT case body (DESIGN.md §4.17 "Case body components"). Facts: cases/gaapt/BRIEF.md only.
        Scaffold: every text block and image slot is a placeholder named by its slot ([Todo "slot"]); final copy arrives as gaapt-copy.md,
        images as cases/gaapt/assets/*.webp (neutral names), loading="lazy" except the cover. "After" screens are a redesign: never "Shipped" or "live".
@@ -91,9 +92,9 @@
     <div class="cb-flow">
       <aside class="cb-todo" aria-label="Todo"><span class="t-mono">Todo</span><p class="t-body-sm">"problem-prose"</p></aside>
       <div class="cb-stack">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-bridge]">[Todo "legacy-bridge"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-bridge-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-pyramid]">[Todo "legacy-pyramid"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-pyramid-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-table]">[Todo "legacy-table"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-table-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-bridge]">[Todo "legacy-bridge"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-bridge-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-pyramid]">[Todo "legacy-pyramid"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-pyramid-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-table]">[Todo "legacy-table"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-table-caption"]</figcaption></figure>
       </div>
     </div>
   </section>
@@ -124,8 +125,8 @@
         <div><span class="cb-dlabel t-mono">Decision 01</span><h3 class="t-h3" id="d1-h">Countries stay visible on the dashboard</h3></div>
         <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">[Todo "d1-problem"]</p></div>
       <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-geographies]">[Todo "legacy-geographies"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-geographies-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: geo-header]">[Todo "geo-header"]</div></div></div><figcaption class="t-body-sm">[Todo "geo-header-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-geographies]">[Todo "legacy-geographies"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-geographies-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: geo-header]">[Todo "geo-header"]</div></div></div><figcaption class="t-body-sm">[Todo "geo-header-caption"]</figcaption></figure>
       </div>
         <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">[Todo "d1-why"]</p></div>
       </article>
@@ -134,8 +135,8 @@
         <div><span class="cb-dlabel t-mono">Decision 02</span><h3 class="t-h3" id="d2-h">One endless page → four tabs</h3></div>
         <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">[Todo "d2-problem"]</p></div>
       <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-page]">[Todo "legacy-page"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-page-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: tabs]">[Todo "tabs"]</div></div></div><figcaption class="t-body-sm">[Todo "tabs-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-page]">[Todo "legacy-page"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-page-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: tabs]">[Todo "tabs"]</div></div></div><figcaption class="t-body-sm">[Todo "tabs-caption"]</figcaption></figure>
       </div>
         <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">[Todo "d2-why"]</p></div>
       </article>
@@ -145,8 +146,8 @@
         <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">[Todo "d3-problem"]</p></div>
         <!-- table-levels: an interactive table later; a placeholder for now -->
       <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-table]">[Todo "legacy-table"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-table-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: table-levels]">[Todo "table-levels"]</div></div></div><figcaption class="t-body-sm">[Todo "table-levels-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-table]">[Todo "legacy-table"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-table-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: table-levels]">[Todo "table-levels"]</div></div></div><figcaption class="t-body-sm">[Todo "table-levels-caption"]</figcaption></figure>
       </div>
         <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">[Todo "d3-why"]</p></div>
       </article>
@@ -160,12 +161,12 @@
     </div>
     <div class="cb-flow">
       <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-bridge]">[Todo "legacy-bridge"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-bridge-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: bridge-after]">[Todo "bridge-after"]</div></div></div><figcaption class="t-body-sm">[Todo "bridge-after-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-bridge]">[Todo "legacy-bridge"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-bridge-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: bridge-after]">[Todo "bridge-after"]</div></div></div><figcaption class="t-body-sm">[Todo "bridge-after-caption"]</figcaption></figure>
       </div>
       <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-pyramid]">[Todo "legacy-pyramid"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-pyramid-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: pyramid-after]">[Todo "pyramid-after"]</div></div></div><figcaption class="t-body-sm">[Todo "pyramid-after-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-pyramid]">[Todo "legacy-pyramid"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-pyramid-caption"]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: pyramid-after]">[Todo "pyramid-after"]</div></div></div><figcaption class="t-body-sm">[Todo "pyramid-after-caption"]</figcaption></figure>
       </div>
     </div>
   </section>

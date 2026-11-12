@@ -1,0 +1,57 @@
+/* GAAPT case theme (DESIGN.md §5.8): dark case body, scoped to cases/gaapt/ only. Linked after ../shared/case.css.
+   Layering: ink intro/end sheets (#0a0a0a, unchanged) → teal-graphite body (--gp-bg) → near-black screenshots on a framed mat.
+   The .cb-* components are themed by remapping the shell variables inside main.gaapt; a selector is overridden only where
+   a component's light look isn't a variable (frame, panels, captions, Before/After tags). */
+
+/* tokens: --gp-* (§5.8), used only on this page */
+.case-gaapt{
+  --gp-bg:#172023;
+  --gp-glow:radial-gradient(1200px 520px at 72% 0, rgba(93,181,173,.08), transparent 70%);
+  --gp-surface:#1F292C;
+  --gp-surface-2:#263235;
+  --gp-text:#E8EEEF;
+  --gp-text-2:#AEB9BB;
+  --gp-text-3:#93A0A2;
+  --gp-line:rgba(255,255,255,.09);
+  --gp-accent:#5DB5AD;
+  --gp-accent-2:#9AD3CD;
+  --gp-mat:#07090A;
+  --gp-mat-border:rgba(255,255,255,.10);
+  --gp-mat-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+/* the area behind the intro's and end block's rounded corners is the body colour, not white */
+body.case-gaapt{background:var(--gp-bg)}
+
+/* mapping: the shell variables the .cb-* components already use */
+main.gaapt{
+  color-scheme:dark;
+  --background:var(--gp-bg); --surface:var(--gp-surface); --surface-2:var(--gp-surface-2); --surface-soft:rgba(31,41,44,.6);
+  --foreground:var(--gp-text); --text:var(--gp-text); --text-2:var(--gp-text-2); --text-3:var(--gp-text-3);
+  --line:var(--gp-line); --border-ctl:rgba(255,255,255,.3);
+  --accent:var(--gp-accent); --ring-light:var(--gp-accent-2);
+  color:var(--text);                 /* body sets its colour from the light :root, so main re-applies it */
+  background:var(--gp-glow);         /* one soft glow at the top, over the body's --gp-bg */
+}
+
+/* figures: each screenshot sits on a near-black mat, so it reads as a screen placed on the page */
+.gaapt .cb-frame{background:var(--gp-mat);border:1px solid var(--gp-mat-border);box-shadow:var(--gp-mat-shadow)}
+.gaapt .cb-figure figcaption{color:var(--gp-text-3)}
+
+/* Before / After tags (scoped exception to §4.17 "Tag: don't color-code"; the label text still carries the meaning) */
+.gaapt .cb-tag.gp-before{color:var(--gp-text-3)}
+.gaapt .cb-tag.gp-after{color:var(--gp-accent)}
+
+/* panels on --gp-surface with a 1px --gp-line border: summary items, cards, decisions, stats, outcomes */
+.gaapt .cb-summary dl>div,
+.gaapt .cb-card,
+.gaapt .cb-decision,
+.gaapt .cb-stats>div,
+.gaapt .cb-outcomes{background:var(--gp-surface);border:1px solid var(--gp-line);border-radius:var(--r-card-sm)}
+.gaapt .cb-summary dl>div,.gaapt .cb-stats>div{padding:1.5rem}
+.gaapt .cb-decision{padding:1.5rem}
+@media (min-width:1024px){.gaapt .cb-decision{padding:2.5rem}}
+/* panels replace the rule between two decisions: the usual 3rem block gap instead of 5rem + rule + 5rem */
+.gaapt .cb-decision+.cb-decision{margin-top:3rem;padding-top:1.5rem}
+@media (min-width:1024px){.gaapt .cb-decision+.cb-decision{padding-top:2.5rem}}
+.gaapt .cb-outcomes{padding-inline:1.5rem}
+.gaapt .cb-outcomes li:first-child{border-top:0}

@@ -618,7 +618,7 @@ Every case page shares one shell. (v1, 2026-11-05)
 - **Rules:**
   - New cases start as a copy of `cases/_template/` at `cases/<slug>/index.html`.
   - The shell is **never restyled per case**. A change to the header, intro or end block is made in `cases/shared/case.css` and applies to every case.
-  - A case may have its own visual language **only inside `<main>`**, under its own scope class and token prefix (like `.digest` / `--dg-*`), documented as its own §5.x section (Digest: §5.7). Shared case-body blocks use the `.cb-*` components below; anything else stays in the case's own scope.
+  - A case may have its own visual language **only inside `<main>`**, under its own scope class and token prefix (like `.digest` / `--dg-*`), documented as its own §5.x section (Digest: §5.7; GAAPT: §5.8, whose dark body also sets `body.case-gaapt` so the area behind the sheets' rounded corners matches it). Shared case-body blocks use the `.cb-*` components below; anything else stays in the case's own scope.
   - **No process-meta section.** Case pages have no "How it's built", "Under the hood" or similar section about how the page was made. A case ends with its body, then the end block. (2026-11-05: removed from Digest.)
   - Load order: case stylesheet(s), then `shared/type.css`, then `shared/components.css`, then `case.css`, then the page's own `<style>`.
   - **Case fonts (2026-11-05).** A case body may use its project's own font plus at most one more font proposed in that case's chat: **two own fonts per case at most**. They are used only inside `<main>` under the case scope class (like `.digest`), never in the shell. The case's own sizes go into a short case token scale under its prefix (like `--dg-*`), documented in its §5.x section. **Minimum 12px for any text, 14px for reading text** (paragraphs, list items, answers).
@@ -892,6 +892,47 @@ Reduced motion: `data-intro="done"` at once, so the final state shows instantly 
 **Cat (playlist card).** Inline SVG peeking from the card bottom (`translateY(--dg-cat-peek)`). The card is `300px` tall (not to the board edge): the old card ran to the frame's bottom, where the camera can't scroll, so the cat sat below the visible area. Tail: `rotate(±--dg-wag-angle)`, `--dg-wag` loop. Hover, focus-visible or tap (`.is-up`, a tap elsewhere resets) → `translateY(0)` in `--dur-micro` `--ease-hover`, showing head and paws. Reduced motion: no wag, no rise. CSS transforms only.
 
 Layout-only values in the mobile stack (<768px): world gap `3rem`, team cards two per row, What We Do cards one column (max 299px), burger 60% wide, playlist card `20rem`, Digest nav in flow. Disabled Digest tabs use the §3 disabled rule (`opacity:.4`).
+
+### 5.8 GAAPT case theme
+The GAAPT case (`cases/gaapt/`, added 2026-11-12) has a dark body to match the product. Scope: `body.case-gaapt` and `main.gaapt`, styles in `cases/gaapt/gaapt.css`, linked only from `cases/gaapt/index.html` after `../shared/case.css`. The shell (`cases/shared/`) and the template are unchanged; header, intro and end block are the usual `.ink` sheets.
+
+**Layering** (top to bottom). The body has to stay visibly apart from both the black sheets and the near-black screenshots:
+1. Header + intro: the unchanged `.ink` sheet (`--ink` `#0a0a0a`) with rounded bottom corners.
+2. Case body: teal-graphite `--gp-bg`, lighter and cooler than the ink, so the intro's rounded corners still read. `body.case-gaapt` takes this colour too, so the area behind the corners is not white.
+3. Screenshots: near-black (`#07090A`, the product's own background) on a framed mat, so each image reads as a screen placed on the page, not a hole in it.
+4. End block: the unchanged `.ink` sheet.
+
+**Tokens** (on `.case-gaapt`, used only on this page). Contrast ratios are on `--gp-bg`.
+
+| Token | Value | Where / why |
+|---|---|---|
+| `--gp-bg` | `#172023` | Body background |
+| `--gp-glow` | `radial-gradient(1200px 520px at 72% 0, rgba(93,181,173,.08), transparent 70%)` | One soft teal glow at the top of `main`, over `--gp-bg` |
+| `--gp-surface` | `#1F292C` | Panels: summary items, cards, decisions, stats, outcomes, todo boxes |
+| `--gp-surface-2` | `#263235` | Hover / nested surface (placeholder boxes) |
+| `--gp-text` | `#E8EEEF` | Primary text, 14.1:1 |
+| `--gp-text-2` | `#AEB9BB` | Secondary text, 8.3:1 |
+| `--gp-text-3` | `#93A0A2` | Captions, labels, the Before tag, 6.2:1. The minimum for any text on this page |
+| `--gp-line` | `rgba(255,255,255,.09)` | Dividers, card and panel borders |
+| `--gp-accent` | `#5DB5AD` | Links and active states inside the case, the After tag, 6.9:1 |
+| `--gp-accent-2` | `#9AD3CD` | Focus ring, link hover, 9.9:1 |
+| `--gp-mat` | `#07090A` | Figure frame background behind every image |
+| `--gp-mat-border` | `rgba(255,255,255,.10)` | 1px figure frame border |
+| `--gp-mat-shadow` | `0 24px 60px rgba(0,0,0,.35)` | Figure depth |
+
+**Mapping** inside `main.gaapt`: the shell variables the `.cb-*` components already use are remapped, so no component CSS is rewritten. `--background` → `--gp-bg`; `--surface` → `--gp-surface`; `--surface-2` → `--gp-surface-2`; `--surface-soft` → `rgba(31,41,44,.6)`; `--foreground` / `--text` → `--gp-text`; `--text-2` → `--gp-text-2`; `--text-3` → `--gp-text-3`; `--line` → `--gp-line`; `--border-ctl` → `rgba(255,255,255,.3)`; `--accent` → `--gp-accent`; `--ring-light` → `--gp-accent-2`. `main.gaapt` also sets `color:var(--text)` (body takes its colour from the light `:root`), `color-scheme:dark` and the glow.
+
+**Selectors overridden beyond variables** (the light look there isn't a variable, or the theme adds a panel):
+- `.cb-frame`: `--gp-mat` background, `1px --gp-mat-border`, `--gp-mat-shadow` (radius stays `--r-card-sm`).
+- `.cb-figure figcaption`: `--gp-text-3`.
+- `.cb-tag.gp-before` / `.cb-tag.gp-after`: `--gp-text-3` / `--gp-accent`. The two scoped classes sit on the tags in the HTML.
+- Panels (`--gp-surface`, `1px --gp-line`, `--r-card-sm`): `.cb-summary dl>div` and `.cb-stats>div` (padding `1.5rem`), `.cb-card`, `.cb-outcomes` (padding-inline `1.5rem`, first row without its top rule), `.cb-decision` (padding `1.5rem` → `2.5rem` at 1024). Two decisions in a row are `3rem` apart (the `.cb-flow` gap) instead of the `5rem` + rule + `5rem` split, because the panels already separate them.
+
+**Scoped exceptions** (this page only):
+- **Accent.** The global `--accent` `#4f5bd5` is about 3:1 on `--gp-bg` and fails for links, so inside this case it is replaced by `--gp-accent` (6.9:1), with `--gp-accent-2` for the focus ring. D1/D7 still hold for the portfolio shell.
+- **Tag colour.** §4.17 says Tags are not colour-coded and don't use `--accent`. Here Before is `--gp-text-3` and After is `--gp-accent`, per the GAAPT theme spec (2026-11-12). The label text still carries the meaning.
+
+**Rules.** Fonts unchanged (Onest + Geist Mono), so the case still belongs to the portfolio. No colours beyond this table. Text never below `--gp-text-3`.
 
 ---
 
