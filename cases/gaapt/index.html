@@ -63,8 +63,9 @@
        "After" screens are a redesign: never "Shipped" or "live". Legacy crops carry no client name, logo, URL or currency (NDA). -->
 
   <div class="shell cb-section cb-flow">
-    <!-- cover: redesigned Profit & Loss dashboard; first image on the page, no loading="lazy" -->
-    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/cover.webp" alt="Redesigned forecasting dashboard in a dark theme: selected countries as chips in the header, four tabs, six KPI tiles and a grouped revenue chart over a dotted globe." width="2400" height="1980" decoding="async"></div></div><figcaption class="t-body-sm">The redesigned Profit &amp; Loss dashboard: country filters, four tabs and one chart system.</figcaption></figure>
+    <!-- cover: redesigned Profit & Loss dashboard; first image on the page, no loading="lazy". The poster stays at every width;
+         at >=1024 the script at the end of the page lays the live dashboard (demo/dashboard.html#embed=cover) over it. -->
+    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media" id="cover-media"><img src="assets/cover.webp" alt="Redesigned forecasting dashboard in a dark theme: selected countries as chips in the header, four tabs, six KPI tiles and a grouped revenue chart over a dotted globe." width="2400" height="1980" decoding="async"></div></div><figcaption class="t-body-sm" id="cover-cap">The redesigned Profit &amp; Loss dashboard: country filters, four tabs and one chart system.</figcaption></figure>
   </div>
 
   <section class="shell cb-summary" aria-label="Summary">
@@ -223,6 +224,35 @@
 
 <script src="../shared/case.js"></script>
 <script>
+/* Live cover, >=1024 only: demo/dashboard.html#embed=cover is rendered at 1440 x 1188 CSS px (the poster's ratio) and scaled to the
+   poster's box, which keeps the layout. It stays hidden until its load event, so the poster covers the wait, then fades in.
+   Below 1024 no iframe is created (no request for the demo); if the window narrows later it is hidden and the poster caption returns.
+   The embed locks its own scroll and pauses its globe when off screen. */
+(function () {
+  var media = document.getElementById('cover-media'), cap = document.getElementById('cover-cap');
+  if (!media || !cap || !window.matchMedia) return;
+  var mq = matchMedia('(min-width: 1024px)'), W = 1440, H = 1188, f = null;
+  var posterCap = cap.textContent, liveCap = 'The redesigned Profit & Loss dashboard. Live: remove a country or change the fiscal year.';
+  function fit() { if (f) f.style.transform = 'scale(' + media.clientWidth / W + ')'; }
+  function make() {
+    f = document.createElement('iframe');
+    f.className = 'gp-cover-live';
+    f.title = 'Interactive dashboard: remove a country or change the fiscal year to update the charts';
+    f.width = W; f.height = H;
+    f.addEventListener('load', function () { f.classList.add('is-on'); }, { once: true });
+    f.src = 'demo/dashboard.html#embed=cover';
+    media.appendChild(f);
+    fit();
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(media); else addEventListener('resize', fit);
+  }
+  function apply() {
+    if (mq.matches) { if (!f) make(); f.hidden = false; cap.textContent = liveCap; }
+    else { if (f) f.hidden = true; cap.textContent = posterCap; }
+  }
+  apply();
+  if (mq.addEventListener) mq.addEventListener('change', apply); else mq.addListener(apply);
+})();
+
 /* Decision 03 live table: the demo posts {gaaptDemoHeight:n} after every render; the frame follows it, so it never scrolls inside.
    Only messages from that iframe's own window are accepted. n is the demo's documentElement.scrollHeight, which never drops
    below the frame's current height, so a frame that grew would never shrink back. The demo is same-origin, so its body height

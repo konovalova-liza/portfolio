@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GAAPT · Dashboard redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#07090A; --text:#E8EEEF; --text-2:#A3AFB1; --text-3:#8B989A; --label:#C3CDCF;
+  --accent:#5DB5AD; --accent-light:#9AD3CD; --warn:#F59E5B;
+  --mono:'Geist Mono', ui-monospace, monospace; --sans:Geist, Inter, system-ui, sans-serif;
+  --noise:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjg1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIwIDAgMCAwIDEgIDAgMCAwIDAgMSAgMCAwIDAgMCAxICAwIDAgMCAuNTUgMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWx0ZXI9InVybCgjbikiIG9wYWNpdHk9Ii41Ii8+PC9zdmc+");
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)} a:hover{color:var(--accent-light)}
+button,select{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+select{appearance:none;-webkit-appearance:none;cursor:pointer}
+select option{background:#121819;color:var(--text)}
+
+#bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+  background:radial-gradient(1px 1px at 8% 12%,rgba(232,238,239,.55),transparent 60%),radial-gradient(1px 1px at 18% 64%,rgba(232,238,239,.35),transparent 60%),radial-gradient(1.5px 1.5px at 27% 30%,rgba(232,238,239,.4),transparent 60%),radial-gradient(1px 1px at 88% 8%,rgba(232,238,239,.5),transparent 60%),radial-gradient(1px 1px at 94% 44%,rgba(232,238,239,.35),transparent 60%),radial-gradient(1px 1px at 72% 4%,rgba(232,238,239,.4),transparent 60%),radial-gradient(1px 1px at 5% 38%,rgba(232,238,239,.3),transparent 60%),var(--bg)}
+#globe{position:absolute;left:50%;top:-560px;width:1900px;height:1900px;margin-left:-880px}
+#bg .vignette{position:absolute;inset:0;background:radial-gradient(ellipse 75% 70% at 50% 25%,transparent 50%,rgba(7,9,10,.55) 100%)}
+#app{position:relative;z-index:1;min-height:100vh}
+
+.glass{position:relative;background:linear-gradient(180deg,rgba(30,39,42,.52) 0%,rgba(13,18,20,.58) 100%);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%);border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 24px 60px rgba(0,0,0,.38)}
+.glass::before,.glass-hero::before{content:"";position:absolute;inset:0;border-radius:inherit;background-image:var(--noise);background-size:200px 200px;opacity:.07;mix-blend-mode:overlay;pointer-events:none}
+.glass-hero{position:relative;background:linear-gradient(180deg,rgba(24,32,35,.20) 0%,rgba(10,14,16,.30) 100%);-webkit-backdrop-filter:blur(7px) saturate(140%);backdrop-filter:blur(7px) saturate(140%);border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 24px 60px rgba(0,0,0,.25)}
+.glass-hero h1,.glass-hero p,.glass-hero [role=tab]{text-shadow:0 1px 12px rgba(7,9,10,.85)}
+.glass-bar{-webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);background:rgba(7,9,10,.42)}
+.field{background:rgba(6,9,10,.55);border:1px solid rgba(255,255,255,.11);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--text)}
+.field:hover{border-color:rgba(255,255,255,.2)}
+
+.mono{font-family:var(--mono)}
+.lbl{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.lbl-lg{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.sel{position:relative}
+.sel select{width:100%;height:38px;padding:0 36px 0 12px;border-radius:10px;font-size:13px}
+.sel.lg select{height:42px;border-radius:11px;font-size:14px}
+.sel svg{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none}
+.sel .y{font-family:var(--mono)}
+.ibtn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 38px}
+.field-col{display:flex;flex-direction:column;gap:5px}
+
+header.top{height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 20px 0 14px;border-bottom:1px solid rgba(255,255,255,.07)}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.mark{width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,rgba(93,181,173,.22),rgba(93,181,173,.04));border:1px solid rgba(93,181,173,.3);display:flex;align-items:center;justify-content:center}
+.tbtn{width:38px;height:38px;border-radius:11px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text-2);position:relative}
+.layout{display:flex;flex-wrap:wrap;align-items:stretch}
+nav.rail{flex:0 0 68px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 0;border-right:1px solid rgba(255,255,255,.07)}
+nav.rail a{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--text-3)}
+nav.rail a[aria-current]{color:var(--accent-light);background:rgba(93,181,173,.14);border:1px solid rgba(93,181,173,.32);box-shadow:0 0 18px rgba(93,181,173,.18)}
+main{flex:999 1 560px;min-width:0;padding:32px 32px 56px;display:flex;flex-direction:column;gap:20px}
+
+.hero{display:flex;flex-direction:column;gap:24px;padding:28px 28px 0;border-radius:24px}
+.hero h1{margin:10px 0 6px;font-size:44px;line-height:1.08;font-weight:500;letter-spacing:-.025em}
+.hero p{margin:0;color:var(--text-2);max-width:560px}
+.filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:20px;padding:18px 20px;border-radius:18px;background:rgba(6,9,10,.30);border:1px solid rgba(255,255,255,.08);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.chip{display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 4px 0 12px;border-radius:999px;background:rgba(93,181,173,.12);border:1px solid rgba(93,181,173,.32)}
+.chip button{width:26px;height:26px;border-radius:50%;border:0;background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center}
+.tabs-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:100%}
+.tab{height:50px;padding:0 16px;background:transparent;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--text-2);white-space:nowrap;font-weight:500}
+.tab[aria-selected=true]{border-bottom-color:var(--accent);color:var(--text)}
+.seg{display:flex;padding:3px;border-radius:12px}
+.seg button{height:34px;padding:0 16px;border-radius:9px;border:0;background:transparent;color:var(--text-2);font-weight:500}
+.seg button[aria-pressed=true]{background:var(--accent);color:#061012}
+.seg.sm{border-radius:11px}
+.seg.sm button{width:36px;height:30px;padding:0;border-radius:8px;font-family:var(--mono);font-size:12px}
+
+h2.sec{margin:8px 0 0;font-size:22px;font-weight:500;letter-spacing:-.01em}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.kpi{display:flex;flex-direction:column;padding:16px 18px 18px;border-radius:18px;min-width:0}
+.kpi .top{display:flex;align-items:center;justify-content:space-between;gap:8px;height:20px}
+.kpi .row{margin-top:10px;display:flex;align-items:center;gap:10px;min-width:0}
+.kpi .ico{width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;flex:0 0 28px}
+.kpi .name{color:var(--label);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.kpi .val{margin-top:14px;height:32px;display:flex;align-items:center;font-family:var(--mono);font-size:30px;line-height:1;letter-spacing:-.03em;white-space:nowrap}
+.kpi .ticks{margin-top:14px;display:flex;gap:3px}
+.kpi .ticks span{flex:1 1 0;height:6px;border-radius:2px}
+.badge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;font-family:var(--mono);font-size:11px;white-space:nowrap}
+.up{color:#9AD3CD;background:rgba(111,183,176,.14)} .down{color:#E4A19C;background:rgba(208,111,106,.16)}
+
+.card{padding:22px 24px 20px;border-radius:22px;min-width:0}
+.card h3{margin:0;font-size:16px;font-weight:500}
+.card .sub{margin-top:4px;color:var(--text-3);font-size:13px}
+.card-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px}
+.ctrls{display:flex;gap:8px;align-items:flex-end;flex-wrap:nowrap}
+.row2{display:flex;flex-wrap:wrap;gap:20px}
+.pill{height:32px;padding:0 12px 0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--text);display:inline-flex;align-items:center;gap:8px;font-size:12px;white-space:nowrap}
+.pill[aria-pressed=false],.pill[aria-selected=false]{border-color:rgba(255,255,255,.08);background:rgba(6,9,10,.35);color:var(--text-2)}
+.pill[aria-selected=true]{border-color:rgba(93,181,173,.5);background:rgba(93,181,173,.12)}
+.sw{width:10px;height:10px;border-radius:3px;flex:0 0 10px}
+
+.chart{display:flex;gap:10px}
+.yaxis{position:relative;flex:0 0 40px}
+.yaxis span{position:absolute;right:0;transform:translateY(50%);font-family:var(--mono);font-size:11px;color:var(--text-3)}
+.plot{flex:1 1 auto;min-width:0}
+.area{position:relative}
+.grid-line{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.07)}
+.cols{position:absolute;inset:0;display:flex}
+.xl{display:flex;margin-top:10px}
+.xl div{flex:1 1 0;padding:0 2px;text-align:center;font-size:11px;line-height:1.3;color:var(--text-2)}
+.wcol{position:relative;flex:1 1 0}
+.wbar{position:absolute;border-radius:5px}
+.wlink{position:absolute;border-top:1px dashed rgba(195,205,207,.3)}
+.wval{position:absolute;left:0;right:0;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text)}
+.legend{margin-top:16px;display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--text-2)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+.prow{display:grid;grid-template-columns:220px minmax(0,1fr) 150px 120px;gap:16px;align-items:center;padding:0 12px;height:44px;border-bottom:1px solid rgba(255,255,255,.05);border-radius:8px}
+.prow:hover{background:rgba(255,255,255,.035)}
+.phead{display:grid;grid-template-columns:220px minmax(0,1fr) 150px 120px;gap:16px;padding:0 12px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+.switch{height:38px;padding:0 12px 0 6px;border-radius:10px;display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.switch .tr{position:relative;width:34px;height:20px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18)}
+.switch .kn{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--text-3);transition:left .2s}
+.switch[aria-checked=true] .tr{background:rgba(93,181,173,.35);border-color:rgba(93,181,173,.7)}
+.switch[aria-checked=true] .kn{left:16px;background:var(--accent-light)}
+.empty{padding:56px 24px;border-radius:22px;text-align:center;color:var(--text-2)}
+
+.tbar{display:flex;flex-wrap:nowrap;align-items:flex-end;gap:10px}
+.showbtn{width:100%;height:38px;padding:0 12px;border-radius:10px;display:flex;align-items:center;justify-content:space-between;font-size:13px;text-align:left}
+.pop{position:absolute;top:calc(100% + 6px);left:0;width:240px;z-index:20;border-radius:14px;padding:6px;display:flex;flex-direction:column}
+.pop button{display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;border-radius:9px;border:0;background:transparent;color:var(--text);font-size:13px;text-align:left}
+.pop button:hover{background:rgba(255,255,255,.05)}
+.pop .rd{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);display:inline-block;position:relative;flex:0 0 16px}
+.pop [aria-checked=true] .rd{border-color:var(--accent)}
+.pop [aria-checked=true] .rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--accent-light)}
+.twrap{overflow-x:auto;margin:0 -4px;padding:0 4px 4px}
+.tinner{min-width:1180px;display:flex;flex-direction:column;gap:12px}
+.thead{border-radius:14px;position:sticky;top:0;z-index:5}
+.thead th{height:44px}
+.gt{width:100%;table-layout:fixed;border-collapse:collapse}
+.gt th,.gt td{padding:0 12px;text-align:right;white-space:nowrap}
+.gt th[scope=row]{text-align:left;font-weight:inherit}
+.tcard{border-radius:18px;overflow:hidden}
+.trow{border-top:1px solid rgba(255,255,255,.05)}
+.trow:first-child{border-top:0}
+.trow:hover{background:rgba(255,255,255,.035)!important}
+.trow.d0{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.rname{display:flex;align-items:center;gap:8px;min-width:0}
+.rtxt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.tgl{width:24px;height:24px;flex:0 0 24px;border-radius:7px;border:0;background:transparent;color:var(--text-2);display:flex;align-items:center;justify-content:center}
+.tgl:hover{background:rgba(255,255,255,.07);color:var(--text)}
+.spk{text-align:center!important}
+.spk svg{display:inline-block;vertical-align:middle}
+input[type=search]{color:var(--text);font:inherit;font-size:13px}
+input[type=search]::placeholder{color:var(--text-3)}
+input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sel svg[style*="left:12px"]{right:auto;z-index:1}
+
+.primary{height:42px;padding:0 18px;border-radius:11px;border:0;background:var(--accent);color:#061012;font-weight:500;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.primary:hover{background:var(--accent-light)}
+.ntable{width:100%;min-width:1080px;table-layout:fixed;border-collapse:collapse}
+.ntable th{height:46px;padding:0 16px;text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);font-weight:400;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(6,9,10,.25)}
+.ntable td{padding:14px 16px;vertical-align:middle;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+.nrow:hover{background:rgba(255,255,255,.03)}
+.nd{margin-top:3px;color:var(--text-2);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nmut{color:var(--label);font-size:12px;white-space:nowrap}
+.ntype{display:inline-flex;align-items:center;gap:8px}
+.nbadge{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;border:1px solid;font-family:var(--mono);font-size:11px}
+.live{width:6px;height:6px;border-radius:50%;background:#9AD3CD;box-shadow:0 0 0 3px rgba(154,211,205,.18)}
+.npager{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
+.pgn{min-width:32px;height:32px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--text-2)}
+.pgn[aria-current]{background:rgba(93,181,173,.16);color:var(--text);border:1px solid rgba(93,181,173,.4)}
+.nicon{width:36px;height:36px;border-radius:10px;border:1px solid;display:flex;align-items:center;justify-content:center;flex:0 0 36px}
+.nbanner{display:flex;align-items:center;gap:14px;padding:12px 12px 12px 14px;border-radius:14px;border:1px solid;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.scrim{position:fixed;inset:0;background:rgba(4,6,7,.55);z-index:40;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100vw);z-index:41;border-radius:22px 0 0 22px;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(26,34,37,.92),rgba(12,16,18,.94))}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:20px 20px 16px 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+.dbody{flex:1 1 auto;overflow-y:auto;padding:4px 24px 24px}
+.dsec{padding-top:22px}
+.dsec>.lbl-lg{margin-bottom:10px}
+.tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tcardbtn{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(6,9,10,.4);text-align:left;color:var(--text)}
+.tcardbtn:hover{border-color:rgba(255,255,255,.22)}
+.tcardbtn .rd{position:absolute;top:14px;right:14px;width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35)}
+.tcardbtn[aria-checked=true] .rd{border-color:var(--accent-light)}
+.tcardbtn[aria-checked=true] .rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--accent-light)}
+.frow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.drawer label{font-size:13px;color:var(--label);display:block;margin-bottom:6px}
+.frow label{margin:0}
+.req{color:#E4A19C}
+.cnt{font-size:11px;color:var(--text-3)}
+.fin{width:100%;height:42px;padding:0 12px;border-radius:11px;font:inherit;font-size:14px;color:var(--text);color-scheme:dark}
+textarea.fin{height:auto;padding:10px 12px;resize:vertical;line-height:1.45}
+.fin::placeholder{color:var(--text-3)}
+.fin:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.fin[aria-invalid=true]{border-color:rgba(228,161,156,.75);background:rgba(208,111,106,.08)}
+.ferr{margin-top:6px;font-size:12px;color:#E4A19C}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px}
+.dfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.08)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:50;padding:12px 18px;border-radius:12px;font-size:13px}
+.topbanner{margin-bottom:-4px}
+
+body.bare header.top,body.bare nav.rail{display:none}
+body.bare main{padding:40px}
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.swatch{display:flex;align-items:center;gap:12px;height:44px}
+.swatch i{width:44px;height:28px;border-radius:7px;flex:0 0 44px;box-shadow:inset 0 2px 0 var(--c)}
+@media (prefers-reduced-motion: reduce){.switch .kn{transition:none}}
+[data-k]{transition:height .5s cubic-bezier(.2,.7,.2,1),bottom .5s cubic-bezier(.2,.7,.2,1)}
+@media (prefers-reduced-motion: reduce){[data-k]{transition:none}}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"><canvas id="globe"></canvas><div class="vignette"></div></div>
+
+<div id="app">
+  <header class="top glass-bar">
+    <div class="brand">
+      <div class="mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AD3CD" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.8 5.2 3.8 8.5s-1.2 6.1-3.8 8.5c-2.6-2.4-3.8-5.2-3.8-8.5s1.2-6.1 3.8-8.5z"/></svg></div>
+      <span style="font-weight:600;letter-spacing:.02em">GAAPT</span>
+      <span style="width:1px;height:18px;background:rgba(255,255,255,.14)"></span>
+      <span style="color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Global A&amp;A Planning Tool</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="tbtn" aria-label="Help"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.2-2.5 3.8M12 17.2v.1"/></svg></button>
+      <button class="tbtn" aria-label="Notifications, 3 unread"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 1.5h-15zM10 20.5h4"/></svg><span style="position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 2px #0B0F10"></span></button>
+      <button aria-label="Account: DB" style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(30,39,42,.7);font-family:var(--mono);font-size:12px">DB</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="rail glass-bar" aria-label="Main">
+      <a href="#" data-a="page" data-v="dash" aria-label="Dashboard" aria-current="page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="9" rx="2"/><rect x="13.5" y="3.5" width="7" height="5" rx="2"/><rect x="13.5" y="11.5" width="7" height="9" rx="2"/><rect x="3.5" y="15.5" width="7" height="5" rx="2"/></svg></a>
+      <a href="#" aria-label="Table view and levels"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 9.5v10"/></svg></a>
+      <a href="#" aria-label="User management"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5c.7-3.2 3-5 6-5s5.3 1.8 6 5M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.8c1.5.7 2.6 2.3 3 4.7"/></svg></a>
+      <a href="#" data-a="page" data-v="notif" aria-label="Notification center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4.5 6.5h15v9h-9l-4 3.5v-3.5h-2z"/></svg></a>
+    </nav>
+    <main id="main"></main>
+  </div>
+</div>
+
+<script>
+(function () {
+'use strict';
+var LAND = [-840,-1512,-840,-1368,-840,-1224,-840,-1080,-840,-936,-840,-792,-840,-648,-840,-504,-840,-360,-840,-216,-840,-72,-840,72,-840,216,-840,360,-840,504,-840,648,-840,792,-840,936,-840,1080,-840,1224,-840,1368,-840,1512,-840,1656,-825,-1452,-825,-1335,-825,-1219,-825,-1103,-825,-987,-825,-871,-825,-755,-825,-639,-825,-523,-825,-406,-825,-290,-825,-174,-825,-58,-825,58,-825,174,-825,290,-825,406,-825,523,-825,639,-825,755,-825,871,-825,987,-825,1103,-825,1219,-825,1335,-825,1452,-825,1568,-810,-1411,-810,-1314,-810,-1216,-810,-1119,-810,-1022,-810,-924,-810,-827,-810,-730,-810,-341,-810,-243,-810,-146,-810,-49,-810,49,-810,146,-810,243,-810,341,-810,438,-810,535,-810,632,-810,730,-810,827,-810,924,-810,1022,-810,1119,-810,1216,-810,1314,-810,1411,-810,1508,-810,1605,-795,-1633,-795,-1465,-795,-1381,-795,-1298,-795,-1214,-795,-1130,-795,-1047,-795,-963,-795,-879,-795,-795,-795,-712,-795,-460,-795,-293,-795,-209,-795,-126,-795,-42,-795,42,-795,126,-795,209,-795,293,-795,377,-795,460,-795,544,-795,628,-795,712,-795,795,-795,879,-795,963,-795,1047,-795,1130,-795,1214,-795,1298,-795,1381,-795,1465,-795,1549,-780,-1580,-780,-1506,-780,-1433,-780,-1359,-780,-1286,-780,-1212,-780,-1139,-780,-1065,-780,-992,-780,-918,-780,-845,-780,-478,-780,-331,-780,-257,-780,-184,-780,-110,-780,-37,-780,37,-780,110,-780,184,-780,257,-780,331,-780,404,-780,478,-780,551,-780,624,-780,698,-780,771,-780,845,-780,918,-780,992,-780,1065,-780,1139,-780,1212,-780,1286,-780,1359,-780,1433,-780,1506,-780,1580,-765,-1414,-765,-1350,-765,-1286,-765,-1221,-765,-1157,-765,-1093,-765,-1029,-765,-964,-765,-900,-765,-836,-765,-707,-765,-257,-765,-193,-765,-129,-765,-64,-765,0,-765,64,-765,129,-765,193,-765,257,-765,321,-765,386,-765,450,-765,514,-765,579,-765,643,-765,707,-765,771,-765,836,-765,900,-765,964,-765,1029,-765,1093,-765,1157,-765,1221,-765,1286,-765,1350,-765,1414,-765,1479,-765,1543,-765,1607,-750,-1335,-750,-1277,-750,-1219,-750,-1161,-750,-987,-750,-929,-750,-871,-750,-813,-750,-755,-750,-697,-750,-174,-750,-116,-750,-58,-750,0,-750,58,-750,116,-750,174,-750,232,-750,290,-750,348,-750,406,-750,465,-750,523,-750,581,-750,639,-750,697,-750,755,-750,813,-750,871,-750,929,-750,987,-750,1045,-750,1103,-750,1161,-750,1219,-750,1277,-750,1335,-750,1394,-750,1452,-750,1510,-750,1568,-750,1626,-735,-1271,-735,-953,-735,-900,-735,-794,-735,-688,-735,-635,-735,-159,-735,-106,-735,-53,-735,0,-735,53,-735,106,-735,159,-735,212,-735,265,-735,318,-735,371,-735,424,-735,476,-735,529,-735,582,-735,635,-735,688,-735,741,-735,794,-735,847,-735,900,-735,953,-735,1006,-735,1059,-735,1112,-735,1165,-735,1218,-735,1271,-735,1324,-735,1376,-735,1429,-735,1482,-735,1535,-735,1588,-735,1641,-720,-632,-720,-97,-720,-49,-720,0,-720,49,-720,97,-720,146,-720,195,-720,243,-720,292,-720,341,-720,389,-720,438,-720,486,-720,535,-720,584,-720,632,-720,730,-720,778,-720,827,-720,876,-720,924,-720,973,-720,1022,-720,1070,-720,1119,-720,1168,-720,1216,-720,1265,-720,1314,-720,1362,-720,1411,-720,1459,-720,1508,-720,1557,-720,1605,-720,1654,-705,-675,-705,-630,-705,90,-705,135,-705,315,-705,360,-705,405,-705,450,-705,495,-705,540,-705,585,-705,630,-705,675,-705,765,-705,810,-705,855,-705,900,-705,945,-705,990,-705,1035,-705,1080,-705,1125,-705,1170,-705,1215,-705,1260,-705,1305,-705,1350,-705,1395,-705,1440,-705,1485,-705,1530,-705,1575,-705,1620,-690,-712,-690,335,-690,419,-690,460,-690,502,-690,544,-690,586,-690,628,-690,670,-690,795,-690,837,-690,879,-690,921,-690,963,-690,1005,-690,1047,-690,1088,-690,1130,-690,1172,-690,1214,-690,1256,-690,1298,-690,1340,-690,1381,-690,1423,-690,1465,-690,1507,-690,1549,-675,495,-675,534,-675,574,-675,851,-675,890,-675,930,-675,969,-675,1009,-675,1048,-675,1088,-675,1127,-675,1167,-675,1207,-675,1246,-675,1286,-675,1325,-675,1365,-675,1404,-660,-649,-660,-612,-660,538,-660,1021,-660,1132,-645,-612,-540,-728,-540,-677,-525,-740,-525,-715,-510,-727,-510,-703,-495,-755,-495,-732,-495,-708,-495,-685,-480,-720,-480,-698,-480,-675,-465,-753,-465,-731,-465,-709,-465,-687,-465,1691,-450,-714,-450,-692,-450,-671,-450,1672,-450,1693,-435,-724,-435,-703,-435,-683,-435,-662,-435,1469,-435,1717,-420,-708,-420,-688,-420,-667,-420,1456,-420,1476,-420,1719,-420,1739,-405,-732,-405,-712,-405,-692,-405,-673,-405,-653,-405,-633,-405,1760,-390,-716,-390,-697,-390,-677,-390,-658,-390,-639,-390,1742,-390,1761,-375,-720,-375,-701,-375,-682,-375,-663,-375,-644,-375,-625,-375,-606,-375,-587,-375,1402,-375,1421,-375,1440,-375,1459,-375,1478,-375,1497,-360,-724,-360,-705,-360,-687,-360,-668,-360,-649,-360,-631,-360,-612,-360,-594,-360,-575,-360,1373,-360,1410,-360,1429,-360,1447,-360,1466,-360,1485,-360,1744,-345,-704,-345,-685,-345,-667,-345,-649,-345,-630,-345,-612,-345,-594,-345,-576,-345,-557,-345,1160,-345,1179,-345,1398,-345,1416,-345,1435,-345,1453,-345,1471,-345,1489,-345,1508,-330,-707,-330,-690,-330,-672,-330,-654,-330,-636,-330,-618,-330,-600,-330,-582,-330,-564,-330,-546,-330,-528,-330,188,-330,206,-330,224,-330,242,-330,260,-330,278,-330,1173,-330,1191,-330,1209,-330,1227,-330,1352,-330,1370,-330,1388,-330,1406,-330,1424,-330,1442,-330,1460,-330,1478,-330,1496,-330,1513,-315,-706,-315,-688,-315,-671,-315,-653,-315,-635,-315,-618,-315,-600,-315,-582,-315,-565,-315,-547,-315,-529,-315,-512,-315,194,-315,212,-315,229,-315,247,-315,265,-315,282,-315,1165,-315,1182,-315,1200,-315,1218,-315,1235,-315,1253,-315,1271,-315,1288,-315,1306,-315,1324,-315,1341,-315,1359,-315,1376,-315,1394,-315,1412,-315,1429,-315,1447,-315,1465,-315,1482,-315,1500,-315,1518,-300,-704,-300,-687,-300,-670,-300,-652,-300,-635,-300,-617,-300,-600,-300,-583,-300,-565,-300,-548,-300,-530,-300,-513,-300,183,-300,200,-300,217,-300,235,-300,252,-300,270,-300,287,-300,304,-300,1157,-300,1174,-300,1191,-300,1209,-300,1226,-300,1243,-300,1261,-300,1278,-300,1296,-300,1313,-300,1330,-300,1348,-300,1365,-300,1383,-300,1400,-300,1417,-300,1435,-300,1452,-300,1470,-300,1487,-300,1504,-300,1522,-285,-703,-285,-686,-285,-669,-285,-651,-285,-634,-285,-617,-285,-600,-285,-583,-285,-566,-285,-549,-285,-531,-285,-514,-285,-497,-285,171,-285,189,-285,206,-285,223,-285,240,-285,257,-285,274,-285,291,-285,309,-285,1149,-285,1166,-285,1183,-285,1200,-285,1217,-285,1234,-285,1251,-285,1269,-285,1286,-285,1303,-285,1320,-285,1337,-285,1354,-285,1371,-285,1389,-285,1406,-285,1423,-285,1440,-285,1457,-285,1474,-285,1491,-285,1509,-285,1526,-270,-701,-270,-685,-270,-668,-270,-651,-270,-634,-270,-617,-270,-600,-270,-583,-270,-566,-270,-549,-270,-532,-270,-515,-270,-499,-270,161,-270,177,-270,194,-270,211,-270,228,-270,245,-270,262,-270,279,-270,296,-270,313,-270,1141,-270,1158,-270,1175,-270,1192,-270,1208,-270,1225,-270,1242,-270,1259,-270,1276,-270,1293,-270,1310,-270,1327,-270,1344,-270,1361,-270,1377,-270,1394,-270,1411,-270,1428,-270,1445,-270,1462,-270,1479,-270,1496,-270,1513,-270,1530,-255,-700,-255,-683,-255,-667,-255,-650,-255,-633,-255,-617,-255,-600,-255,-583,-255,-567,-255,-550,-255,-533,-255,-517,-255,-500,-255,150,-255,167,-255,183,-255,200,-255,217,-255,233,-255,250,-255,267,-255,283,-255,300,-255,317,-255,1150,-255,1167,-255,1183,-255,1200,-255,1217,-255,1233,-255,1250,-255,1267,-255,1283,-255,1300,-255,1317,-255,1333,-255,1350,-255,1367,-255,1383,-255,1400,-255,1417,-255,1433,-255,1450,-255,1467,-255,1483,-255,1500,-255,1517,-240,-699,-240,-682,-240,-666,-240,-649,-240,-633,-240,-616,-240,-600,-240,-584,-240,-567,-240,-551,-240,-534,-240,-518,-240,-501,-240,-485,-240,-468,-240,156,-240,173,-240,189,-240,205,-240,222,-240,238,-240,255,-240,271,-240,288,-240,304,-240,321,-240,337,-240,353,-240,452,-240,468,-240,1142,-240,1159,-240,1175,-240,1192,-240,1208,-240,1225,-240,1241,-240,1258,-240,1274,-240,1290,-240,1307,-240,1323,-240,1340,-240,1356,-240,1373,-240,1389,-240,1405,-240,1422,-240,1438,-240,1455,-240,1471,-240,1488,-240,1504,-225,-692,-225,-676,-225,-660,-225,-643,-225,-627,-225,-611,-225,-595,-225,-578,-225,-562,-225,-546,-225,-529,-225,-513,-225,-497,-225,-481,-225,-464,-225,-448,-225,-432,-225,155,-225,171,-225,187,-225,204,-225,220,-225,236,-225,252,-225,269,-225,285,-225,301,-225,318,-225,334,-225,350,-225,448,-225,464,-225,1148,-225,1165,-225,1181,-225,1197,-225,1214,-225,1230,-225,1246,-225,1262,-225,1279,-225,1295,-225,1311,-225,1328,-225,1344,-225,1360,-225,1376,-225,1393,-225,1409,-225,1425,-225,1442,-225,1458,-225,1474,-225,1490,-210,-691,-210,-675,-210,-659,-210,-643,-210,-627,-210,-611,-210,-595,-210,-579,-210,-562,-210,-546,-210,-530,-210,-514,-210,-498,-210,-482,-210,-466,-210,-450,-210,-434,-210,-418,-210,145,-210,161,-210,177,-210,193,-210,209,-210,225,-210,241,-210,257,-210,273,-210,289,-210,305,-210,321,-210,338,-210,450,-210,466,-210,482,-210,1173,-210,1189,-210,1205,-210,1221,-210,1238,-210,1254,-210,1270,-210,1286,-210,1302,-210,1318,-210,1334,-210,1350,-210,1366,-210,1382,-210,1398,-210,1414,-210,1430,-210,1446,-210,1462,-210,1479,-210,1671,-195,-701,-195,-685,-195,-669,-195,-653,-195,-637,-195,-621,-195,-605,-195,-589,-195,-573,-195,-558,-195,-542,-195,-526,-195,-510,-195,-494,-195,-478,-195,-462,-195,-446,-195,-430,-195,-414,-195,-398,-195,143,-195,159,-195,175,-195,191,-195,207,-195,223,-195,239,-195,255,-195,271,-195,287,-195,303,-195,319,-195,335,-195,350,-195,446,-195,462,-195,478,-195,1227,-195,1242,-195,1258,-195,1274,-195,1290,-195,1306,-195,1322,-195,1338,-195,1354,-195,1370,-195,1386,-195,1402,-195,1418,-195,1434,-195,1450,-195,1465,-180,-695,-180,-679,-180,-663,-180,-647,-180,-632,-180,-616,-180,-600,-180,-584,-180,-568,-180,-553,-180,-537,-180,-521,-180,-505,-180,-489,-180,-474,-180,-458,-180,-442,-180,-426,-180,-411,-180,126,-180,142,-180,158,-180,174,-180,189,-180,205,-180,221,-180,237,-180,253,-180,268,-180,284,-180,300,-180,316,-180,332,-180,347,-180,363,-180,442,-180,458,-180,474,-180,489,-180,1232,-180,1247,-180,1263,-180,1279,-180,1295,-180,1311,-180,1326,-180,1342,-180,1358,-180,1374,-180,1389,-180,1405,-180,1421,-180,1437,-180,1453,-180,1784,-165,-1800,-165,-720,-165,-704,-165,-689,-165,-673,-165,-657,-165,-642,-165,-626,-165,-610,-165,-595,-165,-579,-165,-563,-165,-548,-165,-532,-165,-517,-165,-501,-165,-485,-165,-470,-165,-454,-165,-438,-165,-423,-165,-407,-165,-391,-165,125,-165,141,-165,157,-165,172,-165,188,-165,203,-165,219,-165,235,-165,250,-165,266,-165,282,-165,297,-165,313,-165,329,-165,344,-165,360,-165,376,-165,391,-165,454,-165,470,-165,485,-165,1237,-165,1252,-165,1268,-165,1283,-165,1299,-165,1315,-165,1330,-165,1346,-165,1362,-165,1377,-165,1393,-165,1424,-165,1440,-165,1675,-150,-740,-150,-725,-150,-709,-150,-694,-150,-678,-150,-662,-150,-647,-150,-631,-150,-616,-150,-600,-150,-584,-150,-569,-150,-553,-150,-538,-150,-522,-150,-506,-150,-491,-150,-475,-150,-460,-150,-444,-150,-429,-150,-413,-150,-397,-150,132,-150,148,-150,164,-150,179,-150,195,-150,210,-150,226,-150,242,-150,257,-150,273,-150,288,-150,304,-150,319,-150,335,-150,351,-150,366,-150,382,-150,397,-150,491,-150,1270,-150,1286,-150,1301,-150,1317,-150,1332,-150,1348,-150,1426,-150,1442,-135,-1723,-135,-749,-135,-734,-135,-718,-135,-703,-135,-688,-135,-672,-135,-657,-135,-641,-135,-626,-135,-610,-135,-595,-135,-579,-135,-564,-135,-548,-135,-533,-135,-518,-135,-502,-135,-487,-135,-471,-135,-456,-135,-440,-135,-425,-135,-409,-135,-394,-135,131,-135,147,-135,162,-135,178,-135,193,-135,209,-135,224,-135,239,-135,255,-135,270,-135,286,-135,301,-135,317,-135,332,-135,348,-135,363,-135,379,-135,394,-135,487,-135,1306,-135,1321,-135,1336,-135,1352,-135,1429,-120,-769,-120,-754,-120,-738,-120,-723,-120,-708,-120,-692,-120,-677,-120,-662,-120,-646,-120,-631,-120,-615,-120,-600,-120,-585,-120,-569,-120,-554,-120,-538,-120,-523,-120,-508,-120,-492,-120,-477,-120,-462,-120,-446,-120,-431,-120,-415,-120,-400,-120,-385,-120,138,-120,154,-120,169,-120,185,-120,200,-120,215,-120,231,-120,246,-120,262,-120,277,-120,292,-120,308,-120,323,-120,338,-120,354,-120,369,-120,385,-120,400,-120,492,-120,1338,-120,1431,-105,-1386,-105,-774,-105,-758,-105,-743,-105,-728,-105,-712,-105,-697,-105,-682,-105,-666,-105,-651,-105,-636,-105,-620,-105,-605,-105,-590,-105,-574,-105,-559,-105,-544,-105,-529,-105,-513,-105,-498,-105,-483,-105,-467,-105,-452,-105,-437,-105,-421,-105,-406,-105,-391,-105,-375,-105,146,-105,161,-105,176,-105,191,-105,207,-105,222,-105,237,-105,253,-105,268,-105,283,-105,299,-105,314,-105,329,-105,345,-105,360,-105,375,-105,391,-105,1233,-105,1616,-90,-782,-90,-767,-90,-752,-90,-737,-90,-722,-90,-706,-90,-691,-90,-676,-90,-661,-90,-646,-90,-630,-90,-615,-90,-600,-90,-585,-90,-570,-90,-554,-90,-539,-90,-524,-90,-509,-90,-494,-90,-478,-90,-463,-90,-448,-90,-433,-90,-418,-90,-403,-90,-387,-90,-372,-90,-357,-90,144,-90,159,-90,175,-90,190,-90,205,-90,220,-90,235,-90,251,-90,266,-90,281,-90,296,-90,311,-90,327,-90,342,-90,357,-90,372,-90,387,-90,1253,-90,1420,-90,1481,-75,-782,-75,-767,-75,-752,-75,-737,-75,-722,-75,-706,-75,-691,-75,-676,-75,-661,-75,-646,-75,-630,-75,-615,-75,-600,-75,-585,-75,-570,-75,-554,-75,-539,-75,-524,-75,-509,-75,-494,-75,-478,-75,-463,-75,-448,-75,-433,-75,-418,-75,-403,-75,-387,-75,-372,-75,-357,-75,144,-75,159,-75,175,-75,190,-75,205,-75,220,-75,235,-75,251,-75,266,-75,281,-75,296,-75,311,-75,327,-75,342,-75,357,-75,372,-75,387,-75,1086,-75,1101,-75,1116,-75,1314,-75,1390,-75,1405,-75,1420,-75,1435,-75,1451,-75,1466,-60,-802,-60,-787,-60,-771,-60,-756,-60,-741,-60,-726,-60,-711,-60,-696,-60,-681,-60,-666,-60,-650,-60,-635,-60,-620,-60,-605,-60,-590,-60,-575,-60,-560,-60,-545,-60,-529,-60,-514,-60,-499,-60,-484,-60,-469,-60,-454,-60,-439,-60,-424,-60,-408,-60,-393,-60,-378,-60,-363,-60,136,-60,151,-60,166,-60,182,-60,197,-60,212,-60,227,-60,242,-60,257,-60,272,-60,287,-60,303,-60,318,-60,333,-60,348,-60,363,-60,378,-60,393,-60,1346,-60,1392,-60,1407,-60,1422,-60,1437,-60,1452,-60,1467,-60,1497,-45,-806,-45,-791,-45,-776,-45,-761,-45,-746,-45,-731,-45,-715,-45,-700,-45,-685,-45,-670,-45,-655,-45,-640,-45,-625,-45,-610,-45,-595,-45,-580,-45,-565,-45,-550,-45,-535,-45,-520,-45,-505,-45,-490,-45,-474,-45,-459,-45,-444,-45,-429,-45,-414,-45,-399,-45,-384,-45,128,-45,143,-45,158,-45,173,-45,188,-45,203,-45,218,-45,233,-45,249,-45,264,-45,279,-45,294,-45,309,-45,324,-45,339,-45,354,-45,369,-45,384,-45,1032,-45,1047,-45,1197,-45,1363,-45,1378,-45,1393,-45,1408,-45,1423,-45,1438,-45,1454,-45,1529,-30,-791,-30,-776,-30,-761,-30,-746,-30,-731,-30,-715,-30,-700,-30,-685,-30,-670,-30,-655,-30,-640,-30,-625,-30,-610,-30,-595,-30,-580,-30,-565,-30,-550,-30,-535,-30,-520,-30,-505,-30,-490,-30,-474,-30,-459,-30,-444,-30,-429,-30,-414,-30,-399,-30,113,-30,128,-30,143,-30,158,-30,173,-30,188,-30,203,-30,218,-30,233,-30,249,-30,264,-30,279,-30,294,-30,309,-30,324,-30,339,-30,354,-30,369,-30,384,-30,399,-30,1002,-30,1017,-30,1032,-30,1047,-30,1077,-30,1107,-30,1122,-30,1137,-30,1152,-30,1197,-30,1213,-30,1288,-30,1303,-30,1333,-30,1348,-30,1363,-30,1378,-30,1393,-30,1408,-30,1514,-15,-806,-15,-791,-15,-776,-15,-761,-15,-746,-15,-731,-15,-715,-15,-700,-15,-685,-15,-670,-15,-655,-15,-640,-15,-625,-15,-610,-15,-595,-15,-580,-15,-565,-15,-550,-15,-535,-15,-520,-15,-505,-15,-490,-15,-474,-15,-459,-15,98,-15,113,-15,128,-15,143,-15,158,-15,173,-15,188,-15,203,-15,218,-15,233,-15,249,-15,264,-15,279,-15,294,-15,309,-15,324,-15,339,-15,354,-15,369,-15,384,-15,399,-15,414,-15,1017,-15,1032,-15,1107,-15,1122,-15,1137,-15,1152,-15,1197,-15,1213,-15,1318,-15,1333,-15,1378,0,-915,0,-795,0,-780,0,-765,0,-750,0,-735,0,-720,0,-705,0,-690,0,-675,0,-660,0,-645,0,-630,0,-615,0,-600,0,-585,0,-570,0,-555,0,-540,0,-525,0,-495,0,105,0,120,0,135,0,150,0,165,0,180,0,195,0,210,0,225,0,240,0,255,0,270,0,285,0,300,0,315,0,330,0,345,0,360,0,375,0,390,0,405,0,420,0,1005,0,1020,0,1035,0,1095,0,1110,0,1125,0,1140,0,1155,0,1170,0,1200,15,-776,15,-761,15,-746,15,-731,15,-715,15,-700,15,-685,15,-670,15,-655,15,-640,15,-625,15,-610,15,-595,15,-580,15,-565,15,-550,15,-535,15,-520,15,-505,15,98,15,113,15,128,15,143,15,158,15,173,15,188,15,203,15,218,15,233,15,249,15,264,15,279,15,294,15,309,15,324,15,339,15,354,15,369,15,384,15,399,15,414,15,429,15,444,15,1002,15,1017,15,1092,15,1107,15,1122,15,1137,15,1152,15,1167,15,1182,30,-776,30,-761,30,-746,30,-731,30,-715,30,-700,30,-685,30,-670,30,-655,30,-640,30,-625,30,-610,30,-595,30,-580,30,-565,30,-550,30,-535,30,-520,30,113,30,128,30,143,30,158,30,173,30,188,30,203,30,218,30,233,30,249,30,264,30,279,30,294,30,309,30,324,30,339,30,354,30,369,30,384,30,399,30,414,30,429,30,444,30,459,30,987,30,1017,30,1032,30,1137,30,1152,30,1167,45,-761,45,-746,45,-731,45,-715,45,-700,45,-685,45,-670,45,-655,45,-640,45,-625,45,-610,45,-595,45,-580,45,-565,45,-550,45,-535,45,-520,45,68,45,98,45,113,45,128,45,143,45,158,45,173,45,188,45,203,45,218,45,233,45,249,45,264,45,279,45,294,45,309,45,324,45,339,45,354,45,369,45,384,45,399,45,414,45,429,45,444,45,459,45,474,45,972,45,1017,45,1032,45,1152,45,1167,45,1182,60,-771,60,-756,60,-741,60,-726,60,-711,60,-696,60,-681,60,-666,60,-650,60,-635,60,-620,60,-605,60,-590,60,-575,60,-91,60,-76,60,-61,60,-45,60,-30,60,-15,60,0,60,61,60,76,60,91,60,106,60,121,60,136,60,151,60,166,60,182,60,197,60,212,60,227,60,242,60,257,60,272,60,287,60,303,60,318,60,333,60,348,60,363,60,378,60,393,60,408,60,424,60,439,60,454,60,469,60,484,60,1013,60,1165,60,1180,60,1210,60,1255,75,-767,75,-752,75,-737,75,-722,75,-706,75,-691,75,-676,75,-661,75,-646,75,-630,75,-615,75,-600,75,-114,75,-99,75,-84,75,-68,75,-53,75,-38,75,-23,75,-8,75,8,75,23,75,38,75,53,75,68,75,84,75,99,75,114,75,129,75,144,75,159,75,175,75,190,75,205,75,220,75,235,75,251,75,266,75,281,75,296,75,311,75,327,75,342,75,357,75,372,75,387,75,403,75,418,75,433,75,448,75,463,75,478,75,494,75,813,75,995,75,1223,75,1253,90,-828,90,-797,90,-782,90,-752,90,-737,90,-722,90,-706,90,-691,90,-676,90,-661,90,-646,90,-630,90,-615,90,-129,90,-114,90,-99,90,-84,90,-68,90,-53,90,-38,90,-23,90,-8,90,8,90,23,90,38,90,53,90,68,90,84,90,99,90,114,90,129,90,144,90,159,90,175,90,190,90,205,90,220,90,235,90,251,90,266,90,281,90,296,90,311,90,327,90,342,90,357,90,372,90,387,90,403,90,418,90,433,90,448,90,463,90,478,90,494,90,767,90,782,90,995,90,1177,105,-850,105,-835,105,-743,105,-728,105,-712,105,-697,105,-682,105,-666,105,-636,105,-146,105,-130,105,-115,105,-100,105,-84,105,-69,105,-54,105,-38,105,-23,105,-8,105,8,105,23,105,38,105,54,105,69,105,84,105,100,105,115,105,130,105,146,105,161,105,176,105,191,105,207,105,222,105,237,105,253,105,268,105,283,105,299,105,314,105,329,105,345,105,360,105,375,105,391,105,406,105,421,105,437,105,452,105,467,105,483,105,498,105,774,105,789,105,988,105,1049,105,1065,105,1233,105,1249,120,-862,120,-846,120,-154,120,-138,120,-123,120,-108,120,-92,120,-77,120,-62,120,-46,120,-31,120,-15,120,0,120,15,120,31,120,46,120,62,120,77,120,92,120,108,120,123,120,138,120,154,120,169,120,185,120,200,120,215,120,231,120,246,120,262,120,277,120,292,120,308,120,323,120,338,120,354,120,369,120,385,120,400,120,415,120,431,120,754,120,769,120,785,120,985,120,1031,120,1046,120,1062,120,1077,120,1092,120,1200,135,-888,135,-873,135,-858,135,-842,135,-162,135,-147,135,-131,135,-116,135,-100,135,-85,135,-70,135,-54,135,-39,135,-23,135,-8,135,8,135,23,135,39,135,54,135,70,135,85,135,100,135,116,135,131,135,147,135,162,135,178,135,193,135,209,135,224,135,239,135,255,135,270,135,286,135,301,135,317,135,332,135,348,135,363,135,379,135,394,135,409,135,440,135,456,135,749,135,765,135,780,135,796,135,997,135,1012,135,1027,135,1043,135,1058,135,1074,135,1089,150,-912,150,-896,150,-881,150,-865,150,-849,150,-834,150,-164,150,-148,150,-132,150,-117,150,-101,150,-86,150,-70,150,-55,150,-39,150,-23,150,-8,150,8,150,23,150,39,150,55,150,70,150,86,150,101,150,117,150,132,150,148,150,164,150,179,150,195,150,210,150,226,150,242,150,257,150,273,150,288,150,304,150,319,150,335,150,351,150,366,150,382,150,397,150,444,150,460,150,475,150,491,150,740,150,756,150,771,150,787,150,990,150,1005,150,1021,150,1036,150,1052,150,1068,150,1083,150,1208,165,-986,165,-970,165,-955,165,-939,165,-923,165,-908,165,-892,165,-157,165,-141,165,-125,165,-110,165,-94,165,-78,165,-63,165,-47,165,-31,165,-16,165,0,165,16,165,31,165,47,165,63,165,78,165,94,165,110,165,125,165,141,165,157,165,172,165,188,165,203,165,219,165,235,165,250,165,266,165,282,165,297,165,313,165,329,165,344,165,360,165,376,165,391,165,438,165,454,165,470,165,485,165,501,165,517,165,736,165,751,165,767,165,783,165,798,165,814,165,955,165,986,165,1002,165,1017,165,1033,165,1049,165,1064,165,1205,165,1221,180,-1011,180,-995,180,-979,180,-963,180,-947,180,-932,180,-916,180,-900,180,-884,180,-774,180,-663,180,-158,180,-142,180,-126,180,-111,180,-95,180,-79,180,-63,180,-47,180,-32,180,-16,180,0,180,16,180,32,180,47,180,63,180,79,180,95,180,111,180,126,180,142,180,158,180,174,180,189,180,205,180,221,180,237,180,253,180,268,180,284,180,300,180,316,180,332,180,347,180,363,180,379,180,426,180,442,180,458,180,474,180,489,180,505,180,521,180,537,180,553,180,742,180,758,180,774,180,789,180,805,180,821,180,947,180,963,180,979,180,995,180,1011,180,1026,180,1042,180,1058,180,1216,195,-1035,195,-1019,195,-1004,195,-988,195,-972,195,-892,195,-876,195,-717,195,-701,195,-159,195,-143,195,-127,195,-112,195,-96,195,-80,195,-64,195,-48,195,-32,195,-16,195,0,195,16,195,32,195,48,195,64,195,80,195,96,195,112,195,127,195,143,195,159,195,175,195,191,195,207,195,223,195,239,195,255,195,271,195,287,195,303,195,319,195,335,195,350,195,366,195,414,195,430,195,446,195,462,195,478,195,494,195,510,195,526,195,542,195,558,195,573,195,733,195,749,195,765,195,781,195,796,195,812,195,828,195,844,195,940,195,956,195,972,195,988,195,1004,195,1019,195,1035,195,1051,195,1099,210,-1045,210,-1029,210,-1012,210,-996,210,-980,210,-900,210,-884,210,-771,210,-161,210,-145,210,-129,210,-112,210,-96,210,-80,210,-64,210,-48,210,-32,210,-16,210,0,210,16,210,32,210,48,210,64,210,80,210,96,210,112,210,129,210,145,210,161,210,177,210,193,210,209,210,225,210,241,210,257,210,273,210,289,210,305,210,321,210,338,210,354,210,370,210,402,210,418,210,434,210,450,210,466,210,482,210,498,210,514,210,530,210,546,210,562,210,579,210,707,210,739,210,755,210,771,210,788,210,804,210,820,210,836,210,852,210,868,210,932,210,948,210,964,210,980,210,996,210,1012,210,1029,210,1045,210,1061,225,-1051,225,-1034,225,-1018,225,-1002,225,-986,225,-839,225,-806,225,-155,225,-138,225,-122,225,-106,225,-90,225,-73,225,-57,225,-41,225,-24,225,-8,225,8,225,24,225,41,225,57,225,73,225,90,225,106,225,122,225,138,225,155,225,171,225,187,225,204,225,220,225,236,225,252,225,269,225,285,225,301,225,318,225,334,225,350,225,399,225,415,225,432,225,448,225,464,225,481,225,497,225,513,225,529,225,546,225,562,225,578,225,595,225,709,225,725,225,741,225,757,225,774,225,790,225,806,225,823,225,839,225,855,225,871,225,888,225,904,225,920,225,937,225,953,225,969,225,986,225,1002,225,1018,225,1034,225,1051,225,1067,225,1083,225,1100,225,1116,225,1132,240,-1060,240,-1044,240,-1027,240,-1011,240,-995,240,-978,240,-156,240,-140,240,-123,240,-107,240,-90,240,-74,240,-58,240,-41,240,-25,240,-8,240,8,240,25,240,41,240,58,240,74,240,90,240,107,240,123,240,140,240,156,240,173,240,189,240,205,240,222,240,238,240,255,240,271,240,288,240,304,240,321,240,337,240,353,240,386,240,403,240,419,240,436,240,452,240,468,240,485,240,501,240,518,240,534,240,551,240,567,240,682,240,699,240,715,240,732,240,748,240,764,240,781,240,797,240,814,240,830,240,847,240,863,240,879,240,896,240,912,240,929,240,945,240,962,240,978,240,995,240,1011,240,1027,240,1044,240,1060,240,1077,240,1093,240,1110,240,1126,240,1142,240,1159,240,1175,240,1208,255,-1117,255,-1083,255,-1067,255,-1050,255,-1033,255,-1017,255,-1000,255,-983,255,-133,255,-117,255,-100,255,-83,255,-67,255,-50,255,-33,255,-17,255,0,255,17,255,33,255,50,255,67,255,83,255,100,255,117,255,133,255,150,255,167,255,183,255,200,255,217,255,233,255,250,255,267,255,283,255,300,255,317,255,333,255,383,255,400,255,417,255,433,255,450,255,467,255,483,255,500,255,600,255,617,255,633,255,650,255,667,255,683,255,700,255,717,255,733,255,750,255,767,255,783,255,800,255,817,255,833,255,850,255,867,255,883,255,900,255,917,255,933,255,950,255,967,255,983,255,1000,255,1017,255,1033,255,1050,255,1067,255,1083,255,1100,255,1117,255,1133,255,1150,255,1167,255,1183,270,-1124,270,-1090,270,-1073,270,-1056,270,-1039,270,-1023,270,-1006,270,-989,270,-820,270,-803,270,-127,270,-110,270,-93,270,-76,270,-59,270,-42,270,-25,270,-8,270,8,270,25,270,42,270,59,270,76,270,93,270,110,270,127,270,144,270,161,270,177,270,194,270,211,270,228,270,245,270,262,270,279,270,296,270,313,270,330,270,363,270,380,270,397,270,414,270,431,270,448,270,465,270,482,270,549,270,583,270,600,270,617,270,634,270,651,270,668,270,685,270,701,270,718,270,735,270,752,270,769,270,786,270,803,270,820,270,837,270,854,270,870,270,887,270,904,270,921,270,938,270,955,270,972,270,989,270,1006,270,1023,270,1039,270,1056,270,1073,270,1090,270,1107,270,1124,270,1141,270,1158,270,1175,270,1192,285,-1131,285,-1114,285,-1097,285,-1080,285,-1063,285,-1046,285,-1029,285,-1011,285,-994,285,-977,285,-823,285,-806,285,-103,285,-86,285,-69,285,-51,285,-34,285,-17,285,0,285,17,285,34,285,51,285,69,285,86,285,103,285,120,285,137,285,154,285,171,285,189,285,206,285,223,285,240,285,257,285,274,285,291,285,309,285,326,285,343,285,360,285,377,285,394,285,411,285,429,285,446,285,463,285,480,285,514,285,531,285,549,285,566,285,583,285,600,285,617,285,634,285,651,285,669,285,686,285,703,285,720,285,737,285,754,285,771,285,789,285,806,285,823,285,840,285,857,285,874,285,891,285,909,285,926,285,943,285,960,285,977,285,994,285,1011,285,1029,285,1046,285,1063,285,1080,285,1097,285,1114,285,1131,285,1149,285,1166,285,1183,285,1200,300,-1157,300,-1122,300,-1104,300,-1087,300,-1070,300,-1052,300,-1035,300,-1017,300,-1000,300,-983,300,-965,300,-948,300,-930,300,-913,300,-826,300,-96,300,-78,300,-61,300,-43,300,-26,300,-9,300,9,300,26,300,43,300,61,300,78,300,96,300,113,300,130,300,148,300,165,300,183,300,200,300,217,300,235,300,252,300,270,300,287,300,304,300,322,300,339,300,357,300,374,300,391,300,409,300,426,300,443,300,461,300,478,300,496,300,513,300,530,300,548,300,565,300,583,300,600,300,617,300,635,300,652,300,670,300,687,300,704,300,722,300,739,300,757,300,774,300,791,300,809,300,826,300,843,300,861,300,878,300,896,300,913,300,930,300,948,300,965,300,983,300,1000,300,1017,300,1035,300,1052,300,1070,300,1087,300,1104,300,1122,300,1139,300,1157,300,1174,300,1191,300,1209,315,-1165,315,-1129,315,-1112,315,-1094,315,-1076,315,-1059,315,-1041,315,-1024,315,-1006,315,-988,315,-971,315,-953,315,-935,315,-918,315,-900,315,-882,315,-865,315,-847,315,-829,315,-88,315,-71,315,-53,315,-35,315,-18,315,0,315,18,315,35,315,53,315,71,315,88,315,106,315,124,315,141,315,212,315,229,315,247,315,353,315,371,315,388,315,406,315,424,315,441,315,459,315,476,315,494,315,512,315,529,315,547,315,565,315,582,315,600,315,618,315,635,315,653,315,671,315,688,315,706,315,724,315,741,315,759,315,776,315,794,315,812,315,829,315,847,315,865,315,882,315,900,315,918,315,935,315,953,315,971,315,988,315,1006,315,1024,315,1041,315,1059,315,1076,315,1094,315,1112,315,1129,315,1147,315,1165,315,1182,315,1200,315,1218,330,-1155,330,-1137,330,-1119,330,-1101,330,-1084,330,-1066,330,-1048,330,-1030,330,-1012,330,-994,330,-976,330,-958,330,-940,330,-922,330,-904,330,-887,330,-869,330,-851,330,-833,330,-815,330,-797,330,-81,330,-63,330,-45,330,-27,330,-9,330,9,330,27,330,45,330,63,330,81,330,99,330,116,330,367,330,385,330,403,330,421,330,439,330,457,330,475,330,493,330,510,330,528,330,546,330,564,330,582,330,600,330,618,330,636,330,654,330,672,330,690,330,707,330,725,330,743,330,761,330,779,330,797,330,815,330,833,330,851,330,869,330,887,330,904,330,922,330,940,330,958,330,976,330,994,330,1012,330,1030,330,1048,330,1066,330,1084,330,1101,330,1119,330,1137,330,1155,330,1173,330,1191,330,1316,345,-1197,345,-1179,345,-1160,345,-1142,345,-1124,345,-1106,345,-1087,345,-1069,345,-1051,345,-1032,345,-1014,345,-996,345,-978,345,-959,345,-941,345,-923,345,-905,345,-886,345,-868,345,-850,345,-831,345,-813,345,-795,345,-777,345,-64,345,-46,345,-27,345,-9,345,9,345,27,345,46,345,64,345,82,345,101,345,375,345,393,345,411,345,429,345,448,345,466,345,484,345,503,345,521,345,539,345,557,345,576,345,594,345,612,345,630,345,649,345,667,345,685,345,704,345,722,345,740,345,758,345,777,345,795,345,813,345,831,345,850,345,868,345,886,345,905,345,923,345,941,345,959,345,978,345,996,345,1014,345,1032,345,1051,345,1069,345,1087,345,1106,345,1124,345,1142,345,1160,345,1179,345,1197,345,1325,345,1343,345,1361,360,-1206,360,-1188,360,-1169,360,-1151,360,-1132,360,-1113,360,-1095,360,-1076,360,-1058,360,-1039,360,-1021,360,-1002,360,-984,360,-965,360,-946,360,-928,360,-909,360,-891,360,-872,360,-854,360,-835,360,-816,360,-798,360,-779,360,19,360,37,360,56,360,74,360,93,360,278,360,371,360,390,360,408,360,427,360,445,360,464,360,482,360,501,360,520,360,538,360,557,360,575,360,594,360,612,360,631,360,649,360,668,360,687,360,705,360,724,360,742,360,761,360,779,360,798,360,816,360,835,360,854,360,872,360,891,360,909,360,928,360,946,360,965,360,984,360,1002,360,1021,360,1039,360,1058,360,1076,360,1095,360,1113,360,1132,360,1151,360,1169,360,1188,360,1280,360,1373,360,1392,375,-1213,375,-1194,375,-1175,375,-1156,375,-1137,375,-1118,375,-1099,375,-1080,375,-1061,375,-1042,375,-1023,375,-1004,375,-985,375,-966,375,-947,375,-928,375,-909,375,-891,375,-872,375,-853,375,-834,375,-815,375,-796,375,-777,375,-758,375,-76,375,-57,375,-38,375,-19,375,133,375,227,375,284,375,303,375,322,375,341,375,360,375,379,375,398,375,417,375,436,375,455,375,474,375,493,375,512,375,531,375,549,375,568,375,587,375,606,375,625,375,644,375,663,375,682,375,701,375,720,375,739,375,758,375,777,375,796,375,815,375,834,375,853,375,872,375,891,375,909,375,928,375,947,375,966,375,985,375,1004,375,1023,375,1042,375,1061,375,1080,375,1099,375,1118,375,1137,375,1156,375,1175,375,1213,375,1269,375,1288,375,1402,390,-1219,390,-1200,390,-1181,390,-1161,390,-1142,390,-1123,390,-1103,390,-1084,390,-1065,390,-1045,390,-1026,390,-1006,390,-987,390,-968,390,-948,390,-929,390,-910,390,-890,390,-871,390,-852,390,-832,390,-813,390,-794,390,-774,390,-755,390,-77,390,-58,390,-39,390,-19,390,213,390,232,390,271,390,290,390,310,390,329,390,348,390,368,390,387,390,406,390,426,390,445,390,465,390,484,390,503,390,523,390,542,390,561,390,581,390,600,390,619,390,639,390,658,390,677,390,697,390,716,390,735,390,755,390,774,390,794,390,813,390,832,390,852,390,871,390,890,390,910,390,929,390,948,390,968,390,987,390,1006,390,1026,390,1045,390,1065,390,1084,390,1103,390,1123,390,1142,390,1161,390,1258,390,1277,390,1413,405,-1226,405,-1207,405,-1187,405,-1167,405,-1147,405,-1127,405,-1108,405,-1088,405,-1068,405,-1048,405,-1029,405,-1009,405,-989,405,-969,405,-949,405,-930,405,-910,405,-890,405,-870,405,-851,405,-831,405,-811,405,-791,405,-771,405,-752,405,-79,405,-59,405,-40,405,-20,405,0,405,158,405,178,405,198,405,218,405,237,405,277,405,297,405,316,405,336,405,356,405,376,405,396,405,415,405,435,405,455,405,475,405,495,405,514,405,534,405,554,405,574,405,593,405,613,405,633,405,653,405,673,405,692,405,712,405,732,405,752,405,771,405,791,405,811,405,831,405,851,405,870,405,890,405,910,405,930,405,949,405,969,405,989,405,1009,405,1029,405,1048,405,1068,405,1088,405,1108,405,1127,405,1147,405,1167,405,1187,405,1207,405,1226,405,1246,405,1266,405,1286,405,1404,420,-1234,420,-1213,420,-1193,420,-1173,420,-1153,420,-1133,420,-1112,420,-1092,420,-1072,420,-1052,420,-1031,420,-1011,420,-991,420,-971,420,-951,420,-930,420,-910,420,-890,420,-870,420,-849,420,-829,420,-809,420,-789,420,-769,420,-748,420,-728,420,-708,420,-81,420,-61,420,-40,420,-20,420,0,420,20,420,121,420,142,420,202,420,222,420,243,420,263,420,425,420,445,420,465,420,485,420,506,420,526,420,546,420,566,420,587,420,607,420,627,420,647,420,667,420,688,420,708,420,728,420,748,420,769,420,789,420,809,420,829,420,849,420,870,420,890,420,910,420,930,420,951,420,971,420,991,420,1011,420,1031,420,1052,420,1072,420,1092,420,1112,420,1133,420,1153,420,1173,420,1193,420,1213,420,1234,420,1254,420,1274,420,1294,435,-1241,435,-1221,435,-1200,435,-1179,435,-1159,435,-1138,435,-1117,435,-1097,435,-1076,435,-1055,435,-1034,435,-1014,435,-993,435,-972,435,-952,435,-931,435,-910,435,-890,435,-869,435,-848,435,-828,435,-807,435,-786,435,-766,435,-745,435,-724,435,-83,435,-62,435,0,435,21,435,41,435,62,435,103,435,124,435,166,435,186,435,207,435,228,435,248,435,269,435,414,435,434,435,455,435,476,435,497,435,517,435,538,435,559,435,579,435,600,435,621,435,641,435,662,435,683,435,703,435,724,435,745,435,766,435,786,435,807,435,828,435,848,435,869,435,890,435,910,435,931,435,952,435,972,435,993,435,1014,435,1034,435,1055,435,1076,435,1097,435,1117,435,1138,435,1159,435,1179,435,1200,435,1221,435,1241,435,1262,435,1283,435,1303,435,1324,435,1345,435,1428,435,1448,450,-1225,450,-1204,450,-1182,450,-1161,450,-1140,450,-1118,450,-1097,450,-1076,450,-1054,450,-1033,450,-1012,450,-991,450,-969,450,-948,450,-927,450,-905,450,-884,450,-863,450,-841,450,-820,450,-799,450,-778,450,-756,450,-735,450,-714,450,-692,450,-671,450,-650,450,-628,450,-11,450,11,450,32,450,53,450,75,450,96,450,117,450,138,450,160,450,181,450,202,450,224,450,245,450,266,450,288,450,351,450,373,450,394,450,415,450,437,450,458,450,479,450,501,450,522,450,543,450,564,450,586,450,607,450,628,450,650,450,671,450,692,450,714,450,735,450,756,450,778,450,799,450,820,450,841,450,863,450,884,450,905,450,927,450,948,450,969,450,991,450,1012,450,1033,450,1054,450,1076,450,1097,450,1118,450,1140,450,1161,450,1182,450,1204,450,1225,450,1246,450,1267,450,1289,450,1310,450,1331,450,1353,465,-1233,465,-1211,465,-1189,465,-1167,465,-1145,465,-1124,465,-1102,465,-1080,465,-1058,465,-1036,465,-1015,465,-993,465,-971,465,-949,465,-927,465,-905,465,-884,465,-862,465,-840,465,-818,465,-796,465,-775,465,-753,465,-731,465,-709,465,-687,465,-665,465,-11,465,11,465,33,465,55,465,76,465,98,465,120,465,142,465,164,465,185,465,207,465,229,465,251,465,273,465,295,465,316,465,338,465,382,465,404,465,425,465,447,465,469,465,491,465,513,465,535,465,556,465,578,465,600,465,622,465,644,465,665,465,687,465,709,465,731,465,753,465,775,465,796,465,818,465,840,465,862,465,884,465,905,465,927,465,949,465,971,465,993,465,1015,465,1036,465,1058,465,1080,465,1102,465,1124,465,1145,465,1167,465,1189,465,1211,465,1233,465,1255,465,1276,465,1298,465,1320,465,1342,465,1364,480,-1238,480,-1215,480,-1192,480,-1170,480,-1148,480,-1125,480,-1102,480,-1080,480,-1058,480,-1035,480,-1012,480,-990,480,-968,480,-945,480,-922,480,-900,480,-878,480,-855,480,-832,480,-810,480,-788,480,-765,480,-742,480,-720,480,-675,480,-585,480,-562,480,-540,480,-45,480,-22,480,0,480,22,480,45,480,68,480,90,480,112,480,135,480,158,480,180,480,202,480,225,480,248,480,270,480,292,480,315,480,338,480,360,480,382,480,405,480,428,480,450,480,472,480,495,480,518,480,540,480,562,480,585,480,608,480,630,480,652,480,675,480,698,480,720,480,742,480,765,480,788,480,810,480,832,480,855,480,878,480,900,480,922,480,945,480,968,480,990,480,1012,480,1035,480,1058,480,1080,480,1102,480,1125,480,1148,480,1170,480,1192,480,1215,480,1238,480,1260,480,1282,480,1305,480,1328,480,1350,480,1372,480,1395,495,-1243,495,-1219,495,-1196,495,-1173,495,-1150,495,-1126,495,-1103,495,-1080,495,-1057,495,-1034,495,-1010,495,-987,495,-964,495,-941,495,-917,495,-894,495,-871,495,-848,495,-825,495,-801,495,-778,495,-755,495,-732,495,-708,495,-685,495,-569,495,-546,495,12,495,35,495,58,495,81,495,105,495,128,495,151,495,174,495,197,495,221,495,244,495,267,495,290,495,314,495,337,495,360,495,383,495,406,495,430,495,453,495,476,495,499,495,523,495,546,495,569,495,592,495,615,495,639,495,662,495,685,495,708,495,732,495,755,495,778,495,801,495,825,495,848,495,871,495,894,495,917,495,941,495,964,495,987,495,1010,495,1034,495,1057,495,1080,495,1103,495,1126,495,1150,495,1173,495,1196,495,1219,495,1243,495,1266,495,1289,495,1312,495,1335,495,1359,495,1382,495,1405,495,1428,510,-1252,510,-1228,510,-1204,510,-1180,510,-1156,510,-1132,510,-1109,510,-1085,510,-1061,510,-1037,510,-1013,510,-989,510,-966,510,-942,510,-918,510,-894,510,-870,510,-846,510,-823,510,-799,510,-775,510,-751,510,-727,510,-703,510,-679,510,-656,510,-632,510,-608,510,-560,510,-36,510,-12,510,36,510,60,510,83,510,107,510,131,510,155,510,179,510,203,510,226,510,250,510,274,510,298,510,322,510,346,510,370,510,393,510,417,510,441,510,465,510,489,510,513,510,536,510,560,510,584,510,608,510,632,510,656,510,679,510,703,510,727,510,751,510,775,510,799,510,823,510,846,510,870,510,894,510,918,510,942,510,966,510,989,510,1013,510,1037,510,1061,510,1085,510,1109,510,1132,510,1156,510,1180,510,1204,510,1228,510,1252,510,1275,510,1299,510,1323,510,1347,510,1371,510,1395,525,-1282,525,-1258,525,-1233,525,-1208,525,-1184,525,-1159,525,-1134,525,-1110,525,-1085,525,-1060,525,-1036,525,-1011,525,-986,525,-962,525,-937,525,-912,525,-888,525,-863,525,-838,525,-764,525,-740,525,-715,525,-690,525,-666,525,-641,525,-616,525,-592,525,-567,525,-74,525,-25,525,0,525,49,525,74,525,99,525,123,525,148,525,173,525,197,525,222,525,247,525,271,525,296,525,321,525,345,525,370,525,395,525,419,525,444,525,468,525,493,525,518,525,542,525,567,525,592,525,616,525,641,525,666,525,690,525,715,525,740,525,764,525,789,525,814,525,838,525,863,525,888,525,912,525,937,525,962,525,986,525,1011,525,1036,525,1060,525,1085,525,1110,525,1134,525,1159,525,1184,525,1208,525,1233,525,1258,525,1282,525,1307,525,1332,525,1356,525,1381,525,1405,525,1430,525,1578,540,-1289,540,-1264,540,-1238,540,-1213,540,-1187,540,-1162,540,-1136,540,-1111,540,-1085,540,-1060,540,-1034,540,-1009,540,-983,540,-957,540,-932,540,-906,540,-881,540,-855,540,-830,540,-779,540,-753,540,-728,540,-702,540,-677,540,-651,540,-626,540,-600,540,-574,540,-89,540,-64,540,-13,540,89,540,115,540,140,540,166,540,191,540,217,540,243,540,268,540,294,540,319,540,345,540,370,540,396,540,421,540,447,540,472,540,498,540,523,540,549,540,574,540,600,540,626,540,651,540,677,540,702,540,728,540,753,540,779,540,804,540,830,540,855,540,881,540,906,540,932,540,957,540,983,540,1009,540,1034,540,1060,540,1085,540,1111,540,1136,540,1162,540,1187,540,1213,540,1238,540,1264,540,1289,540,1315,540,1340,540,1366,540,1391,540,1570,540,1596,555,-1613,555,-1293,555,-1267,555,-1240,555,-1213,555,-1187,555,-1160,555,-1133,555,-1107,555,-1080,555,-1053,555,-1027,555,-1000,555,-973,555,-947,555,-920,555,-893,555,-867,555,-760,555,-733,555,-707,555,-680,555,-653,555,-627,555,-40,555,93,555,120,555,227,555,253,555,280,555,307,555,333,555,360,555,387,555,413,555,440,555,467,555,493,555,520,555,547,555,573,555,600,555,627,555,653,555,680,555,707,555,733,555,760,555,787,555,813,555,840,555,867,555,893,555,920,555,947,555,973,555,1000,555,1027,555,1053,555,1080,555,1107,555,1133,555,1160,555,1187,555,1213,555,1240,555,1267,555,1293,555,1320,555,1347,555,1560,555,1587,555,1613,570,-1578,570,-1302,570,-1274,570,-1246,570,-1218,570,-1191,570,-1163,570,-1135,570,-1108,570,-1080,570,-1052,570,-1025,570,-997,570,-969,570,-942,570,-914,570,-748,570,-720,570,-692,570,-665,570,-637,570,-55,570,-28,570,138,570,222,570,249,570,277,570,305,570,332,570,360,570,388,570,415,570,443,570,471,570,498,570,526,570,554,570,582,570,609,570,637,570,665,570,692,570,720,570,748,570,775,570,803,570,831,570,858,570,886,570,914,570,942,570,969,570,997,570,1025,570,1052,570,1080,570,1108,570,1135,570,1163,570,1191,570,1218,570,1246,570,1274,570,1302,570,1329,570,1357,570,1385,570,1578,570,1606,585,-1570,585,-1541,585,-1368,585,-1339,585,-1310,585,-1282,585,-1253,585,-1224,585,-1195,585,-1166,585,-1138,585,-1109,585,-1080,585,-1051,585,-1022,585,-994,585,-965,585,-936,585,-763,585,-734,585,-706,585,-648,585,-43,585,72,585,130,585,158,585,245,585,274,585,302,585,331,585,360,585,389,585,418,585,446,585,475,585,504,585,533,585,562,585,590,585,619,585,648,585,677,585,706,585,734,585,763,585,792,585,821,585,850,585,878,585,907,585,936,585,965,585,994,585,1022,585,1051,585,1080,585,1109,585,1138,585,1166,585,1195,585,1224,585,1253,585,1282,585,1310,585,1339,585,1368,585,1397,585,1598,600,-1620,600,-1590,600,-1560,600,-1530,600,-1500,600,-1410,600,-1380,600,-1350,600,-1320,600,-1290,600,-1260,600,-1230,600,-1200,600,-1170,600,-1140,600,-1110,600,-1080,600,-1050,600,-1020,600,-990,600,-960,600,-750,600,-720,600,60,600,90,600,120,600,150,600,180,600,330,600,360,600,390,600,420,600,450,600,480,600,510,600,540,600,570,600,600,600,630,600,660,600,690,600,720,600,750,600,780,600,810,600,840,600,870,600,900,600,930,600,960,600,990,600,1020,600,1050,600,1080,600,1110,600,1140,600,1170,600,1200,600,1230,600,1260,600,1290,600,1320,600,1350,600,1380,600,1410,600,1440,600,1470,600,1500,600,1530,600,1620,600,1650,615,-1642,615,-1611,615,-1579,615,-1547,615,-1516,615,-1484,615,-1453,615,-1421,615,-1389,615,-1358,615,-1326,615,-1295,615,-1263,615,-1232,615,-1200,615,-1168,615,-1137,615,-1105,615,-1074,615,-1042,615,-1011,615,-979,615,-947,615,-758,615,-726,615,-474,615,-442,615,63,615,95,615,126,615,158,615,221,615,253,615,284,615,316,615,347,615,379,615,411,615,442,615,474,615,505,615,537,615,568,615,600,615,632,615,663,615,695,615,726,615,758,615,789,615,821,615,853,615,884,615,916,615,947,615,979,615,1011,615,1042,615,1074,615,1105,615,1137,615,1168,615,1200,615,1232,615,1263,615,1295,615,1326,615,1358,615,1389,615,1421,615,1453,615,1484,615,1516,615,1547,615,1611,615,1642,615,1674,615,1705,630,-1633,630,-1600,630,-1567,630,-1533,630,-1500,630,-1467,630,-1433,630,-1400,630,-1367,630,-1333,630,-1300,630,-1267,630,-1233,630,-1200,630,-1167,630,-1133,630,-1100,630,-1067,630,-1033,630,-1000,630,-967,630,-933,630,-700,630,-500,630,-467,630,-433,630,100,630,133,630,167,630,233,630,267,630,300,630,333,630,367,630,400,630,433,630,467,630,500,630,533,630,567,630,600,630,633,630,667,630,700,630,733,630,767,630,800,630,833,630,867,630,900,630,933,630,967,630,1000,630,1033,630,1067,630,1100,630,1133,630,1167,630,1200,630,1233,630,1267,630,1300,630,1333,630,1367,630,1400,630,1433,630,1467,630,1500,630,1533,630,1567,630,1600,630,1633,630,1667,630,1700,630,1733,630,1767,645,-1730,645,-1590,645,-1555,645,-1520,645,-1485,645,-1450,645,-1416,645,-1381,645,-1346,645,-1311,645,-1276,645,-1241,645,-1206,645,-1171,645,-1136,645,-1101,645,-1066,645,-1031,645,-996,645,-961,645,-926,645,-891,645,-856,645,-821,645,-751,645,-717,645,-682,645,-472,645,-437,645,-192,645,-157,645,122,645,157,645,192,645,262,645,297,645,332,645,402,645,437,645,472,645,507,645,542,645,577,645,612,645,647,645,682,645,717,645,751,645,786,645,821,645,856,645,891,645,926,645,961,645,996,645,1031,645,1066,645,1101,645,1136,645,1171,645,1206,645,1241,645,1276,645,1311,645,1346,645,1381,645,1416,645,1450,645,1485,645,1520,645,1555,645,1590,645,1625,645,1660,645,1695,645,1730,645,1765,660,-1800,660,-1763,660,-1726,660,-1652,660,-1614,660,-1577,660,-1540,660,-1503,660,-1466,660,-1429,660,-1392,660,-1355,660,-1318,660,-1280,660,-1243,660,-1206,660,-1169,660,-1132,660,-1095,660,-1058,660,-1021,660,-984,660,-946,660,-909,660,-872,660,-835,660,-724,660,-687,660,-649,660,-501,660,-464,660,-427,660,-390,660,-204,660,-167,660,130,660,167,660,204,660,241,660,278,660,315,660,427,660,464,660,501,660,538,660,575,660,612,660,649,660,687,660,724,660,761,660,798,660,835,660,872,660,909,660,946,660,984,660,1021,660,1058,660,1095,660,1132,660,1169,660,1206,660,1243,660,1280,660,1318,660,1355,660,1392,660,1429,660,1466,660,1503,660,1540,660,1577,660,1614,660,1652,660,1689,660,1726,660,1763,675,-1800,675,-1760,675,-1602,675,-1563,675,-1523,675,-1484,675,-1444,675,-1404,675,-1365,675,-1325,675,-1286,675,-1246,675,-1207,675,-1167,675,-1127,675,-1048,675,-1009,675,-969,675,-930,675,-890,675,-851,675,-771,675,-692,675,-653,675,-534,675,-495,675,-455,675,-415,675,-376,675,-336,675,178,675,218,675,257,675,297,675,336,675,376,675,495,675,534,675,574,675,613,675,653,675,692,675,771,675,811,675,851,675,890,675,930,675,969,675,1009,675,1048,675,1088,675,1127,675,1167,675,1207,675,1246,675,1286,675,1325,675,1365,675,1404,675,1444,675,1484,675,1523,675,1563,675,1602,675,1642,675,1681,675,1721,675,1760,690,-1633,690,-1591,690,-1549,690,-1507,690,-1465,690,-1423,690,-1381,690,-1340,690,-1298,690,-1256,690,-1214,690,-1130,690,-1088,690,-1047,690,-1005,690,-963,690,-921,690,-837,690,-753,690,-712,690,-502,690,-460,690,-419,690,-377,690,-335,690,-293,690,209,690,251,690,293,690,335,690,628,690,712,690,795,690,837,690,879,690,921,690,963,690,1005,690,1047,690,1088,690,1130,690,1172,690,1214,690,1256,690,1298,690,1340,690,1381,690,1423,690,1465,690,1507,690,1549,690,1591,690,1633,690,1674,690,1716,690,1758,705,-1575,705,-1530,705,-1080,705,-1035,705,-945,705,-855,705,-810,705,-765,705,-720,705,-540,705,-495,705,-450,705,-405,705,-360,705,-315,705,675,705,720,705,765,705,810,705,855,705,900,705,945,705,990,705,1035,705,1080,705,1125,705,1170,705,1215,705,1260,705,1305,705,1350,705,1395,705,1440,705,1485,705,1530,705,1575,720,-1216,720,-1168,720,-1119,720,-1070,720,-973,720,-876,720,-827,720,-778,720,-535,720,-486,720,-438,720,-389,720,-341,720,-292,720,-243,720,535,720,827,720,876,720,924,720,973,720,1022,720,1070,720,1119,720,1168,720,1216,720,1265,720,1411,720,1459,735,-1218,735,-1165,735,-1059,735,-1006,735,-953,735,-794,735,-529,735,-476,735,-424,735,-371,735,-318,735,-265,735,-212,735,847,735,900,735,953,735,1006,735,1059,735,1112,735,1165,735,1271,735,1429,750,-1103,750,-987,750,-871,750,-813,750,-523,750,-465,750,-406,750,-348,750,-290,750,-232,750,581,750,929,750,987,750,1045,750,1103,750,1394,765,-1093,765,-900,765,-836,765,-643,765,-579,765,-514,765,-450,765,-386,765,-321,765,-257,765,1029,765,1093,780,-992,780,-845,780,-771,780,-698,780,-624,780,-551,780,-478,780,-404,780,-331,780,-257,780,184,795,-879,795,-795,795,-628,795,-544,795,-460,795,-377,795,-293,795,-209,795,126,795,209,795,963,810,-924,810,-827,810,-730,810,-535,810,-438,810,-341,810,-243,810,-146,825,-755,825,-639,825,-406,825,-290];
+
+/* ---------- state ---------- */
+var S = { fy: 1, tab: 0, view: 0, off: {}, bridge: 0, mode: 0, compare: true, geos: ['Africa', 'Asia', 'Brazil', 'Spain'], level: 1, exp: {}, q: '', menu: false, page: 'dash', nq: '', nst: 'All', drawer: false, f: null, errs: {}, tried: false, toast: '', banner: null };
+var TABS = ['Profit & Loss', 'Gross Margin Analysis', 'Headcount', 'Summary of Transformation Levers'];
+
+/* ---------- helpers ---------- */
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function rgba(hex, a) { var h = hex.replace('#', ''); return 'rgba(' + parseInt(h.slice(0, 2), 16) + ',' + parseInt(h.slice(2, 4), 16) + ',' + parseInt(h.slice(4, 6), 16) + ',' + a + ')'; }
+var CHEV = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A3AFB1" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+var DL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
+function select(id, label, opts, sel, w, mono, lg) {
+  return '<div class="field-col" style="width:' + w + 'px;flex:0 0 ' + w + 'px">' +
+    (label ? '<label class="' + (lg ? 'lbl-lg' : 'lbl') + '" for="' + id + '">' + label + '</label>' : '') +
+    '<div class="sel' + (lg ? ' lg' : '') + '"><select id="' + id + '" class="field' + (mono ? ' y' : '') + '"' + (label ? '' : ' aria-label="' + id + '"') + '>' +
+    opts.map(function (o) { return '<option' + (o === sel ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') +
+    '</select>' + CHEV + '</div></div>';
+}
+function dlBtn() { return '<button class="field ibtn" aria-label="Download chart">' + DL + '</button>'; }
+
+function wf(steps, max, fmt, tickFmt, inset, kp) {
+  var C = { tot: '#8C97A6', inc: '#6FB7B0', dec: '#D06F6A' }, run = 0, n = steps.length;
+  var pct = function (v) { return (v / max * 100).toFixed(2) + '%'; };
+  var bars = steps.map(function (s, i) {
+    var lo, hi, kind;
+    if (s.t) { lo = 0; hi = s.v; run = s.v; kind = 'tot'; }
+    else { var nr = run + s.v; lo = Math.min(run, nr); hi = Math.max(run, nr); run = nr; kind = s.v >= 0 ? 'inc' : 'dec'; }
+    var c = C[kind];
+    var fade = 'linear-gradient(180deg,' + rgba(c, .62) + ' 0%,' + rgba(c, .10) + ' 100%)';
+    var fill = kind === 'dec' ? 'repeating-linear-gradient(135deg,' + rgba(c, .45) + ' 0 2px,transparent 2px 6px),' + fade : fade;
+    var val = s.t ? fmt(s.v) : (s.v >= 0 ? '+' : '−') + fmt(Math.abs(s.v));
+    var h = Math.max((hi - lo) / max * 100, .8);
+    return '<div class="wcol">' +
+      '<div class="wbar" data-k="' + (kp || 'w') + i + '" title="' + esc(s.l + ': ' + val) + '" style="left:' + inset + '%;right:' + inset + '%;bottom:' + pct(lo) + ';height:' + h.toFixed(2) + '%;background:' + fill + ';border:1px solid ' + rgba(c, .18) + ';box-shadow:inset 0 2px 0 ' + c + '"></div>' +
+      (i < n - 1 ? '<div class="wlink" style="left:' + (100 - inset) + '%;right:-' + inset + '%;bottom:' + pct(run) + '"></div>' : '') +
+      '<span class="wval" style="bottom:calc(' + pct(hi) + ' + 6px)">' + val + '</span></div>';
+  }).join('');
+  var ticks = [0, 1, 2, 3, 4].map(function (k) { return { pos: k * 25 + '%', label: tickFmt(max * k / 4) }; });
+  return { bars: bars, ticks: ticks, labels: steps.map(function (s) { return '<div>' + esc(s.l) + '</div>'; }).join('') };
+}
+function chartFrame(w, h, yw) {
+  return '<div class="chart"><div class="yaxis" style="height:' + h + 'px;flex-basis:' + yw + 'px">' +
+    w.ticks.map(function (t) { return '<span style="bottom:' + t.pos + '">' + t.label + '</span>'; }).join('') +
+    '</div><div class="plot"><div class="area" style="height:' + h + 'px">' +
+    w.ticks.map(function (t) { return '<div class="grid-line" style="bottom:' + t.pos + '"></div>'; }).join('') +
+    '<div class="cols">' + w.bars + '</div></div><div class="xl">' + w.labels + '</div></div></div>';
+}
+
+/* ---------- hero ---------- */
+function hero() {
+  return '<section class="hero glass-hero">' +
+    '<div><div class="lbl-lg" style="letter-spacing:.12em">Planning · ' + FYS[S.fy] + ' · ' + (37 + S.geos.length) + ' geographies</div>' +
+    '<h1>Dashboard</h1><p>Audit &amp; Assurance revenue and profit, consolidated for the selected year and geographies.</p></div>' +
+    '<div class="filters">' +
+      select('fy', 'Fiscal year', FYS, FYS[S.fy], 240, true, true) +
+      '<div style="width:1px;align-self:stretch;background:rgba(255,255,255,.09)"></div>' +
+      '<div style="display:flex;flex-direction:column;gap:6px;flex:1 1 360px;min-width:0"><span class="lbl-lg">Geographies</span>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:42px">' +
+        S.geos.map(function (g) { return '<span class="chip">' + esc(g) + '<button data-a="geo" data-v="' + esc(g) + '" aria-label="Remove ' + esc(g) + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span>'; }).join('') +
+        '<button class="field" style="height:34px;padding:0 12px;border-radius:999px;font-family:var(--mono);font-size:12px">+37 more</button>' +
+        '<button style="height:34px;padding:0 10px;border-radius:999px;background:transparent;border:0;color:var(--accent);display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></svg>Edit</button>' +
+      '</div></div>' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<button class="field" aria-label="Refresh data" style="width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button>' +
+        '<button class="field" style="height:42px;padding:0 16px;border-radius:11px;display:inline-flex;align-items:center;gap:8px">' + DL.replace('15', '16').replace('15', '16') + 'Export Excel</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="tabs-row"><div class="tabs" role="tablist" aria-label="Dashboard sections">' +
+      TABS.map(function (t, i) { return '<button class="tab" role="tab" data-a="tab" data-v="' + i + '" aria-selected="' + (S.tab === i) + '">' + esc(t) + '</button>'; }).join('') +
+    '</div><div class="seg field" role="group" aria-label="View" style="margin-bottom:8px">' +
+      ['Chart', 'Table'].map(function (l, i) { return '<button data-a="view" data-v="' + i + '" aria-pressed="' + (S.view === i) + '">' + l + '</button>'; }).join('') +
+    '</div></div></section>';
+}
+
+/* ---------- KPI ---------- */
+function kpiTile(o) {
+  var ticks = '';
+  if (o.fill != null) for (var i = 0; i < 24; i++) ticks += '<span style="background:' + (i < o.fill ? o.c : 'rgba(255,255,255,.08)') + '"></span>';
+  return '<div class="kpi glass"><div class="top"><span class="lbl">' + o.period + '</span>' + (o.trend ? '<span class="badge ' + (o.trend > 0 ? 'up' : 'down') + '">' + o.trendText + '</span>' : '') + '</div>' +
+    '<div class="row"><span class="ico" style="color:' + o.c + '">' + (o.icon || '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>') + '</span><span class="name" title="' + esc(o.label) + '">' + esc(o.label) + '</span>' + (o.extra || '') + '</div>' +
+    '<div class="val">' + o.value + '</div>' + (ticks ? '<div class="ticks">' + ticks + '</div>' : '') + '</div>';
+}
+
+/* ---------- P&L ---------- */
+var SERIES = [
+  { name: 'External Audit A', c: '#6FB7B0' }, { name: 'External Audit B', c: '#4F8E9C' },
+  { name: 'IT, Data and Analytics', c: '#A9B98C' }, { name: 'Accounting & Reporting Assurance', c: '#9A8FD1' },
+  { name: 'Controls Assurance', c: '#C9A574' }, { name: 'Sustainability & Emerging Assurance', c: '#C47F8E' }
+];
+
+/* ---------- single data model ---------- */
+var FYS = []; for (var fk = 25; fk <= 35; fk++) FYS.push('FY' + fk);
+var OFF_BASE = [146.9, 98.4, 120.6, 132.2, 88.7, 64.3];   /* FY26 net revenue per offering, all 41 geographies, in millions */
+var OFF_GROW = [0.012, 0.018, 0.041, 0.034, 0.015, 0.062];
+var GEO_W = { Africa: 0.09, Asia: 0.15, Brazil: 0.10, Spain: 0.11 };
+var OTHER_W = 0.55;                                       /* the 37 other geographies */
+function geoW(list) { var w = OTHER_W; (list || S.geos).forEach(function (g) { w += GEO_W[g] || 0; }); return w; }
+function revAt(i, k, w) { return OFF_BASE[i] * Math.pow(1 + OFF_GROW[i], k - 1) * (w == null ? geoW() : w); }
+function nrAt(k, w) { var s = 0; for (var i = 0; i < 6; i++) s += revAt(i, k, w); return s; }
+function naAt(k, w) { return nrAt(k, w) * 0.97; }
+function subAt(k, offs, w) { var s = 0; offs.forEach(function (i) { s += revAt(i, k, w); }); return s * 0.97; }
+function niceMax(v) { var e = Math.pow(10, Math.floor(Math.log10(v))), m = v / e, steps = [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]; for (var i = 0; i < steps.length; i++) if (m <= steps[i]) return steps[i] * e; return 10 * e; }
+function f1(v) { return v.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
+function startK() { return Math.min(S.fy, 9); }
+
+function pnl() {
+  var fy = S.fy, k0 = startK();
+  var FULL = naAt(10, 1);
+  var kp = [
+    [FYS[fy], 'A&A total', naAt(fy)], [FYS[fy], 'Audit subtotal', subAt(fy, [0, 1, 2])], [FYS[fy], 'Assurance subtotal', subAt(fy, [3, 4, 5])],
+    ['FY35', 'A&A total', naAt(10), naAt(fy)], ['FY35', 'Audit subtotal', subAt(10, [0, 1, 2]), subAt(fy, [0, 1, 2])], ['FY35', 'Assurance subtotal', subAt(10, [3, 4, 5]), subAt(fy, [3, 4, 5])]
+  ];
+  var k = kp.map(function (r) {
+    var ch = r[3] != null && fy < 10 ? (r[2] - r[3]) / r[3] * 100 : null;
+    var tr = ch == null ? 0 : ch >= 0 ? 1 : -1;
+    var c = tr ? (tr > 0 ? '#6FB7B0' : '#D06F6A') : '#8C97A6';
+    return kpiTile({ period: r[0], label: r[1], value: f1(r[2]), trend: tr, trendText: (tr > 0 ? '↑ +' : '↓ −') + Math.abs(ch || 0).toFixed(1) + '% vs ' + FYS[fy], c: c, fill: Math.max(1, Math.round(r[2] / FULL * 24)) });
+  }).join('');
+
+  var maxFull = 0, i, y;
+  for (i = 0; i < 6; i++) for (y = 0; y < 11; y++) maxFull = Math.max(maxFull, revAt(i, y, 1));
+  var axis = niceMax(maxFull * 1.05);
+  var yA = [0, 1, 2, 3, 4].map(function (t) { return Math.round(axis * t / 4); });
+  var legend = SERIES.map(function (s, i) {
+    var on = !S.off[i];
+    return '<button class="pill" data-a="ser" data-v="' + i + '" aria-pressed="' + on + '"><span class="sw" style="background:' + (on ? 'linear-gradient(180deg,' + s.c + ',' + rgba(s.c, .35) + ')' : 'transparent') + ';' + (on ? '' : 'box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)') + '"></span>' + esc(s.name) + '</button>';
+  }).join('');
+  var years = FYS.map(function (lab, y) {
+    var sel = y === fy;
+    var bars = SERIES.map(function (sr, i) {
+      if (S.off[i]) return '';
+      var v = revAt(i, y), c = sr.c;
+      return '<div data-k="g' + y + '-' + i + '" title="' + lab + ' · ' + esc(sr.name) + ': ' + f1(v) + '" style="flex:1 1 0;max-width:14px;height:' + (v / axis * 100).toFixed(2) + '%;border-radius:4px 4px 1px 1px;background:linear-gradient(180deg,' + rgba(c, .62) + ' 0%,' + rgba(c, .08) + ' 100%);box-shadow:inset 0 2px 0 ' + c + '"></div>';
+    }).join('');
+    return '<div style="flex:1 1 0;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:0 8px;border-radius:12px;' + (sel ? 'background:rgba(93,181,173,.07);border:1px solid rgba(93,181,173,.22)' : 'border:1px solid transparent') + '">' + bars + '</div>';
+  }).join('');
+  var ylabels = FYS.map(function (lab, y) { return '<div style="flex:1 1 0;text-align:center;font-family:var(--mono);font-size:11px;color:' + (y === fy ? '#9AD3CD' : '#8B989A') + '">' + lab + '</div>'; }).join('');
+  var data = [];
+
+  var int = function (v) { return String(Math.round(v)); };
+  var dA = [{ l: FYS[k0], v: naAt(k0), t: 1 }];
+  var short = ['Ext. Audit A', 'Ext. Audit B', 'IT, Data & Analytics', 'Accounting & Reporting', 'Controls', 'Sustainability'];
+  for (i = 0; i < 6; i++) dA.push({ l: short[i], v: revAt(i, 10) - revAt(i, k0) });
+  dA.push({ l: 'Pricing & exits', v: -0.03 * (nrAt(10) - nrAt(k0)) });
+  dA.push({ l: 'FY35', v: naAt(10), t: 1 });
+  var A = wf(dA, niceMax(naAt(10, 1) * 1.1), int, int, 20, 'a');
+
+  var bi = S.bridge, r0 = revAt(bi, k0), r1 = revAt(bi, 10), G = r1 - r0;
+  var bMax = niceMax((revAt(bi, k0, 1) + 1.4 * (revAt(bi, 10, 1) - revAt(bi, k0, 1))) * 1.15);
+  var B = wf([{ l: FYS[k0], v: r0, t: 1 }, { l: 'Wins', v: 1.4 * G }, { l: 'Losses', v: -0.4 * G }, { l: 'Exits', v: -0.09 * r1 }, { l: 'Pricing', v: 0.06 * r1 }, { l: 'FY35', v: 0.97 * r1, t: 1 }], bMax, f1, int, 30, 'b' + bi);
+
+  var pm = S.mode === 1, p0 = 0.12 * naAt(k0), p1 = 0.12 * naAt(10), dN = naAt(10) - naAt(k0);
+  var money = function (v) { return pm ? (v / p0 * 100).toFixed(0) + '%' : f1(v) + 'M'; };
+  var moneyT = function (v) { return pm ? (v / p0 * 100).toFixed(0) + '%' : v.toFixed(0) + 'M'; };
+  var P = wf([{ l: 'Direct profit ' + FYS[k0], v: p0, t: 1 }, { l: 'Net revenue after pricing & exits', v: 0.30 * dN }, { l: 'Technical staff cost', v: -0.12 * dN }, { l: 'Overheads', v: -0.06 * dN }, { l: 'Direct profit FY35', v: p1, t: 1 }], niceMax(0.12 * naAt(10, 1) * 1.25), money, moneyT, 18, 'p');
+  var wfLegend = '<div class="legend"><span><i style="background:linear-gradient(180deg,#8C97A6,rgba(140,151,166,.3))"></i>Total</span><span><i style="background:linear-gradient(180deg,#6FB7B0,rgba(111,183,176,.3))"></i>Increase (+)</span><span><i style="background:repeating-linear-gradient(135deg,rgba(208,111,106,.7) 0 2px,transparent 2px 5px),linear-gradient(180deg,#D06F6A,rgba(208,111,106,.3))"></i>Decrease (−)</span></div>';
+
+  return '<h2 class="sec">Profit &amp; Loss</h2><div class="kpis">' + k + '</div>' +
+    '<section class="card glass" aria-labelledby="c1"><div class="card-head"><div><h3 id="c1">Consolidated net revenue by year</h3><div class="sub">After pricing and exits · by offering, FY25–FY35</div></div>' +
+      '<button class="field" style="height:38px;padding:0 14px;border-radius:11px;display:inline-flex;align-items:center;gap:8px">' + DL + 'Download</button></div>' +
+      '<div role="group" aria-label="Show or hide offerings" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px">' + legend + '</div>' +
+      '<div style="margin-top:12px;padding-top:12px;overflow-x:auto"><div style="min-width:880px" class="chart"><div class="yaxis" style="height:280px;flex-basis:36px">' +
+        yA.map(function (v, i) { return '<span style="bottom:' + i * 25 + '%">' + v + '</span>'; }).join('') +
+      '</div><div class="plot"><div class="area" style="height:280px">' + yA.map(function (v, i) { return '<div class="grid-line" style="bottom:' + i * 25 + '%"></div>'; }).join('') +
+        '<div class="cols" style="gap:6px">' + years + '</div></div><div style="display:flex;gap:6px;margin-top:10px">' + ylabels + '</div></div></div></div></section>' +
+    '<div class="row2">' +
+      '<section class="card glass" aria-labelledby="c2" style="flex:7 1 600px"><div class="card-head"><div style="flex:1 1 220px"><h3 id="c2">Consolidated net revenue</h3><div class="sub">After pricing and exits · what moves ' + FYS[k0] + ' to FY35</div></div>' +
+        '<div class="ctrls">' + select('s2a', 'Start', FYS.slice(0, 10), FYS[k0], 220, true) + select('s2b', 'Finish', ['FY34', 'FY35'], 'FY35', 220, true) + dlBtn() + '</div></div>' +
+        '<div style="margin-top:26px">' + chartFrame(A, 250, 40) + '</div>' + wfLegend + '</section>' +
+      '<section class="card glass" aria-labelledby="c4" style="flex:5 1 460px"><div class="card-head" style="align-items:flex-start"><div><h3 id="c4">Direct profit bridge</h3><div class="sub">' + FYS[k0] + ' to FY35 · all offerings</div></div>' +
+        '<div class="ctrls" style="align-items:center"><div class="seg sm field" role="group" aria-label="Units">' +
+          '<button data-a="mode" data-v="0" aria-pressed="' + (S.mode === 0) + '" aria-label="Show amounts">$</button><button data-a="mode" data-v="1" aria-pressed="' + (S.mode === 1) + '" aria-label="Show percent of start year">%</button></div>' + dlBtn() + '</div></div>' +
+        '<div class="ctrls" style="margin-top:14px">' + select('off', 'Offering', ['All offerings'].concat(SERIES.map(function (s) { return s.name; })), 'All offerings', 240, false) + select('per', 'Period', FYS.slice(0, 10).map(function (f) { return f + ' → FY35'; }), FYS[k0] + ' → FY35', 220, true) + '</div>' +
+        '<div style="margin-top:22px">' + chartFrame(P, 220, 44) + '</div></section>' +
+    '</div>' +
+    '<section class="card glass" aria-labelledby="c3"><div class="card-head"><div style="flex:1 1 260px"><h3 id="c3">Net revenue bridge</h3><div class="sub">' + FYS[k0] + ' to FY35 · wins, losses, exits and pricing for one offering</div></div>' +
+      '<div class="ctrls">' + select('b3a', 'Start', FYS.slice(0, 10), FYS[k0], 220, true) + select('b3b', 'Finish', ['FY34', 'FY35'], 'FY35', 220, true) + dlBtn() + '</div></div>' +
+      '<div role="tablist" aria-label="Offering" style="margin-top:18px;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px">' +
+        SERIES.map(function (s, i) { return '<button class="pill" role="tab" data-a="bridge" data-v="' + i + '" aria-selected="' + (S.bridge === i) + '"><span class="sw" style="width:8px;height:8px;flex-basis:8px;border-radius:2px;background:' + s.c + '"></span>' + esc(s.name) + '</button>'; }).join('') +
+      '</div><div style="margin-top:24px">' + chartFrame(B, 230, 40) + '</div></section>';
+}
+
+/* ---------- Headcount ---------- */
+function headcount() {
+  var fmt = function (n) { return n.toLocaleString('en-US'); };
+  var data = [['Equity Partner',1137,1052],['Salary Partner',1964,1830],['Signing Director',3184,2905],['Director',9217,8640],['Senior Manager',9217,9480],['Manager',12746,13320],['5+ years experience',16538,17210],['4 years experience',21684,22950],['3 years experience',27913,28400],['2 years experience',35402,34100],['1 year experience',27402,29350]];
+  var gw = geoW(); data = data.map(function (d) { return [d[0], Math.round(d[1] * gw), Math.round(d[2] * gw)]; });
+  var max = 36000, tot = 0, base = 0;
+  data.forEach(function (d) { tot += d[2]; base += d[1]; });
+  var td = (tot - base) / base * 100;
+  var rows = data.map(function (d) {
+    var dv = (d[2] - d[1]) / d[1] * 100, up = dv >= 0;
+    return '<div class="prow"><span style="color:var(--label);font-size:13px;white-space:nowrap">' + d[0] + '</span>' +
+      '<div title="' + esc(d[0] + ': FY27 ' + fmt(d[2]) + ', FY26 ' + fmt(d[1])) + '" style="display:flex;flex-direction:column;align-items:center;gap:3px">' +
+        (S.compare ? '<div style="width:' + (d[1] / max * 100).toFixed(1) + '%;height:6px;border-radius:3px;background:linear-gradient(90deg,rgba(140,151,166,.15),rgba(140,151,166,.55) 50%,rgba(140,151,166,.15));box-shadow:inset 0 1px 0 rgba(140,151,166,.8)"></div>' : '') +
+        '<div style="width:' + (d[2] / max * 100).toFixed(1) + '%;height:12px;border-radius:4px;background:linear-gradient(90deg,rgba(111,183,176,.12),rgba(111,183,176,.62) 50%,rgba(111,183,176,.12));box-shadow:inset 0 2px 0 #6FB7B0"></div></div>' +
+      '<span class="mono" style="text-align:right;font-size:12px;white-space:nowrap"><span>' + fmt(d[2]) + '</span><span style="color:var(--text-3)"> · ' + (d[2] / tot * 100).toFixed(1) + '%</span></span>' +
+      '<span class="mono" style="text-align:right;font-size:12px;color:' + (!S.compare ? '#8B989A' : up ? '#9AD3CD' : '#E4A19C') + '">' + (S.compare ? (up ? '↑ +' : '↓ −') + Math.abs(dv).toFixed(1) + '%' : '—') + '</span></div>';
+  }).join('');
+  var people = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"/><path d="M3 19.5c.7-3.2 3-5 6-5s5.3 1.8 6 5M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.8c1.5.7 2.6 2.3 3 4.7"/></svg>';
+  var tri = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3l9 17H3z"/></svg>';
+  var info = '<button aria-label="About bulge ratio" style="margin-left:auto;width:24px;height:24px;flex:0 0 24px;border-radius:50%;border:0;background:transparent;color:var(--text-3);display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.1"/></svg></button>';
+  return '<h2 class="sec">Headcount</h2><div class="kpis">' +
+      kpiTile({ period: 'FY27', label: 'Total headcount', value: fmt(tot), trend: S.compare ? (td >= 0 ? 1 : -1) : 0, trendText: (td >= 0 ? '↑ +' : '↓ −') + Math.abs(td).toFixed(1) + '%', c: '#6FB7B0', icon: people }) +
+      kpiTile({ period: 'FY27', label: 'Bulge ratio', value: '1.29', c: '#9A8FD1', icon: tri, extra: info }) +
+    '</div>' +
+    '<section class="card glass" aria-labelledby="hp"><div class="card-head"><div style="flex:1 1 260px"><h3 id="hp">Headcount pyramid</h3><div class="sub">People by grade · ' + (S.compare ? 'FY27 compared with base year FY26' : 'FY27') + '</div></div>' +
+      '<div class="ctrls"><button class="switch field" role="switch" data-a="compare" aria-checked="' + S.compare + '"><span class="tr"><span class="kn"></span></span>Compare with FY26</button>' +
+        select('hfy', 'Year', ['FY26', 'FY27', 'FY28'], 'FY27', 220, true) + dlBtn() + '</div></div>' +
+      '<div style="margin-top:22px;overflow-x:auto"><div style="min-width:860px"><div class="phead lbl"><span>Grade</span><span style="text-align:center">Distribution</span><span style="text-align:right">FY27 · share</span><span style="text-align:right">' + (S.compare ? 'Change vs FY26' : 'Change') + '</span></div>' + rows + '</div></div>' +
+      '<div class="legend"><span><i style="width:22px;height:8px;background:linear-gradient(90deg,rgba(111,183,176,.2),#6FB7B0,rgba(111,183,176,.2))"></i>FY27</span>' + (S.compare ? '<span><i style="width:22px;height:5px;background:linear-gradient(90deg,rgba(140,151,166,.2),#8C97A6,rgba(140,151,166,.2))"></i>FY26 · base year</span>' : '') + '</div></section>';
+}
+
+function notYet() {
+  return '<h2 class="sec">' + esc(TABS[S.tab]) + '</h2><div class="empty glass"><div class="lbl-lg" style="margin-bottom:8px">In progress</div>This view is next in the redesign queue.</div>';
+}
+function tableNotYet() {
+  return '<h2 class="sec">' + esc(TABS[S.tab]) + ' · Table</h2><div class="empty glass"><div class="lbl-lg" style="margin-bottom:8px">In progress</div>The interactive table view is next in the redesign queue.</div>';
+}
+
+/* ---------- Table view ---------- */
+var LEVELS = ['Business total', 'Offering portfolio', 'Offering', 'Geographies'];
+var YEARS = []; for (var yy = 26; yy <= 35; yy++) YEARS.push('FY' + yy);
+var BLOCKS = [
+  { id: 'nr', name: 'Net revenue', f: 1 },
+  { id: 'pi', name: 'Pricing improvement', f: 0.06 },
+  { id: 'ae', name: 'Accumulated exits incl. pricing foregone', f: -0.09 },
+  { id: 'na', name: 'Net revenue after pricing and exits', f: 0.97 }
+];
+var SUBS = [{ id: 'au', name: 'Audit subtotal', offs: [0, 1, 2] }, { id: 'as', name: 'Assurance subtotal', offs: [3, 4, 5] }];
+function leaf(b, off, g, y) { return OFF_BASE[off] * (g === 'other' ? OTHER_W : (GEO_W[g] || 0)) * Math.pow(1 + OFF_GROW[off], y) * b.f; }
+function series(b, off, g) {
+  return YEARS.map(function (_, y) {
+    if (g != null) return leaf(b, off, g, y);
+    var s = leaf(b, off, 'other', y); S.geos.forEach(function (gg) { s += leaf(b, off, gg, y); }); return s;
+  });
+}
+function sum(arrs) { return YEARS.map(function (_, y) { var s = 0; arrs.forEach(function (a) { s += a[y]; }); return s; }); }
+function num(v) {
+  var a = Math.abs(v), t = a.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return v < 0 ? '−' + t : t;
+}
+function spark(vals, c) {
+  var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), w = 84, h = 22, r = mx - mn || 1;
+  var pts = vals.map(function (v, i) { return (i * w / (vals.length - 1)).toFixed(1) + ',' + (h - 2 - (v - mn) / r * (h - 4)).toFixed(1); }).join(' ');
+  var last = pts.split(' ').pop().split(',');
+  return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true"><polyline points="' + pts + '" fill="none" stroke="' + c + '" stroke-width="1.5" stroke-opacity=".85"/><circle cx="' + last[0] + '" cy="' + last[1] + '" r="2.2" fill="' + c + '"/></svg>';
+}
+function isOpen(key, depth) { return S.exp[key] != null ? S.exp[key] : depth < S.level; }
+function match(name) { return !S.q || name.toLowerCase().indexOf(S.q.toLowerCase()) > -1; }
+
+var COLS = '<colgroup><col style="width:340px"><col style="width:auto" span="' + YEARS.length + '"><col style="width:112px"></colgroup>';
+
+function rowHtml(o) {
+  var pad = [16, 34, 52, 78][o.depth];
+  var styles = [
+    'height:56px;font-size:15px;font-weight:500;color:var(--text)',
+    'height:46px;font-size:13px;font-weight:500;color:var(--text);background:rgba(255,255,255,.03)',
+    'height:42px;font-size:13px;color:var(--label)',
+    'height:38px;font-size:12px;color:var(--text-2)'
+  ][o.depth];
+  var vstyle = ['font-size:14px;color:var(--text)', 'font-size:13px;color:var(--text)', 'font-size:12px;color:var(--label)', 'font-size:12px;color:var(--text-3)'][o.depth];
+  var head = o.toggle
+    ? '<button class="tgl" data-a="row" data-v="' + o.key + '" aria-expanded="' + o.open + '" aria-label="' + (o.open ? 'Collapse ' : 'Expand ') + esc(o.name) + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="transform:rotate(' + (o.open ? 90 : 0) + 'deg);transition:transform .15s"><path d="M9 6l6 6-6 6"/></svg></button>'
+    : '<span style="width:24px;flex:0 0 24px"></span>';
+  var dot = o.dot ? '<span style="width:8px;height:8px;border-radius:2px;flex:0 0 8px;background:' + o.dot + '"></span>' : '';
+  return '<tr class="trow d' + o.depth + '" style="' + styles + '">' +
+    '<th scope="row" style="padding-left:' + pad + 'px"><span class="rname">' + head + dot + '<span class="rtxt" title="' + esc(o.name) + '">' + esc(o.name) + '</span></span></th>' +
+    o.vals.map(function (v, i) { return '<td class="mono" style="' + vstyle + (v < 0 ? ';color:#E4A19C' : '') + (YEARS[i] === FYS[S.fy] ? ';background:rgba(93,181,173,.05)' : '') + '">' + num(v) + '</td>'; }).join('') +
+    '<td class="spk">' + spark(o.vals, o.spark) + '</td></tr>';
+}
+
+function tableView() {
+  var sel = S.geos.length;
+  var menu = S.menu ? '<div class="pop glass" role="radiogroup" aria-label="Show level">' +
+    LEVELS.map(function (l, i) { return '<button role="radio" aria-checked="' + (S.level === i) + '" data-a="level" data-v="' + i + '"><span class="rd"></span>' + l + '</button>'; }).join('') + '</div>' : '';
+  var toolbar = '<div class="tbar">' +
+    '<div class="field-col" style="width:240px;flex:0 0 240px"><label class="lbl" for="tq">Search</label><div class="sel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A3AFB1" stroke-width="2" aria-hidden="true" style="left:12px;right:auto"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input id="tq" class="field" type="search" placeholder="Offering or geography" value="' + esc(S.q) + '" autocomplete="off" style="width:100%;height:38px;padding:0 12px 0 34px;border-radius:10px;font-size:13px"></div></div>' +
+    '<div class="field-col" style="width:240px;flex:0 0 240px;position:relative"><span class="lbl" id="showl">Show</span><button class="field showbtn" data-a="menu" aria-haspopup="true" aria-expanded="' + !!S.menu + '" aria-labelledby="showl showv"><span id="showv">' + LEVELS[S.level] + '</span>' + CHEV + '</button>' + menu + '</div>' +
+    '<div style="flex:1 1 auto"></div>' +
+    '<button class="switch field" role="switch" data-a="expandall" aria-checked="' + (S.level === 3 && !Object.keys(S.exp).length) + '"><span class="tr"><span class="kn"></span></span>Expand all</button>' +
+    '<button class="field" style="height:38px;padding:0 14px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Table configurations</button>' +
+    dlBtn() + '</div>';
+
+  var header = '<div class="thead glass"><table class="gt">' + COLS + '<thead><tr><th scope="col" class="lbl" style="padding-left:16px;text-align:left">Line item · in millions</th>' +
+    YEARS.map(function (y, i) { return '<th scope="col" class="lbl" style="' + (y === FYS[S.fy] ? 'color:#9AD3CD' : '') + '">' + y + '</th>'; }).join('') +
+    '<th scope="col" class="lbl" style="text-align:center">Trend</th></tr></thead></table></div>';
+
+
+  var anyRow = false;
+  var blocks = BLOCKS.map(function (b) {
+    var subRows = SUBS.map(function (sb) {
+      var offRows = sb.offs.map(function (oi) {
+        var oKey = b.id + '|' + sb.id + '|' + oi;
+        var geoRows = S.geos.map(function (g) { return { key: oKey + '|' + g, depth: 3, name: g, vals: series(b, oi, g), spark: '#8B989A', m: match(g) }; }).concat([{ key: oKey + '|other', depth: 3, name: '37 other geographies', vals: series(b, oi, 'other'), spark: '#8B989A', m: match('37 other geographies') }]);
+        return { key: oKey, depth: 2, name: SERIES[oi].name, dot: SERIES[oi].c, vals: series(b, oi), spark: SERIES[oi].c, kids: geoRows, m: match(SERIES[oi].name) };
+      });
+      return { key: b.id + '|' + sb.id, depth: 1, name: sb.name, vals: sum(offRows.map(function (r) { return r.vals; })), spark: '#9AD3CD', kids: offRows, m: match(sb.name) };
+    });
+    var top = { key: b.id, depth: 0, name: b.name, vals: sum(subRows.map(function (r) { return r.vals; })), spark: '#9AD3CD', kids: subRows, m: match(b.name) };
+    var out = [];
+    function walk(r, parentHit) {
+      var hit = r.m || parentHit;
+      var html = [];
+      var childHtml = [];
+      var kidHit = false;
+      (r.kids || []).forEach(function (k) { var res = walk(k, hit); if (res.hit) kidHit = true; childHtml.push(res.html); });
+      var show = !S.q || hit || kidHit;
+      var open = S.q ? (kidHit || isOpen(r.key, r.depth)) : isOpen(r.key, r.depth);
+      if (show) {
+        html.push(rowHtml({ key: r.key, depth: r.depth, name: r.name, vals: r.vals, dot: r.dot, spark: r.spark, toggle: !!(r.kids && r.kids.length), open: open }));
+        if (open) html = html.concat(childHtml);
+      }
+      return { html: html.join(''), hit: show };
+    }
+    var res = walk(top, false);
+    if (!res.hit) return '';
+    anyRow = true;
+    return '<section class="tcard glass" aria-label="' + esc(b.name) + '"><table class="gt">' + COLS + '<tbody>' + res.html + '</tbody></table></section>';
+  }).join('');
+  if (!anyRow) blocks = '<div class="empty glass">No line items match “' + esc(S.q) + '”.</div>';
+
+  return '<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap"><h2 class="sec">Profit &amp; Loss</h2>' +
+    '<span class="lbl-lg">' + (37 + sel) + ' of 41 geographies · ' + LEVELS[S.level] + ' level</span></div>' +
+    toolbar + '<div class="twrap"><div class="tinner">' + header + '<div style="display:flex;flex-direction:column;gap:12px">' + blocks + '</div></div></div>';
+}
+
+/* ---------- Notification Center ---------- */
+var NTYPES = {
+  info: { label: 'Informative', desc: 'Updates and announcements', c: '#5DB5AD', icon: '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 1.5h-15zM10 20.5h4"/>' },
+  warn: { label: 'Warning', desc: 'Planned changes that affect work', c: '#E0B062', icon: '<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.1"/>' },
+  crit: { label: 'Critical', desc: 'Outages and urgent actions', c: '#D06F6A', icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.1"/>' }
+};
+function tIcon(t, size) { return '<svg width="' + (size || 14) + '" height="' + (size || 14) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">' + NTYPES[t].icon + '</svg>'; }
+var NLIST = [
+  { t: 'Scheduled system maintenance', d: 'The platform will be unavailable for about two hours during maintenance.', type: 'info', s: '12 May, 09:00', e: '15 May, 23:59', st: 'Active', by: 'A. Rivera' },
+  { t: 'Forecast submission window closes Friday', d: 'Submit FY27 inputs for your geographies before the window closes.', type: 'warn', s: '20 May, 18:00', e: '24 May, 18:00', st: 'Scheduled', by: 'M. Chen' },
+  { t: 'Platform update in progress', d: 'Some features may be unavailable while the update runs.', type: 'warn', s: '20 Feb, 18:00', e: '01 Mar, 18:00', st: 'Expired', by: 'M. Chen' },
+  { t: 'Emergency maintenance: service disruption', d: 'Unexpected issue detected. We are working to restore service.', type: 'crit', s: '20 Feb, 18:00', e: '20 Feb, 23:00', st: 'Expired', by: 'M. Chen' },
+  { t: 'Platform improvements now live', d: 'Updates to performance and usability are now available.', type: 'info', s: '01 Feb, 09:00', e: '22 Feb, 23:59', st: 'Expired', by: 'L. Novak' },
+  { t: 'New dashboard tabs released', d: 'Profit & Loss, Gross Margin, Headcount and Levers now have their own tabs.', type: 'info', s: '22 Jan, 09:00', e: '05 Feb, 20:00', st: 'Expired', by: 'L. Novak' },
+  { t: 'Access review for site admins', d: 'Confirm the users in your geography before the end of the month.', type: 'crit', s: '10 Jan, 09:00', e: '31 Jan, 23:59', st: 'Expired', by: 'A. Rivera' }
+];
+var STATUSES = ['All', 'Active', 'Scheduled', 'Expired'];
+function blankForm() { return { type: 'info', title: '', desc: '', sd: '', ed: '', st: '09:00', et: '10:00', dismiss: true, geo: 'All geographies' }; }
+
+function statusBadge(st) {
+  var m = { Active: 'color:#9AD3CD;background:rgba(93,181,173,.14);border-color:rgba(93,181,173,.35)', Scheduled: 'color:#E8C887;background:rgba(224,176,98,.12);border-color:rgba(224,176,98,.32)', Expired: 'color:var(--text-3);background:transparent;border-color:rgba(255,255,255,.14)' };
+  return '<span class="nbadge" style="' + m[st] + '">' + (st === 'Active' ? '<span class="live"></span>' : '') + st + '</span>';
+}
+
+function validate(f) {
+  var e = {};
+  if (!f.title.trim()) e.title = 'Add a title';
+  if (!f.desc.trim()) e.desc = 'Add a description';
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  if (!f.sd) e.sd = 'Choose a start date';
+  else if (new Date(f.sd + 'T00:00') < today) e.sd = 'Start date can’t be in the past';
+  if (!f.ed) e.ed = 'Choose an end date';
+  else if (f.sd && new Date(f.ed + 'T' + (f.et || '00:00')) <= new Date(f.sd + 'T' + (f.st || '00:00'))) e.ed = 'End must be after the start';
+  return e;
+}
+
+function bannerHtml(type, title, desc, dismiss, id) {
+  var c = NTYPES[type].c;
+  return '<div class="nbanner" ' + (id ? 'id="' + id + '" ' : '') + 'style="border-color:' + rgba(c, .45) + ';background:linear-gradient(90deg,' + rgba(c, .16) + ',' + rgba(c, .05) + ' 60%,rgba(13,18,20,.5))">' +
+    '<span class="nicon" style="color:' + c + ';background:' + rgba(c, .14) + ';border-color:' + rgba(c, .35) + '">' + tIcon(type, 16) + '</span>' +
+    '<div style="min-width:0;flex:1 1 auto"><div class="pv-t" style="font-weight:500">' + (title ? esc(title) : '<span style="color:var(--text-3)">Notification title</span>') + '</div>' +
+    '<div class="pv-d" style="color:var(--text-2);font-size:13px;margin-top:2px">' + (desc ? esc(desc) : '<span style="color:var(--text-3)">Short description shown under the title</span>') + '</div></div>' +
+    (dismiss ? '<button class="tbtn pv-x" data-a="dismissbanner" aria-label="Dismiss notification" style="flex:0 0 38px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' : '') + '</div>';
+}
+
+function notifPage() {
+  var q = (S.nq || '').toLowerCase();
+  var rows = NLIST.filter(function (n) { return (S.nst === 'All' || n.st === S.nst) && (!q || (n.t + ' ' + n.d).toLowerCase().indexOf(q) > -1); });
+  var counts = {}; STATUSES.forEach(function (s) { counts[s] = s === 'All' ? NLIST.length : NLIST.filter(function (n) { return n.st === s; }).length; });
+  var body = rows.map(function (n, i) {
+    var T = NTYPES[n.type];
+    var editable = n.st !== 'Expired';
+    return '<tr class="nrow">' +
+      '<td><div style="font-weight:500;color:var(--text)">' + esc(n.t) + '</div><div class="nd">' + esc(n.d) + '</div></td>' +
+      '<td><span class="ntype" style="color:' + T.c + '">' + tIcon(n.type) + '<span style="color:var(--label)">' + T.label + '</span></span></td>' +
+      '<td class="mono nmut">' + n.s + '</td><td class="mono nmut">' + n.e + '</td>' +
+      '<td>' + statusBadge(n.st) + '</td>' +
+      '<td style="color:var(--label)">' + esc(n.by) + '</td>' +
+      '<td><div style="display:flex;gap:2px;justify-content:flex-end">' +
+        (editable
+          ? '<button class="tbtn" aria-label="Edit ' + esc(n.t) + '"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></svg></button><button class="tbtn" aria-label="Delete ' + esc(n.t) + '" style="color:#E4A19C"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/></svg></button>'
+          : '<button class="tbtn" aria-label="Duplicate ' + esc(n.t) + '"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg></button>') +
+      '</div></td></tr>';
+  }).join('');
+  if (!rows.length) body = '<tr><td colspan="7" style="padding:40px;text-align:center;color:var(--text-2)">No notifications match these filters.</td></tr>';
+
+  return (S.toast ? '<div class="toast glass" role="status">' + esc(S.toast) + '</div>' : '') +
+    '<section class="hero glass-hero" style="padding-bottom:28px">' +
+      '<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px"><div><div class="lbl-lg" style="letter-spacing:.12em">Admin · platform banners</div>' +
+      '<h1>Notification Center</h1><p>Create and schedule banners that every user sees on the dashboard.</p></div>' +
+      '<button class="primary" data-a="newnotif"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Create notification</button></div>' +
+      '<div class="filters" style="align-items:flex-end">' +
+        '<div class="field-col" style="width:240px;flex:0 0 240px"><label class="lbl-lg" for="nq">Search</label><div class="sel lg"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A3AFB1" stroke-width="2" aria-hidden="true" style="left:12px;right:auto"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input id="nq" class="field" type="search" placeholder="Title or text" value="' + esc(S.nq || '') + '" autocomplete="off" style="width:100%;height:42px;padding:0 12px 0 34px;border-radius:11px"></div></div>' +
+        '<div class="field-col"><span class="lbl-lg">Status</span><div class="seg field" role="group" aria-label="Status">' +
+          STATUSES.map(function (s) { return '<button data-a="nst" data-v="' + s + '" aria-pressed="' + (S.nst === s) + '">' + s + ' <span class="mono" style="opacity:.7;font-size:12px">' + counts[s] + '</span></button>'; }).join('') + '</div></div>' +
+        '<div style="flex:1 1 auto"></div>' +
+        select('nrange', 'Date range', ['Last 30 days', 'Last 90 days', 'This year', 'All time'], 'Last 30 days', 240, false, true) +
+        '<button class="field" aria-label="Export list" style="width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center">' + DL + '</button>' +
+      '</div></section>' +
+    '<section class="glass" style="border-radius:22px;overflow:hidden"><div style="overflow-x:auto"><table class="ntable"><colgroup><col style="width:34%"><col style="width:13%"><col style="width:12%"><col style="width:12%"><col style="width:11%"><col style="width:10%"><col style="width:8%"></colgroup>' +
+      '<thead><tr><th scope="col">Notification</th><th scope="col">Type</th><th scope="col">Start · UTC+2</th><th scope="col">End · UTC+2</th><th scope="col">Status</th><th scope="col">Published by</th><th scope="col" style="text-align:right">Actions</th></tr></thead><tbody>' + body + '</tbody></table></div>' +
+      '<div class="npager"><span class="lbl">' + rows.length + ' of ' + NLIST.length + ' notifications</span><div style="display:flex;gap:4px;align-items:center"><button class="tbtn" aria-label="Previous page" disabled style="opacity:.4"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span class="pgn" aria-current="page">1</span><span class="pgn">2</span><span class="pgn">3</span><button class="tbtn" aria-label="Next page"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div></div></section>' +
+    (S.drawer ? drawerHtml() : '');
+}
+
+function fieldErr(k) { return S.tried && S.errs[k] ? '<div class="ferr" id="err-' + k + '">' + S.errs[k] + '</div>' : ''; }
+function invalid(k) { return S.tried && S.errs[k] ? ' aria-invalid="true" aria-describedby="err-' + k + '"' : ''; }
+
+function drawerHtml() {
+  var f = S.f;
+  var types = Object.keys(NTYPES).map(function (k) {
+    var T = NTYPES[k], on = f.type === k;
+    return '<button class="tcardbtn" role="radio" aria-checked="' + on + '" data-a="ntype" data-v="' + k + '" style="' + (on ? 'border-color:' + rgba(T.c, .6) + ';background:' + rgba(T.c, .10) : '') + '">' +
+      '<span class="nicon" style="color:' + T.c + ';background:' + rgba(T.c, .14) + ';border-color:' + rgba(T.c, .35) + '">' + tIcon(k, 16) + '</span>' +
+      '<span style="font-weight:500">' + T.label + '</span><span style="font-size:12px;color:var(--text-2);line-height:1.35">' + T.desc + '</span>' +
+      '<span class="rd" aria-hidden="true"></span></button>';
+  }).join('');
+  var anyErr = S.tried && Object.keys(S.errs).length;
+  return '<div class="scrim" data-a="closedrawer" aria-hidden="true"></div>' +
+    '<aside class="drawer glass" role="dialog" aria-modal="true" aria-labelledby="dtitle">' +
+      '<div class="dhead"><h2 id="dtitle" style="margin:0;font-size:20px;font-weight:500">New notification</h2><button class="tbtn" data-a="closedrawer" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
+      '<div class="dbody">' +
+        '<div class="dsec"><div class="lbl-lg">Type</div><div class="tgrid" role="radiogroup" aria-label="Notification type">' + types + '</div></div>' +
+        '<div class="dsec">' +
+          '<div class="frow"><label for="ftitle">Title <span class="req">*</span></label><span class="cnt mono" id="c-title">' + f.title.length + '/100</span></div>' +
+          '<input id="ftitle" data-f="title" class="field fin" maxlength="100" placeholder="For example: Scheduled maintenance on Friday" value="' + esc(f.title) + '"' + invalid('title') + '>' + fieldErr('title') +
+          '<div class="frow" style="margin-top:16px"><label for="fdesc">Description <span class="req">*</span></label><span class="cnt mono" id="c-desc">' + f.desc.length + '/650</span></div>' +
+          '<textarea id="fdesc" data-f="desc" class="field fin" maxlength="650" rows="3" placeholder="What happens and what users should do">' + esc(f.desc) + '</textarea>' + fieldErr('desc') +
+        '</div>' +
+        '<div class="dsec"><div class="lbl-lg">Schedule · UTC+2</div><div class="g2">' +
+          '<div><label for="fsd">Start date <span class="req">*</span></label><input id="fsd" data-f="sd" type="date" class="field fin" value="' + f.sd + '"' + invalid('sd') + '>' + fieldErr('sd') + '</div>' +
+          '<div><label for="fed">End date <span class="req">*</span></label><input id="fed" data-f="ed" type="date" class="field fin" value="' + f.ed + '"' + invalid('ed') + '>' + fieldErr('ed') + '</div>' +
+          '<div><label for="fst">Start time</label><input id="fst" data-f="st" type="time" class="field fin" value="' + f.st + '"></div>' +
+          '<div><label for="fet">End time</label><input id="fet" data-f="et" type="time" class="field fin" value="' + f.et + '"></div>' +
+        '</div></div>' +
+        '<div class="dsec"><div class="lbl-lg">Display</div>' +
+          '<button class="switch field" role="switch" data-a="ndismiss" aria-checked="' + f.dismiss + '" style="width:100%;justify-content:space-between;padding:0 12px;height:44px"><span>Users can dismiss the banner</span><span class="tr"><span class="kn"></span></span></button>' +
+          '<div style="margin-top:12px">' + select('fgeo', 'Geography', ['All geographies', 'Africa', 'Asia', 'Brazil', 'Spain'], f.geo, 240, false, false) + '</div>' +
+        '</div>' +
+        '<div class="dsec"><div class="lbl-lg">Preview</div><div id="pv">' + bannerHtml(f.type, f.title, f.desc, f.dismiss) + '</div></div>' +
+      '</div>' +
+      '<div class="dfoot">' + (anyErr ? '<span class="ferr" role="alert" style="margin:0">Fix ' + Object.keys(S.errs).length + ' field' + (Object.keys(S.errs).length > 1 ? 's' : '') + ' to publish</span>' : '<span></span>') +
+        '<div style="display:flex;gap:8px"><button class="field" data-a="closedrawer" style="height:42px;padding:0 18px;border-radius:11px">Cancel</button><button class="primary" data-a="publish">Publish</button></div></div>' +
+    '</aside>';
+}
+
+
+/* ---------- visual system specimen ---------- */
+function cr(a, b) {
+  function L(h) { h = h.replace('#', ''); return [0, 2, 4].map(function (i) { var x = parseInt(h.substr(i, 2), 16) / 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4); }).reduce(function (s, c, i) { return s + c * [.2126, .7152, .0722][i]; }, 0); }
+  var x = L(a), y = L(b); return ((Math.max(x, y) + .05) / (Math.min(x, y) + .05)).toFixed(1);
+}
+function systemPage() {
+  var card = '#161D1F';
+  var sw = function (c, n) { return '<div class="swatch"><i style="--c:' + c + ';background:linear-gradient(180deg,' + rgba(c, .62) + ',' + rgba(c, .1) + ')"></i><div style="flex:1 1 auto"><div style="font-size:13px;color:var(--label)">' + n + '</div><div class="mono" style="font-size:11px;color:var(--text-3)">' + c + ' · ' + cr(c, card) + ':1</div></div></div>'; };
+  return '<section class="card glass"><div class="lbl-lg">Visual system</div><h3 style="font-size:22px;margin:8px 0 22px">Data, surfaces, type</h3><div class="spec-grid">' +
+    '<div><div class="lbl" style="margin-bottom:10px">Offerings · categorical</div>' + SERIES.map(function (s) { return sw(s.c, s.name); }).join('') + '</div>' +
+    '<div><div class="lbl" style="margin-bottom:10px">Meaning</div>' + sw('#8C97A6', 'Total') + sw('#6FB7B0', 'Increase (+)') + sw('#D06F6A', 'Decrease (−), hatched') + sw('#5DB5AD', 'Interface accent') +
+      '<div class="lbl" style="margin:22px 0 10px">Matte glass · 3 densities</div><div style="display:flex;gap:10px">' +
+      '<div class="glass-hero" style="flex:1;height:72px;border-radius:14px;display:flex;align-items:flex-end;padding:10px"><span class="mono" style="font-size:11px;color:var(--text-2)">Hero · 7px</span></div>' +
+      '<div class="glass" style="flex:1;height:72px;border-radius:14px;display:flex;align-items:flex-end;padding:10px"><span class="mono" style="font-size:11px;color:var(--text-2)">Card · 26px</span></div>' +
+      '<div class="field" style="flex:1;height:72px;border-radius:14px;display:flex;align-items:flex-end;padding:10px"><span class="mono" style="font-size:11px;color:var(--text-2)">Field · 8px</span></div></div></div>' +
+    '<div><div class="lbl" style="margin-bottom:10px">Type</div>' +
+      '<div style="font-size:44px;font-weight:500;letter-spacing:-.025em;line-height:1.1">Dashboard</div><div class="mono" style="font-size:11px;color:var(--text-3);margin:4px 0 16px">Geist 500 · 44</div>' +
+      '<div style="font-size:16px;font-weight:500">Consolidated net revenue</div><div class="mono" style="font-size:11px;color:var(--text-3);margin:4px 0 16px">Geist 500 · 16</div>' +
+      '<div class="mono" style="font-size:32px;letter-spacing:-.03em">291.22</div><div class="mono" style="font-size:11px;color:var(--text-3);margin:4px 0 16px">Geist Mono 400 · 32 · numbers</div>' +
+      '<div class="lbl-lg">Fiscal year · FY26</div><div class="mono" style="font-size:11px;color:var(--text-3);margin-top:4px">Geist Mono · 11 caps · labels</div></div>' +
+    '</div></section>';
+}
+
+/* ---------- render + events ---------- */
+var main = document.getElementById('main');
+var SHOT = (location.hash.match(/shot=([\w-]+)/) || [])[1] || '';
+var EMBED = /embed=cover/.test(location.hash);
+if (EMBED) { document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; }
+if (SHOT) {
+  if (/^(geo|bridges|pyramid|system)$/.test(SHOT)) document.body.classList.add('bare');
+  if (SHOT === 'tabs' || SHOT === 'pyramid') S.tab = 2;
+  if (SHOT === 'table') { S.view = 1; S.level = 2; S.exp = { 'nr|au|0': true }; }
+  if (SHOT.indexOf('notif') === 0) S.page = 'notif';
+  if (SHOT === 'notif-errors') { S.drawer = true; S.f = blankForm(); S.f.title = 'Forecast window closes Friday'; S.f.sd = '2020-05-10'; S.f.ed = '2020-05-08'; S.errs = validate(S.f); S.tried = true; }
+  if (SHOT === 'notif-banner') { S.page = 'dash'; S.banner = { type: 'warn', title: 'Forecast submission window closes Friday', desc: 'Submit FY27 inputs for your geographies before the window closes.', dismiss: true }; }
+}
+function shotBody() {
+  if (SHOT === 'geo') return '<div style="max-width:1360px">' + hero() + '</div>';
+  if (SHOT === 'notif-banner') return '<div class="topbanner">' + bannerHtml(S.banner.type, S.banner.title, S.banner.desc, true) + '</div>' + hero();
+  if (SHOT === 'tabs') { var h = headcount(); return hero() + h.slice(0, h.indexOf('<section class="card glass"')); }
+  if (SHOT === 'bridges') { var p = pnl(); var i = p.indexOf('<div class="row2">'); var j = p.indexOf('<section class="card glass" aria-labelledby="c3">'); return p.slice(i, j); }
+  if (SHOT === 'pyramid') { var h2 = headcount(); return h2.slice(h2.indexOf('<section class="card glass"')); }
+  if (SHOT === 'system') return systemPage();
+  return null;
+}
+var PREV = {};
+function animateBars() {
+  var els = main.querySelectorAll('[data-k]'), next = {};
+  els.forEach(function (el) {
+    var k = el.getAttribute('data-k'), h = el.style.height, b = el.style.bottom;
+    next[k] = { h: h, b: b };
+    var p = PREV[k];
+    if (p && !reduceMotion && (p.h !== h || p.b !== b)) { el.style.transition = 'none'; el.style.height = p.h; if (b) el.style.bottom = p.b; }
+  });
+  if (!reduceMotion) { void main.offsetHeight; els.forEach(function (el) { var n = next[el.getAttribute('data-k')]; el.style.transition = ''; el.style.height = n.h; if (n.b) el.style.bottom = n.b; }); }
+  PREV = next;
+}
+var reduceMotion = false; try { reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+function render() {
+  renderInner(); animateBars();
+}
+function renderInner() {
+  var sb = SHOT ? shotBody() : null;
+  if (sb != null) { main.innerHTML = sb; return; }
+  document.querySelectorAll('nav.rail a').forEach(function (a) { if (a.getAttribute('data-v') === S.page) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  if (S.page === 'notif') { main.innerHTML = notifPage(); return; }
+  var body = S.view === 1 ? (S.tab === 0 ? tableView() : tableNotYet()) : S.tab === 0 ? pnl() : S.tab === 2 ? headcount() : notYet();
+  var b = S.banner ? '<div class="topbanner" role="status">' + bannerHtml(S.banner.type, S.banner.title, S.banner.desc, S.banner.dismiss) + '</div>' : '';
+  main.innerHTML = b + hero() + body;
+}
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-a]');
+  if (!b) {
+    if (e.target.closest('a[href="#"]')) e.preventDefault();
+    if (S.menu && !e.target.closest('.pop')) { S.menu = false; render(); }
+    return;
+  }
+  var a = b.getAttribute('data-a'), v = b.getAttribute('data-v');
+  if (a !== 'menu' && a !== 'level') S.menu = false;
+  if (a === 'tab') S.tab = +v;
+  else if (a === 'view') S.view = +v;
+  else if (a === 'ser') S.off[v] = !S.off[v];
+  else if (a === 'bridge') S.bridge = +v;
+  else if (a === 'mode') S.mode = +v;
+  else if (a === 'compare') S.compare = !S.compare;
+  else if (a === 'geo') S.geos = S.geos.filter(function (g) { return g !== v; });
+  else if (a === 'page') { e.preventDefault(); S.page = v; S.drawer = false; window.scrollTo(0, 0); }
+  else if (a === 'nst') S.nst = v;
+  else if (a === 'newnotif') { S.drawer = true; S.f = blankForm(); S.errs = {}; S.tried = false; }
+  else if (a === 'closedrawer') { S.drawer = false; }
+  else if (a === 'ntype') S.f.type = v;
+  else if (a === 'ndismiss') S.f.dismiss = !S.f.dismiss;
+  else if (a === 'dismissbanner') { if (!S.drawer) S.banner = null; else return; }
+  else if (a === 'publish') {
+    S.errs = validate(S.f); S.tried = true;
+    if (!Object.keys(S.errs).length) {
+      var f = S.f, fmtD = function (d, t) { var x = new Date(d + 'T' + (t || '00:00')); return x.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ', ' + (t || '00:00'); };
+      var started = new Date(f.sd + 'T' + f.st) <= new Date();
+      NLIST.unshift({ t: f.title.trim(), d: f.desc.trim(), type: f.type, s: fmtD(f.sd, f.st), e: fmtD(f.ed, f.et), st: started ? 'Active' : 'Scheduled', by: 'You' });
+      S.banner = { type: f.type, title: f.title.trim(), desc: f.desc.trim(), dismiss: f.dismiss };
+      S.drawer = false; S.nst = 'All';
+      S.toast = started ? 'Published. The banner is live on the dashboard.' : 'Scheduled. Preview it on the dashboard.';
+      setTimeout(function () { S.toast = ''; render(); }, 3500);
+    }
+    render();
+    var bad = main.querySelector('[aria-invalid=true]'); if (bad) bad.focus();
+    return;
+  }
+  else if (a === 'row') { var depth = v.split('|').length - 1; S.exp[v] = !isOpen(v, depth); }
+  else if (a === 'menu') S.menu = !S.menu;
+  else if (a === 'level') { S.level = +v; S.exp = {}; S.menu = false; }
+  else if (a === 'expandall') { var on = S.level === 3 && !Object.keys(S.exp).length; S.level = on ? 0 : 3; S.exp = {}; }
+  var focusSel = '[data-a="' + a + '"]' + (v != null ? '[data-v="' + v + '"]' : '');
+  render();
+  if (a === 'newnotif') { var t = document.getElementById('ftitle'); if (t) t.focus(); return; }
+  var f = main.querySelector(focusSel); if (f) f.focus({ preventScroll: true });
+});
+function onField(e) {
+  var k = e.target.getAttribute('data-f'); if (!k || !S.f) return;
+  S.f[k] = e.target.value;
+  var c = document.getElementById('c-' + k); if (c) c.textContent = S.f[k].length + '/' + (k === 'title' ? 100 : 650);
+  var pv = document.getElementById('pv'); if (pv) pv.innerHTML = bannerHtml(S.f.type, S.f.title, S.f.desc, S.f.dismiss);
+  if (S.tried) {
+    S.errs = validate(S.f);
+    ['title', 'desc', 'sd', 'ed'].forEach(function (key) {
+      if (!S.errs[key]) { var el = document.getElementById('err-' + key); if (el) el.remove(); var inp = main.querySelector('[data-f="' + key + '"]'); if (inp) { inp.removeAttribute('aria-invalid'); inp.removeAttribute('aria-describedby'); } }
+    });
+  }
+}
+document.addEventListener('change', function (e) {
+  if (e.target.id === 'fy') { S.fy = FYS.indexOf(e.target.value); render(); var fsel = document.getElementById('fy'); if (fsel) fsel.focus(); return; }
+  if (e.target.id === 'fgeo' && S.f) S.f.geo = e.target.value; else onField(e);
+});
+document.addEventListener('input', function (e) {
+  if (e.target.getAttribute('data-f')) { onField(e); return; }
+  if (e.target.id === 'nq') { var p2 = e.target.selectionStart; S.nq = e.target.value; render(); var n2 = document.getElementById('nq'); if (n2) { n2.focus(); try { n2.setSelectionRange(p2, p2); } catch (x) {} } return; }
+  if (e.target.id !== 'tq') return;
+  var pos = e.target.selectionStart; S.q = e.target.value; render();
+  var i = document.getElementById('tq'); if (i) { i.focus(); try { i.setSelectionRange(pos, pos); } catch (x) {} }
+});
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && S.drawer) { S.drawer = false; render(); var nb = main.querySelector('[data-a=newnotif]'); if (nb) nb.focus(); return; } if (e.key === 'Escape' && S.menu) { S.menu = false; render(); var b = main.querySelector('[data-a=menu]'); if (b) b.focus(); } });
+render();
+
+/* ---------- globe ---------- */
+var cv = document.getElementById('globe');
+var n = LAND.length / 2, SL = new Float32Array(n), CL = new Float32Array(n), LO = new Float32Array(n);
+for (var i = 0; i < n; i++) { var la = LAND[2 * i] / 10 * Math.PI / 180; SL[i] = Math.sin(la); CL[i] = Math.cos(la); LO[i] = LAND[2 * i + 1] / 10 * Math.PI / 180; }
+var reduce = !!SHOT; try { reduce = reduce || matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+var MARKS = [[3,21,1],[40,-4,1],[-11,-50,1],[24,78,1],[52,-1],[51,10],[9,8],[-1,37],[-29,25],[27,30],[24,45],[39,35],[42,13],[47,2],[52,20],[32,-6],[6,-1],[-15,28],[50,30],[33,44],[25,55],[4,-74]];
+function draw(ms) {
+  var r = Math.min(window.devicePixelRatio || 1, 1.5), Sz = 1900, px = Math.round(Sz * r);
+  if (cv.width !== px) { cv.width = px; cv.height = px; }
+  var ctx = cv.getContext('2d'); ctx.setTransform(r, 0, 0, r, 0, 0); ctx.clearRect(0, 0, Sz, Sz);
+  var C = 950, R = 820, D = Math.PI / 180;
+  var g = ctx.createRadialGradient(C, C, R * .92, C, C, R * 1.13);
+  g.addColorStop(0, 'rgba(93,181,173,0)'); g.addColorStop(.3, 'rgba(93,181,173,.22)'); g.addColorStop(1, 'rgba(93,181,173,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(C, C, R * 1.13, 0, 6.2832); ctx.fill();
+  var b = ctx.createRadialGradient(C - R * .35, C - R * .4, R * .1, C, C, R);
+  b.addColorStop(0, '#1B2427'); b.addColorStop(.55, '#10171A'); b.addColorStop(1, '#07090A');
+  ctx.fillStyle = b; ctx.beginPath(); ctx.arc(C, C, R, 0, 6.2832); ctx.fill();
+  var lon0 = (18 - ms * .0025) * D, lat0 = 22 * D, sa = Math.sin(lat0), ca = Math.cos(lat0);
+  var Lx = -.5, Ly = .6, Lz = .62, Ln = Math.sqrt(Lx * Lx + Ly * Ly + Lz * Lz); Lx /= Ln; Ly /= Ln; Lz /= Ln;
+  function P(la, lo) { var s1 = Math.sin(la), c1 = Math.cos(la), dl = lo - lon0, cd = Math.cos(dl); return { x: c1 * Math.sin(dl), y: ca * s1 - sa * c1 * cd, z: sa * s1 + ca * c1 * cd }; }
+  ctx.strokeStyle = 'rgba(154,211,205,.08)'; ctx.lineWidth = 1;
+  var m, la2, lo2, q, pen;
+  for (m = -180; m < 180; m += 20) { ctx.beginPath(); pen = false; for (la2 = -88; la2 <= 88; la2 += 4) { q = P(la2 * D, m * D); if (q.z > 0) { if (pen) ctx.lineTo(C + R * q.x, C - R * q.y); else { ctx.moveTo(C + R * q.x, C - R * q.y); pen = true; } } else pen = false; } ctx.stroke(); }
+  for (la2 = -60; la2 <= 60; la2 += 20) { ctx.beginPath(); pen = false; for (lo2 = -180; lo2 <= 180; lo2 += 4) { q = P(la2 * D, lo2 * D); if (q.z > 0) { if (pen) ctx.lineTo(C + R * q.x, C - R * q.y); else { ctx.moveTo(C + R * q.x, C - R * q.y); pen = true; } } else pen = false; } ctx.stroke(); }
+  ctx.fillStyle = '#A9CFCB';
+  for (var i = 0; i < n; i++) {
+    var dl = LO[i] - lon0, cd = Math.cos(dl), z = sa * SL[i] + ca * CL[i] * cd;
+    if (z < .03) continue;
+    var x = CL[i] * Math.sin(dl), y = ca * SL[i] - sa * CL[i] * cd, lit = x * Lx + y * Ly + z * Lz;
+    if (lit <= 0) continue;
+    var op = .07 + .62 * Math.pow(lit, 1.2) * Math.sqrt(z);
+    if (op < .05) continue;
+    ctx.globalAlpha = op; ctx.beginPath(); ctx.arc(C + R * x, C - R * y, 2.1 * (.6 + .4 * z), 0, 6.2832); ctx.fill();
+  }
+  for (var k = 0; k < MARKS.length; k++) {
+    var mq = P(MARKS[k][0] * D, MARKS[k][1] * D); if (mq.z < .08) continue;
+    var mx = C + R * mq.x, my = C - R * mq.y, a = Math.min(1, mq.z * 1.4);
+    if (MARKS[k][2]) {
+      ctx.globalAlpha = .12 * a; ctx.fillStyle = '#5DB5AD'; ctx.beginPath(); ctx.arc(mx, my, 26, 0, 6.2832); ctx.fill();
+      ctx.globalAlpha = .8 * a; ctx.strokeStyle = '#5DB5AD'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(mx, my, 13, 0, 6.2832); ctx.stroke();
+      ctx.globalAlpha = a; ctx.fillStyle = '#9AD3CD'; ctx.beginPath(); ctx.arc(mx, my, 5.5, 0, 6.2832); ctx.fill();
+    } else { ctx.globalAlpha = .55 * a; ctx.fillStyle = '#5DB5AD'; ctx.beginPath(); ctx.arc(mx, my, 4, 0, 6.2832); ctx.fill(); }
+  }
+  ctx.globalAlpha = 1; ctx.strokeStyle = 'rgba(154,211,205,.16)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(C, C, R, 0, 6.2832); ctx.stroke();
+}
+var t0 = performance.now(), last = -1e9;
+var onScreen = true, pausedAt = 0, pausedTotal = 0;
+try { new IntersectionObserver(function (en) { onScreen = en[0].isIntersecting; }, { threshold: 0 }).observe(document.getElementById('app')); } catch (e) {}
+function loop(now) {
+  var active = onScreen && !document.hidden;
+  if (!active) { if (!pausedAt) pausedAt = now; requestAnimationFrame(loop); return; }
+  if (pausedAt) { pausedTotal += now - pausedAt; pausedAt = 0; }
+  if (now - last > 33) { last = now; draw(reduce ? 0 : now - t0 - pausedTotal); }
+  if (!reduce) requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

@@ -38,6 +38,10 @@ main.gaapt{
 /* figures: each screenshot sits on a near-black mat, so it reads as a screen placed on the page */
 .gaapt .cb-frame{background:var(--gp-mat);border:1px solid var(--gp-mat-border);box-shadow:var(--gp-mat-shadow)}
 .gaapt .cb-figure figcaption{color:var(--gp-text-3)}
+/* live cover (>=1024): the dashboard demo laid over its poster, scaled from its 1440 x 1188 render size (attributes) by the script;
+   hidden until loaded, then a 200ms fade (none under reduced motion: case.css drops all transitions) */
+.gaapt .gp-cover-live{position:absolute;top:0;left:0;border:0;transform-origin:0 0;opacity:0;visibility:hidden;transition:opacity 200ms var(--ease-hover)}
+.gaapt .gp-cover-live.is-on{opacity:1;visibility:visible}
 /* Decision 03 live table: fills the media box on the mat; its height comes from the demo (script at the end of index.html) */
 .gaapt .gp-demo{display:block;width:100%;border:0;background:var(--gp-mat)}
 

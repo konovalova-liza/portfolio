@@ -244,16 +244,13 @@ var BLOCKS = [
 var SUBS = [{ id: 'au', name: 'Audit subtotal', offs: [0, 1, 2] }, { id: 'as', name: 'Assurance subtotal', offs: [3, 4, 5] }];
 var OFF_BASE = [146.9, 98.4, 120.6, 132.2, 88.7, 64.3];
 var OFF_GROW = [0.012, 0.018, 0.041, 0.034, 0.015, 0.062];
-var GEO_SHARE = { Africa: 0.18, Asia: 0.31, Brazil: 0.22, Spain: 0.29 };
-function geoShare(g, list) {
-  var tot = 0; list.forEach(function (x) { tot += GEO_SHARE[x] || 0.2; });
-  return (GEO_SHARE[g] || 0.2) / tot;
-}
-function leaf(b, off, g, y) { return OFF_BASE[off] * geoShare(g, S.geos) * Math.pow(1 + OFF_GROW[off], y) * b.f; }
+var GEO_W = { Africa: 0.09, Asia: 0.15, Brazil: 0.10, Spain: 0.11 };
+var OTHER_W = 0.55;
+function leaf(b, off, g, y) { return OFF_BASE[off] * (g === 'other' ? OTHER_W : (GEO_W[g] || 0)) * Math.pow(1 + OFF_GROW[off], y) * b.f; }
 function series(b, off, g) {
   return YEARS.map(function (_, y) {
     if (g != null) return leaf(b, off, g, y);
-    var s = 0; S.geos.forEach(function (gg) { s += leaf(b, off, gg, y); }); return s;
+    var s = leaf(b, off, 'other', y); S.geos.forEach(function (gg) { s += leaf(b, off, gg, y); }); return s;
   });
 }
 function sum(arrs) { return YEARS.map(function (_, y) { var s = 0; arrs.forEach(function (a) { s += a[y]; }); return s; }); }
@@ -313,7 +310,7 @@ function tableView() {
     var subRows = SUBS.map(function (sb) {
       var offRows = sb.offs.map(function (oi) {
         var oKey = b.id + '|' + sb.id + '|' + oi;
-        var geoRows = S.geos.map(function (g) { return { key: oKey + '|' + g, depth: 3, name: g, vals: series(b, oi, g), spark: '#8B989A', m: match(g) }; });
+        var geoRows = S.geos.map(function (g) { return { key: oKey + '|' + g, depth: 3, name: g, vals: series(b, oi, g), spark: '#8B989A', m: match(g) }; }).concat([{ key: oKey + '|other', depth: 3, name: '37 other geographies', vals: series(b, oi, 'other'), spark: '#8B989A', m: match('37 other geographies') }]);
         return { key: oKey, depth: 2, name: SERIES[oi].name, dot: SERIES[oi].c, vals: series(b, oi), spark: SERIES[oi].c, kids: geoRows, m: match(SERIES[oi].name) };
       });
       return { key: b.id + '|' + sb.id, depth: 1, name: sb.name, vals: sum(offRows.map(function (r) { return r.vals; })), spark: '#9AD3CD', kids: offRows, m: match(sb.name) };
@@ -348,7 +345,7 @@ function tableView() {
 
 
 var main = document.getElementById('main');
-function postHeight() { try { parent.postMessage({ gaaptDemoHeight: Math.ceil(document.documentElement.scrollHeight) }, '*'); } catch (e) {} }
+function postHeight() { try { parent.postMessage({ gaaptDemoHeight: Math.ceil(document.body.getBoundingClientRect().height) }, '*'); } catch (e) {} }
 function render() {
   var html = tableView();
   html = html.replace(/<div style="display:flex;justify-content:space-between[\s\S]*?<\/div>/, '');
