@@ -933,6 +933,20 @@ The GAAPT case (`cases/gaapt/`, added 2026-11-12) has a dark body to match the p
 
 **Tags.** Before and After use the same neutral §4.17 Tag style (2026-11-12): the remapped `--background`, `--line` and `--text-2`, no accent and no colour difference.
 
+**Live demos** (2026-11-12). Two self-contained, same-origin pages in `cases/gaapt/demo/` run inside the case. The owner wrote them; their logic is not edited here.
+
+| Value | Where / why |
+|---|---|
+| Live cover: render size `1440 × 1188` CSS px | `demo/dashboard.html#embed=cover` in an iframe over the cover poster (`.gp-cover-live`, `width`/`height` attributes). 1440 × 1188 is the poster's ratio (`cover.webp` 2400 × 1980 is the same view at 2400/1440), so the frame can sit on the poster 1:1 |
+| Live cover: scale to frame | The script at the end of `index.html` sets `transform: scale(<poster width> / 1440)` from `transform-origin: 0 0`, updated by a `ResizeObserver`; the wrapper keeps the poster's box, so nothing below moves |
+| Live cover: `≥ 1024` only | `matchMedia('(min-width: 1024px)')`. Below it the iframe is never created (no request for the demo) and the poster with its own caption is the cover; if the window narrows later, the iframe is hidden and the poster caption returns. At ≥1024 the caption reads "Live: remove a country or change the fiscal year." |
+| Live cover: `200ms` fade | Opacity 0 → 1 with `--ease-hover` after the iframe's `load` event (hidden until then, so the poster covers the wait). None under reduced motion: `case.css` drops every transition there. A one-off value below `--dur-micro` because it only hides the poster → live hand-over, which shows the same view |
+| Live cover: no scrollbars | The embed locks its own scroll (`overflow: hidden` on its root), so wheel input over the cover scrolls the page. Its globe is the only animated globe on the page and pauses itself when off screen |
+| Table demo: starting height `820px` | `demo/table.html` in Decision 03 (`.gp-demo`, `height` attribute): close to its first render (~802px), so the panel barely moves when the real height arrives |
+| Table demo: height follows content | The demo posts `{gaaptDemoHeight: n}` to the parent after every render. The page accepts it only from that iframe's `contentWindow` and sets the frame to the demo's body height (read directly, since the frame is same-origin; `n` is the fallback), so the frame grows and shrinks with the table and never scrolls inside. Below 768 the table scrolls sideways inside the frame |
+
+**Posters.** `cover.webp` and `bridge-after.webp` are rendered from the same `demo/dashboard.html` (data model v2) at 2× (`#embed=cover` at 1440 × 1188, `#shot=bridges` at 1440 × 600), so the poster and the live cover show the same numbers.
+
 **Rules.** Fonts unchanged (Onest + Geist Mono), so the case still belongs to the portfolio. No colours beyond this table. Text never below `--gp-text-3`.
 
 ---
