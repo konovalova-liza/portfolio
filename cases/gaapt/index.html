@@ -59,12 +59,12 @@
 
 <main id="main" class="gaapt">
   <!-- GAAPT case body (DESIGN.md §4.17 "Case body components", theme §5.8). Facts: cases/gaapt/BRIEF.md; copy: gaapt-copy.md (v1).
-       Image slots are still placeholders ([Todo "slot"]); each slot appears once. Images: cases/gaapt/assets/*.webp (neutral names),
-       loading="lazy" except the cover. "After" screens are a redesign: never "Shipped" or "live". Delete every [Todo] before the case is frozen. -->
+       Images: cases/gaapt/assets/*.webp (neutral names, one use each), loading="lazy" except the cover; specs and alts: IMAGES-gaapt.md.
+       "After" screens are a redesign: never "Shipped" or "live". Legacy crops carry no client name, logo, URL or currency (NDA). -->
 
   <div class="shell cb-section cb-flow">
     <!-- cover: redesigned Profit & Loss dashboard; first image on the page, no loading="lazy" -->
-    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: cover]">[Todo "cover"]</div></div></div><figcaption class="t-body-sm">The redesigned Profit &amp; Loss dashboard: country filters, four tabs and one chart system.</figcaption></figure>
+    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/cover.webp" alt="Redesigned forecasting dashboard in a dark theme: selected countries as chips in the header, four tabs, six KPI tiles and a grouped revenue chart over a dotted globe." width="2400" height="1980" decoding="async"></div></div><figcaption class="t-body-sm">The redesigned Profit &amp; Loss dashboard: country filters, four tabs and one chart system.</figcaption></figure>
   </div>
 
   <section class="shell cb-summary" aria-label="Summary">
@@ -117,8 +117,8 @@
         <div><span class="cb-dlabel t-mono">Decision 01</span><h3 class="t-h3" id="d1-h">Countries stay visible on the dashboard</h3></div>
         <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">Countries were chosen on a separate step and disappeared once the dashboard loaded.</p></div>
         <div class="cb-pair">
-          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-geographies]">[Todo "legacy-geographies"]</div></div></div><figcaption class="t-body-sm">Before: countries chosen elsewhere, invisible on the dashboard.</figcaption></figure>
-          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: geo-header]">[Todo "geo-header"]</div></div></div><figcaption class="t-body-sm">After: selected countries in the header, editable in place.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><img src="assets/legacy-geographies.webp" alt="Legacy dashboard: a &quot;Choose geographies&quot; button with no selected countries visible, above a headcount pyramid with six coloured export buttons." width="785" height="343" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Countries chosen elsewhere, invisible on the dashboard.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><img src="assets/geo-header.webp" alt="Dashboard header with a fiscal year selector, four selected countries as removable chips, a &quot;+37 more&quot; chip and an Edit link." width="2400" height="733" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Selected countries in the header, editable in place.</figcaption></figure>
         </div>
         <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">The selection now lives in the dashboard header as chips, with Edit next to them. Users see what the numbers include and change it in place, without going back.</p></div>
       </article>
@@ -127,8 +127,8 @@
         <div><span class="cb-dlabel t-mono">Decision 02</span><h3 class="t-h3" id="d2-h">One endless page → four tabs</h3></div>
         <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">Every chart sat on one long page, in no particular order.</p></div>
         <div class="cb-pair">
-          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-page]">[Todo "legacy-page"]</div></div></div><figcaption class="t-body-sm">Before: one page of stacked charts.</figcaption></figure>
-          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: tabs]">[Todo "tabs"]</div></div></div><figcaption class="t-body-sm">After: four tabs, Headcount open.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><img src="assets/legacy-page.webp" alt="Legacy gross margin bridge split into three separate graphs for revenue, cost and profit effect, with a review annotation." width="1152" height="872" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">One bridge split into three separate graphs.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><img src="assets/tabs.webp" alt="Dashboard with the Headcount tab open: four tabs under the header and two KPI tiles for total headcount and bulge ratio." width="2400" height="1200" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Four tabs, Headcount open.</figcaption></figure>
         </div>
         <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">We grouped the charts into four tabs by the question they answer: Profit &amp; Loss, Gross Margin, Headcount and Transformation Levers, and removed the charts nobody used. Less scrolling, and each tab loads only its own data.</p></div>
       </article>
@@ -138,8 +138,8 @@
         <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">The table was a wide sheet of near-identical rows that scrolled past the edge of the screen.</p></div>
         <!-- table-levels: an interactive table later; a placeholder for now -->
         <div class="cb-pair">
-          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-table]">[Todo "legacy-table"]</div></div></div><figcaption class="t-body-sm">Before: a wide table with horizontal scroll.</figcaption></figure>
-          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: table-levels]">[Todo "table-levels"]</div></div></div><figcaption class="t-body-sm">After: blocks open by level, all ten years on screen.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><img src="assets/legacy-table.webp" alt="Legacy profit and loss table running past the right edge of the screen with a horizontal scrollbar." width="1373" height="482" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">A wide table with horizontal scroll.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><img src="assets/table-levels.webp" alt="Profit and loss table grouped into blocks: net revenue opened to audit and assurance subtotals, offerings and countries, with ten fiscal years and a trend line per row." width="2400" height="2035" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Blocks open by level, all ten years on screen.</figcaption></figure>
         </div>
         <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">Rows are grouped into blocks that open from total to subtotal, offering and country. A Show control sets the depth in one step, so a leader stays at the total and an analyst opens every country. All ten years fit on screen.</p></div>
       </article>
@@ -153,8 +153,8 @@
     </div>
     <div class="cb-flow">
       <div class="cb-prose t-body"><p>Two patterns repeat across the dashboard. Bridges show the start, every change and the end in one waterfall, with signed values above each bar and hatching on decreases. The headcount pyramid puts the number, the share and the change next to every grade, so nothing hides behind a tooltip.</p></div>
-      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: bridge-after]">[Todo "bridge-after"]</div></div></div><figcaption class="t-body-sm">Revenue and profit bridges: increases, hatched decreases and totals in one chart each.</figcaption></figure>
-      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: pyramid-after]">[Todo "pyramid-after"]</div></div></div><figcaption class="t-body-sm">Headcount by grade, compared with the base year.</figcaption></figure>
+      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/bridge-after.webp" alt="Two waterfall charts: consolidated net revenue from FY26 to FY35 by offering, and a direct profit bridge, with totals, increases and hatched decreases." width="2400" height="1000" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Revenue and profit bridges: increases, hatched decreases and totals in one chart each.</figcaption></figure>
+      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/pyramid-after.webp" alt="Headcount pyramid by grade: a bar per grade for FY27 over a thinner base-year bar, with headcount, share and change for each row." width="2400" height="1267" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Headcount by grade, compared with the base year.</figcaption></figure>
     </div>
   </section>
 
@@ -167,9 +167,9 @@
       <div class="cb-feature">
         <div class="cb-ftext"><h3 class="t-h4">Notification Center</h3><p class="t-body">Admins needed a way to warn every user about maintenance, deadlines or outages. Notification Center lets them write a banner, pick its level, schedule it and preview it before publishing. The form checks dates and required fields inline, so errors are fixed before anything goes live.</p></div>
         <div class="cb-fmedia cb-stack">
-          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-list]">[Todo "notifications-list"]</div></div></div><figcaption class="t-body-sm">Every banner with its status at a glance.</figcaption></figure>
-          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-errors]">[Todo "notifications-errors"]</div></div></div><figcaption class="t-body-sm">Inline validation in the create panel.</figcaption></figure>
-          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-banner]">[Todo "notifications-banner"]</div></div></div><figcaption class="t-body-sm">The published banner on the dashboard.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/notifications-list.webp" alt="Notification Center list with status filters and counts, and rows showing type, schedule, status and actions." width="2400" height="1733" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Every banner with its status at a glance.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/notifications-errors.webp" alt="Create-notification panel showing inline errors: a required description, a start date in the past and an end date before the start." width="2400" height="1667" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Inline validation in the create panel.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/notifications-banner.webp" alt="Dashboard with a published warning banner above the header announcing a forecast submission deadline." width="2400" height="967" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">The published banner on the dashboard.</figcaption></figure>
         </div>
       </div>
       <div class="cb-prose t-body"><p>User management moved to the client side too: site admins now add and remove users themselves, a job that used to go through developers and the backend.</p></div>
@@ -183,7 +183,7 @@
     </div>
     <div class="cb-flow">
       <div class="cb-prose t-body"><p>One dark system runs across every screen: a muted six-colour palette for offerings where every colour passes 4.5:1, matte glass in three densities, and Geist with Geist Mono for numbers.</p></div>
-      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: visual-system]">[Todo "visual-system"]</div></div></div><figcaption class="t-body-sm">Data palette with contrast ratios, glass densities and type.</figcaption></figure>
+      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><img src="assets/visual-system.webp" alt="Visual system: six muted data colours with contrast ratios, colours for totals, increases and decreases, three glass densities and type samples." width="2400" height="900" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Data palette with contrast ratios, glass densities and type.</figcaption></figure>
     </div>
   </section>
 
