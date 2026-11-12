@@ -48,7 +48,7 @@
     <h1 class="t-h1" id="intro-title" tabindex="-1">GAAPT</h1>
     <p class="sum t-body">GAAPT is a forecasting platform for an audit and assurance business: leadership uses it to see revenue, profit and headcount years ahead, and finance teams feed it the data. The legacy tool showed everything at once: one endless page of charts, tables without structure, country filters that disappeared once applied. As the product's only designer after discovery, I talked to users twice a week, cut what nobody used and rebuilt the dashboard, tables and admin tools around how people actually read a forecast.</p>
     <ul class="tags t-body-sm" aria-label="Project facts">
-      <li><b class="t-mono">Role</b>UX/UI designer (sole designer)</li>
+      <li><b class="t-mono">Role</b>Sole UX/UI designer</li>
       <li><b class="t-mono">Team</b>Design lead at discovery, client stakeholders, developers</li>
       <li><b class="t-mono">Platform</b>Desktop web</li>
       <li><b class="t-mono">Status</b>Partly live, in development</li>
@@ -136,10 +136,10 @@
       <article class="cb-decision" aria-labelledby="d3-h">
         <div><span class="cb-dlabel t-mono">Decision 03</span><h3 class="t-h3" id="d3-h">Tables by blocks and levels</h3></div>
         <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">The table was a wide sheet of near-identical rows that scrolled past the edge of the screen.</p></div>
-        <!-- table-levels: an interactive table later; a placeholder for now -->
-        <div class="cb-pair">
+        <!-- After: the live table (demo/table.html, self-contained copy of the owner's demo). Stacked, not a pair: the table needs the full panel width. -->
+        <div class="cb-stack">
           <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><img src="assets/legacy-table.webp" alt="Legacy profit and loss table running past the right edge of the screen with a horizontal scrollbar." width="1373" height="482" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">A wide table with horizontal scroll.</figcaption></figure>
-          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><img src="assets/table-levels.webp" alt="Profit and loss table grouped into blocks: net revenue opened to audit and assurance subtotals, offerings and countries, with ten fiscal years and a trend line per row." width="2400" height="2035" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Blocks open by level, all ten years on screen.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><iframe class="gp-demo" id="d3-demo" src="demo/table.html" title="Interactive table: open blocks, change the Show level, search" loading="lazy" height="820"></iframe></div></div><figcaption class="t-body-sm">Blocks open by level, all ten years on screen. Open a block or change Show to try it.</figcaption></figure>
         </div>
         <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">Rows are grouped into blocks that open from total to subtotal, offering and country. A Show control sets the depth in one step, so a leader stays at the total and an analyst opens every country. All ten years fit on screen.</p></div>
       </article>
@@ -222,5 +222,22 @@
 </section>
 
 <script src="../shared/case.js"></script>
+<script>
+/* Decision 03 live table: the demo posts {gaaptDemoHeight:n} after every render; the frame follows it, so it never scrolls inside.
+   Only messages from that iframe's own window are accepted. n is the demo's documentElement.scrollHeight, which never drops
+   below the frame's current height, so a frame that grew would never shrink back. The demo is same-origin, so its body height
+   (the real content height) is used; n is the fallback if that read fails. */
+(function () {
+  var f = document.getElementById('d3-demo');
+  if (!f) return;
+  addEventListener('message', function (e) {
+    if (e.source !== f.contentWindow || !e.data || typeof e.data.gaaptDemoHeight !== 'number') return;
+    var n = e.data.gaaptDemoHeight;
+    try { n = f.contentDocument.body.getBoundingClientRect().height; } catch (x) {}
+    n = Math.ceil(n);
+    if (n > 0) f.style.height = n + 'px';
+  });
+})();
+</script>
 </body>
 </html>

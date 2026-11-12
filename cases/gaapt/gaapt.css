@@ -38,6 +38,8 @@ main.gaapt{
 /* figures: each screenshot sits on a near-black mat, so it reads as a screen placed on the page */
 .gaapt .cb-frame{background:var(--gp-mat);border:1px solid var(--gp-mat-border);box-shadow:var(--gp-mat-shadow)}
 .gaapt .cb-figure figcaption{color:var(--gp-text-3)}
+/* Decision 03 live table: fills the media box on the mat; its height comes from the demo (script at the end of index.html) */
+.gaapt .gp-demo{display:block;width:100%;border:0;background:var(--gp-mat)}
 
 /* panels on --gp-surface with a 1px --gp-line border: summary items, cards, decisions, stats, outcomes */
 .gaapt .cb-summary dl>div,
