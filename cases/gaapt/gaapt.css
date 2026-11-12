@@ -1,7 +1,7 @@
 /* GAAPT case theme (DESIGN.md §5.8): dark case body, scoped to cases/gaapt/ only. Linked after ../shared/case.css.
    Layering: ink intro/end sheets (#0a0a0a, unchanged) → teal-graphite body (--gp-bg) → near-black screenshots on a framed mat.
    The .cb-* components are themed by remapping the shell variables inside main.gaapt; a selector is overridden only where
-   a component's light look isn't a variable (frame, panels, captions, Before/After tags). */
+   a component's light look isn't a variable (frame, panels, captions, skip-link ring). */
 
 /* tokens: --gp-* (§5.8), used only on this page */
 .case-gaapt{
@@ -21,6 +21,8 @@
 }
 /* the area behind the intro's and end block's rounded corners is the body colour, not white */
 body.case-gaapt{background:var(--gp-bg)}
+/* skip link: its ring sits on the dark body, where the global --accent ring is ~3:1 */
+body.case-gaapt .skip:focus-visible{outline-color:var(--gp-accent-2)}
 
 /* mapping: the shell variables the .cb-* components already use */
 main.gaapt{
@@ -36,10 +38,6 @@ main.gaapt{
 /* figures: each screenshot sits on a near-black mat, so it reads as a screen placed on the page */
 .gaapt .cb-frame{background:var(--gp-mat);border:1px solid var(--gp-mat-border);box-shadow:var(--gp-mat-shadow)}
 .gaapt .cb-figure figcaption{color:var(--gp-text-3)}
-
-/* Before / After tags (scoped exception to §4.17 "Tag: don't color-code"; the label text still carries the meaning) */
-.gaapt .cb-tag.gp-before{color:var(--gp-text-3)}
-.gaapt .cb-tag.gp-after{color:var(--gp-accent)}
 
 /* panels on --gp-surface with a 1px --gp-line border: summary items, cards, decisions, stats, outcomes */
 .gaapt .cb-summary dl>div,

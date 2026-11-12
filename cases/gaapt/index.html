@@ -51,66 +51,58 @@
       <li><b class="t-mono">Role</b>UX/UI designer (sole designer)</li>
       <li><b class="t-mono">Team</b>Design lead at discovery, client stakeholders, developers</li>
       <li><b class="t-mono">Platform</b>Desktop web</li>
-      <li><b class="t-mono">Status</b>[STATUS]</li>
+      <li><b class="t-mono">Status</b>Partly live, in development</li>
     </ul>
-    <p class="ctx t-body">[Todo "context"]</p>
+    <p class="ctx t-body">Enterprise forecasting tool for an audit and assurance business. Legacy system redesigned end to end.</p>
   </section>
 </div>
 
 <main id="main" class="gaapt">
-  <!-- GAAPT case body (DESIGN.md §4.17 "Case body components"). Facts: cases/gaapt/BRIEF.md only.
-       Scaffold: every text block and image slot is a placeholder named by its slot ([Todo "slot"]); final copy arrives as gaapt-copy.md,
-       images as cases/gaapt/assets/*.webp (neutral names), loading="lazy" except the cover. "After" screens are a redesign: never "Shipped" or "live".
-       Delete every .cb-todo and [Todo] before the case is frozen. -->
+  <!-- GAAPT case body (DESIGN.md §4.17 "Case body components", theme §5.8). Facts: cases/gaapt/BRIEF.md; copy: gaapt-copy.md (v1).
+       Image slots are still placeholders ([Todo "slot"]); each slot appears once. Images: cases/gaapt/assets/*.webp (neutral names),
+       loading="lazy" except the cover. "After" screens are a redesign: never "Shipped" or "live". Delete every [Todo] before the case is frozen. -->
 
   <div class="shell cb-section cb-flow">
     <!-- cover: redesigned Profit & Loss dashboard; first image on the page, no loading="lazy" -->
-    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: cover]">[Todo "cover"]</div></div></div><figcaption class="t-body-sm">[Todo "cover-caption"]</figcaption></figure>
+    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: cover]">[Todo "cover"]</div></div></div><figcaption class="t-body-sm">The redesigned Profit &amp; Loss dashboard: country filters, four tabs and one chart system.</figcaption></figure>
   </div>
 
   <section class="shell cb-summary" aria-label="Summary">
     <dl>
-      <div><dt class="t-mono">Problem</dt><dd class="t-body">[Todo "summary-problem"]</dd></div>
-      <div><dt class="t-mono">What I did</dt><dd class="t-body">[Todo "summary-what-i-did"]</dd></div>
-      <div><dt class="t-mono">Outcome</dt><dd class="t-body">[Todo "summary-outcome"]</dd></div>
+      <div><dt class="t-mono">Problem</dt><dd class="t-body">A legacy forecasting tool showed everything at once: one endless page of charts, tables without structure, country filters that vanished once applied.</dd></div>
+      <div><dt class="t-mono">What I did</dt><dd class="t-body">As the only designer after discovery, I talked to users twice a week, cut what nobody used and rebuilt the dashboard, tables and admin tools.</dd></div>
+      <div><dt class="t-mono">Outcome</dt><dd class="t-body">Countries stay in view, the dashboard splits into four tabs, tables open by level, and admins manage users and notifications without developers.</dd></div>
     </dl>
   </section>
 
   <section class="shell cb-section" id="context" aria-labelledby="context-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">01</span>Context and role</span>
-      <h2 class="t-h2" id="context-h">[Todo "context-heading"]</h2>
+      <h2 class="t-h2" id="context-h">Context and role</h2>
     </div>
-    <aside class="cb-todo" aria-label="Todo"><span class="t-mono">Todo</span><p class="t-body-sm">"context-prose"</p></aside>
+    <div class="cb-prose t-body"><p>GAAPT forecasts revenue, profit, headcount and resources for an audit and assurance business several fiscal years ahead. Two groups use it: senior leaders who check the forecast for their countries about once a week, and finance teams who enter the numbers.</p><p>I was the only designer on the product. A design lead joined discovery and the first delivery; after that, discovery, communication with the client and the redesign of every page were mine, including working through the data to decide what each screen should show.</p></div>
   </section>
 
   <section class="shell cb-section" id="problem" aria-labelledby="problem-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">02</span>The problem</span>
-      <h2 class="t-h2" id="problem-h">[Todo "problem-heading"]</h2>
+      <h2 class="t-h2" id="problem-h">The problem</h2>
     </div>
-    <div class="cb-flow">
-      <aside class="cb-todo" aria-label="Todo"><span class="t-mono">Todo</span><p class="t-body-sm">"problem-prose"</p></aside>
-      <div class="cb-stack">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-bridge]">[Todo "legacy-bridge"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-bridge-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-pyramid]">[Todo "legacy-pyramid"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-pyramid-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-table]">[Todo "legacy-table"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-table-caption"]</figcaption></figure>
-      </div>
-    </div>
+    <div class="cb-prose t-body"><p>The data was never the issue: there was a lot of it, before and after. The issue was that all of it arrived at once. The dashboard was one long page of charts in no particular order, so the chart you needed sat somewhere below the ones you didn't. Charts were hard to read: one bridge was split into three separate graphs, and the numbers in the headcount pyramid only appeared on hover. Tables ran sideways past the edge of the screen. And the countries a user picked before opening the dashboard were nowhere on it.</p></div>
   </section>
 
   <section class="shell cb-section" id="research" aria-labelledby="research-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">03</span>Research</span>
-      <h2 class="t-h2" id="research-h">[Todo "research-heading"]</h2>
+      <h2 class="t-h2" id="research-h">What users told us</h2>
     </div>
     <div class="cb-flow">
-      <aside class="cb-todo" aria-label="Todo"><span class="t-mono">Todo</span><p class="t-body-sm">"research-prose"</p></aside>
+      <div class="cb-prose t-body"><p>We spoke with users about twice a week in live calls, with both the leaders and the finance teams, going through the problems they had hit that week.</p></div>
       <!-- three findings: the user-management finding is left out here; it is covered in 06 "New admin tools" -->
       <ul class="cb-cards">
-        <li class="cb-card"><h3 class="t-h5">[Todo "finding-1"]</h3><p class="t-body-sm">[Todo "finding-1-text"]</p></li>
-        <li class="cb-card"><h3 class="t-h5">[Todo "finding-2"]</h3><p class="t-body-sm">[Todo "finding-2-text"]</p></li>
-        <li class="cb-card"><h3 class="t-h5">[Todo "finding-3"]</h3><p class="t-body-sm">[Todo "finding-3-text"]</p></li>
+        <li class="cb-card"><h3 class="t-h5">Many charts went unused</h3><p class="t-body-sm">Users relied on a handful of views. The rest only added scroll and load time, so we cut them or moved them down.</p></li>
+        <li class="cb-card"><h3 class="t-h5">The country context got lost</h3><p class="t-body-sm">Users chose countries before opening the dashboard, then couldn't see the choice. One mistake meant going back and starting over.</p></li>
+        <li class="cb-card"><h3 class="t-h5">One table, many audiences</h3><p class="t-body-sm">The data-entry table was one long sheet, yet it split into clear blocks, and each level of manager needed a different depth.</p></li>
       </ul>
     </div>
   </section>
@@ -118,38 +110,38 @@
   <section class="shell cb-section" id="decisions" aria-labelledby="decisions-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">04</span>Key decisions</span>
-      <h2 class="t-h2" id="decisions-h">[Todo "decisions-heading"]</h2>
+      <h2 class="t-h2" id="decisions-h">Key decisions</h2>
     </div>
     <div class="cb-flow">
       <article class="cb-decision" aria-labelledby="d1-h">
         <div><span class="cb-dlabel t-mono">Decision 01</span><h3 class="t-h3" id="d1-h">Countries stay visible on the dashboard</h3></div>
-        <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">[Todo "d1-problem"]</p></div>
-      <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-geographies]">[Todo "legacy-geographies"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-geographies-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: geo-header]">[Todo "geo-header"]</div></div></div><figcaption class="t-body-sm">[Todo "geo-header-caption"]</figcaption></figure>
-      </div>
-        <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">[Todo "d1-why"]</p></div>
+        <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">Countries were chosen on a separate step and disappeared once the dashboard loaded.</p></div>
+        <div class="cb-pair">
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-geographies]">[Todo "legacy-geographies"]</div></div></div><figcaption class="t-body-sm">Before: countries chosen elsewhere, invisible on the dashboard.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: geo-header]">[Todo "geo-header"]</div></div></div><figcaption class="t-body-sm">After: selected countries in the header, editable in place.</figcaption></figure>
+        </div>
+        <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">The selection now lives in the dashboard header as chips, with Edit next to them. Users see what the numbers include and change it in place, without going back.</p></div>
       </article>
 
       <article class="cb-decision" aria-labelledby="d2-h">
         <div><span class="cb-dlabel t-mono">Decision 02</span><h3 class="t-h3" id="d2-h">One endless page → four tabs</h3></div>
-        <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">[Todo "d2-problem"]</p></div>
-      <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-page]">[Todo "legacy-page"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-page-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: tabs]">[Todo "tabs"]</div></div></div><figcaption class="t-body-sm">[Todo "tabs-caption"]</figcaption></figure>
-      </div>
-        <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">[Todo "d2-why"]</p></div>
+        <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">Every chart sat on one long page, in no particular order.</p></div>
+        <div class="cb-pair">
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-page]">[Todo "legacy-page"]</div></div></div><figcaption class="t-body-sm">Before: one page of stacked charts.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: tabs]">[Todo "tabs"]</div></div></div><figcaption class="t-body-sm">After: four tabs, Headcount open.</figcaption></figure>
+        </div>
+        <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">We grouped the charts into four tabs by the question they answer: Profit &amp; Loss, Gross Margin, Headcount and Transformation Levers, and removed the charts nobody used. Less scrolling, and each tab loads only its own data.</p></div>
       </article>
 
       <article class="cb-decision" aria-labelledby="d3-h">
         <div><span class="cb-dlabel t-mono">Decision 03</span><h3 class="t-h3" id="d3-h">Tables by blocks and levels</h3></div>
-        <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">[Todo "d3-problem"]</p></div>
+        <div class="cb-dblock"><h4 class="t-mono">The problem</h4><p class="t-body">The table was a wide sheet of near-identical rows that scrolled past the edge of the screen.</p></div>
         <!-- table-levels: an interactive table later; a placeholder for now -->
-      <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-table]">[Todo "legacy-table"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-table-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: table-levels]">[Todo "table-levels"]</div></div></div><figcaption class="t-body-sm">[Todo "table-levels-caption"]</figcaption></figure>
-      </div>
-        <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">[Todo "d3-why"]</p></div>
+        <div class="cb-pair">
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-table]">[Todo "legacy-table"]</div></div></div><figcaption class="t-body-sm">Before: a wide table with horizontal scroll.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: table-levels]">[Todo "table-levels"]</div></div></div><figcaption class="t-body-sm">After: blocks open by level, all ten years on screen.</figcaption></figure>
+        </div>
+        <div class="cb-dblock"><h4 class="t-mono">Why</h4><p class="t-body">Rows are grouped into blocks that open from total to subtotal, offering and country. A Show control sets the depth in one step, so a leader stays at the total and an analyst opens every country. All ten years fit on screen.</p></div>
       </article>
     </div>
   </section>
@@ -157,70 +149,65 @@
   <section class="shell cb-section" id="charts" aria-labelledby="charts-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">05</span>Charts that read without hovering</span>
-      <h2 class="t-h2" id="charts-h">[Todo "charts-heading"]</h2>
+      <h2 class="t-h2" id="charts-h">Charts that read without hovering</h2>
     </div>
     <div class="cb-flow">
-      <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-bridge]">[Todo "legacy-bridge"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-bridge-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: bridge-after]">[Todo "bridge-after"]</div></div></div><figcaption class="t-body-sm">[Todo "bridge-after-caption"]</figcaption></figure>
-      </div>
-      <div class="cb-pair">
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-before">Before</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: legacy-pyramid]">[Todo "legacy-pyramid"]</div></div></div><figcaption class="t-body-sm">[Todo "legacy-pyramid-caption"]</figcaption></figure>
-        <figure class="cb-figure"><div class="cb-frame"><span class="cb-tag t-mono gp-after">After</span><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: pyramid-after]">[Todo "pyramid-after"]</div></div></div><figcaption class="t-body-sm">[Todo "pyramid-after-caption"]</figcaption></figure>
-      </div>
+      <div class="cb-prose t-body"><p>Two patterns repeat across the dashboard. Bridges show the start, every change and the end in one waterfall, with signed values above each bar and hatching on decreases. The headcount pyramid puts the number, the share and the change next to every grade, so nothing hides behind a tooltip.</p></div>
+      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: bridge-after]">[Todo "bridge-after"]</div></div></div><figcaption class="t-body-sm">Revenue and profit bridges: increases, hatched decreases and totals in one chart each.</figcaption></figure>
+      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: pyramid-after]">[Todo "pyramid-after"]</div></div></div><figcaption class="t-body-sm">Headcount by grade, compared with the base year.</figcaption></figure>
     </div>
   </section>
 
   <section class="shell cb-section" id="admin" aria-labelledby="admin-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">06</span>New admin tools</span>
-      <h2 class="t-h2" id="admin-h">[Todo "admin-heading"]</h2>
+      <h2 class="t-h2" id="admin-h">New admin tools</h2>
     </div>
     <div class="cb-flow">
       <div class="cb-feature">
-        <div class="cb-ftext"><h3 class="t-h4">Notification Center</h3><p class="t-body">[Todo "notifications-text"]</p></div>
+        <div class="cb-ftext"><h3 class="t-h4">Notification Center</h3><p class="t-body">Admins needed a way to warn every user about maintenance, deadlines or outages. Notification Center lets them write a banner, pick its level, schedule it and preview it before publishing. The form checks dates and required fields inline, so errors are fixed before anything goes live.</p></div>
         <div class="cb-fmedia cb-stack">
-          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-list]">[Todo "notifications-list"]</div></div></div></figure>
-          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-create]">[Todo "notifications-create"]</div></div></div></figure>
-          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-errors]">[Todo "notifications-errors"]</div></div></div></figure>
+          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-list]">[Todo "notifications-list"]</div></div></div><figcaption class="t-body-sm">Every banner with its status at a glance.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-errors]">[Todo "notifications-errors"]</div></div></div><figcaption class="t-body-sm">Inline validation in the create panel.</figcaption></figure>
+          <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: notifications-banner]">[Todo "notifications-banner"]</div></div></div><figcaption class="t-body-sm">The published banner on the dashboard.</figcaption></figure>
         </div>
       </div>
-      <aside class="cb-todo" aria-label="Todo"><span class="t-mono">Todo</span><p class="t-body-sm">"user-management"</p></aside>
+      <div class="cb-prose t-body"><p>User management moved to the client side too: site admins now add and remove users themselves, a job that used to go through developers and the backend.</p></div>
     </div>
   </section>
 
   <section class="shell cb-section" id="visual" aria-labelledby="visual-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">07</span>Visual system</span>
-      <h2 class="t-h2" id="visual-h">[Todo "visual-heading"]</h2>
+      <h2 class="t-h2" id="visual-h">Visual system</h2>
     </div>
     <div class="cb-flow">
-      <aside class="cb-todo" aria-label="Todo"><span class="t-mono">Todo</span><p class="t-body-sm">"visual-prose"</p></aside>
-      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: visual-system]">[Todo "visual-system"]</div></div></div><figcaption class="t-body-sm">[Todo "visual-system-caption"]</figcaption></figure>
+      <div class="cb-prose t-body"><p>One dark system runs across every screen: a muted six-colour palette for offerings where every colour passes 4.5:1, matte glass in three densities, and Geist with Geist Mono for numbers.</p></div>
+      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: visual-system]">[Todo "visual-system"]</div></div></div><figcaption class="t-body-sm">Data palette with contrast ratios, glass densities and type.</figcaption></figure>
     </div>
   </section>
 
   <section class="shell cb-section" id="results" aria-labelledby="results-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">08</span>Result</span>
-      <h2 class="t-h2" id="results-h">[Todo "results-heading"]</h2>
+      <h2 class="t-h2" id="results-h">Result</h2>
     </div>
     <div>
       <ul class="cb-outcomes t-body">
-        <li>[Todo "outcome-1"]</li>
-        <li>[Todo "outcome-2"]</li>
-        <li>[Todo "outcome-3"]</li>
+        <li>Country context is always on screen and editable from the dashboard.</li>
+        <li>The dashboard is four focused tabs instead of one long page.</li>
+        <li>Admins add users and publish notifications without developers.</li>
       </ul>
-      <p class="cb-note t-caption">How we would measure: [Todo "result-note"]</p>
+      <p class="cb-note t-caption">No usage metrics were collected. To measure the impact I would track the time it takes to change the set of countries, the number of access requests sent to developers, and dashboard load time.</p>
     </div>
   </section>
 
   <section class="shell cb-section" id="retro" aria-labelledby="retro-h">
     <div class="cb-head">
       <span class="eyebrow t-mono"><span class="cb-num">09</span>What I'd do differently</span>
-      <h2 class="t-h2" id="retro-h">[Todo "retro-heading"]</h2>
+      <h2 class="t-h2" id="retro-h">What I'd do differently</h2>
     </div>
-    <aside class="cb-todo" aria-label="Todo"><span class="t-mono">Todo</span><p class="t-body-sm">"retro-prose"</p></aside>
+    <div class="cb-prose t-body"><p>Back the cuts with data. We removed charts because users said they didn't use them; usage analytics would have made that call certain.</p><p>Test the table with the people who fill it in. Most of our calls were with leaders, while the table is the finance teams' main tool.</p></div>
   </section>
 </main>
 

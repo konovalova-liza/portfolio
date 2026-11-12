@@ -912,25 +912,26 @@ The GAAPT case (`cases/gaapt/`, added 2026-11-12) has a dark body to match the p
 | `--gp-surface-2` | `#263235` | Hover / nested surface (placeholder boxes) |
 | `--gp-text` | `#E8EEEF` | Primary text, 14.1:1 |
 | `--gp-text-2` | `#AEB9BB` | Secondary text, 8.3:1 |
-| `--gp-text-3` | `#93A0A2` | Captions, labels, the Before tag, 6.2:1. The minimum for any text on this page |
+| `--gp-text-3` | `#93A0A2` | Captions, labels, 6.2:1. The minimum for any text on this page |
 | `--gp-line` | `rgba(255,255,255,.09)` | Dividers, card and panel borders |
-| `--gp-accent` | `#5DB5AD` | Links and active states inside the case, the After tag, 6.9:1 |
-| `--gp-accent-2` | `#9AD3CD` | Focus ring, link hover, 9.9:1 |
+| `--gp-accent` | `#5DB5AD` | Links and active states inside the case, 6.9:1 |
+| `--gp-accent-2` | `#9AD3CD` | Focus ring (inside `main` and on the skip link), link hover, 9.9:1 |
 | `--gp-mat` | `#07090A` | Figure frame background behind every image |
 | `--gp-mat-border` | `rgba(255,255,255,.10)` | 1px figure frame border |
 | `--gp-mat-shadow` | `0 24px 60px rgba(0,0,0,.35)` | Figure depth |
 
 **Mapping** inside `main.gaapt`: the shell variables the `.cb-*` components already use are remapped, so no component CSS is rewritten. `--background` → `--gp-bg`; `--surface` → `--gp-surface`; `--surface-2` → `--gp-surface-2`; `--surface-soft` → `rgba(31,41,44,.6)`; `--foreground` / `--text` → `--gp-text`; `--text-2` → `--gp-text-2`; `--text-3` → `--gp-text-3`; `--line` → `--gp-line`; `--border-ctl` → `rgba(255,255,255,.3)`; `--accent` → `--gp-accent`; `--ring-light` → `--gp-accent-2`. `main.gaapt` also sets `color:var(--text)` (body takes its colour from the light `:root`), `color-scheme:dark` and the glow.
 
-**Selectors overridden beyond variables** (the light look there isn't a variable, or the theme adds a panel):
+**Selectors overridden beyond variables** (the light look there isn't a variable, the theme adds a panel, or an element sits on the dark body outside `main`):
 - `.cb-frame`: `--gp-mat` background, `1px --gp-mat-border`, `--gp-mat-shadow` (radius stays `--r-card-sm`).
 - `.cb-figure figcaption`: `--gp-text-3`.
-- `.cb-tag.gp-before` / `.cb-tag.gp-after`: `--gp-text-3` / `--gp-accent`. The two scoped classes sit on the tags in the HTML.
+- `body.case-gaapt .skip:focus-visible`: ring colour `--gp-accent-2`. The skip link sits outside `main`, so the remapped `--ring-light` doesn't reach it, and the global `--accent` ring is ~3:1 on `--gp-bg`. This page only; the shell keeps its ring.
 - Panels (`--gp-surface`, `1px --gp-line`, `--r-card-sm`): `.cb-summary dl>div` and `.cb-stats>div` (padding `1.5rem`), `.cb-card`, `.cb-outcomes` (padding-inline `1.5rem`, first row without its top rule), `.cb-decision` (padding `1.5rem` → `2.5rem` at 1024). Two decisions in a row are `3rem` apart (the `.cb-flow` gap) instead of the `5rem` + rule + `5rem` split, because the panels already separate them.
 
-**Scoped exceptions** (this page only):
+**Scoped exception** (this page only):
 - **Accent.** The global `--accent` `#4f5bd5` is about 3:1 on `--gp-bg` and fails for links, so inside this case it is replaced by `--gp-accent` (6.9:1), with `--gp-accent-2` for the focus ring. D1/D7 still hold for the portfolio shell.
-- **Tag colour.** §4.17 says Tags are not colour-coded and don't use `--accent`. Here Before is `--gp-text-3` and After is `--gp-accent`, per the GAAPT theme spec (2026-11-12). The label text still carries the meaning.
+
+**Tags.** Before and After use the same neutral §4.17 Tag style (2026-11-12): the remapped `--background`, `--line` and `--text-2`, no accent and no colour difference.
 
 **Rules.** Fonts unchanged (Onest + Geist Mono), so the case still belongs to the portfolio. No colours beyond this table. Text never below `--gp-text-3`.
 
