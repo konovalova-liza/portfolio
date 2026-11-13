@@ -749,6 +749,28 @@ Homepage, `#works`, directly under the "Other projects" heading and above the ca
 - **Reduced motion:** static dot (the global reduced-motion rule sets `animation:none`).
 - **Don't:** use it as a banner at the top of the page, make it dismissible, or put `--accent` or holo colours on its text (D1).
 
+### 4.20 Back to top `.totop`
+Every page: homepage, About, all case pages and the template (2026-11-13). One component: styles in `shared/components.css`, behaviour in `shared/totop.js` (linked with `defer` from each page; the script creates the button, so no page carries its markup).
+
+- **Markup (created by the script):** `button.pill.{dark|light}.totop` with `aria-label="Back to top"` and the sprite's `#i-r` arrow rotated `-90deg`. Reuses `.pill` (§4.1): its `.dark` / `.light` colours and its hover `scale(1.04)`.
+- **Size and place:** `2.75rem` square (44px), `--r-pill`, fixed bottom-right at the page side gutter (`1.25rem`, `2rem` from 640), `max()` with `env(safe-area-inset-right/bottom)`. `z-index:--z-header`: above the page, below the menu (`--z-nav`) and the modal (`--z-modal`).
+- **Variants** (`<body data-totop="light">` selects light; default dark), chosen by the body background under the button:
+
+  | Page | Body under the button | Variant |
+  |---|---|---|
+  | Homepage | white `--background` | dark: `--ink` fill, `--on-ink` arrow |
+  | About, Romper, Design Digest | white (Digest: the white dotted board) | dark |
+  | GAAPT, NXP | `--gp-bg` `#172023` / `--nx-bg` `#000` | light: `--surface` fill, `--foreground` arrow, as the footer CTA pill |
+
+  A `1px` ring in the opposite tone keeps the button ≥ 3:1 where it passes over a section of its own colour: dark has `--border-on-ink` (3.77:1 on `--ink`), light has `--border-ctl`. Fill vs body: `--ink` on white 19.8:1; `--surface` on `#000` 18.44:1, on `#172023` 14.55:1.
+- **When it shows:** hidden until `scrollY > 2 × innerHeight`, then fades in (`opacity` over `--dur-micro`, `--ease-hover`). While hidden it is `visibility:hidden`, `aria-hidden="true"` and `tabindex="-1"`: not seen, not focusable, not announced. Also hidden while the menu (`#nav.open`) or the contact modal (`#modal.open`) is open, and when it cannot fit above the stop element.
+- **Never over the footer contacts:** the stop element is the homepage `.fcols` (footer columns with the contact links) or the `.case-end` end block. When it scrolls into view, the button is lifted (`--totop-lift`, through the `translate` property) so its bottom stays one gutter above it.
+- **Scroll:** one passive `scroll` listener, throttled to one `requestAnimationFrame` per frame, plus a `MutationObserver` on the menu and modal classes.
+- **Click:** scroll to the top (smooth; the homepage scrolls through its Lenis instance, exposed as `window.siteLenis`), then focus the page title with `preventScroll:true` (no second jump): `#intro-title` on case pages and About, the hero `h1` on the homepage (given `tabindex="-1"` on first use). Under `prefers-reduced-motion` the jump is instant.
+- **Focus ring:** `--ring-light` on the dark variant, `--ring-ink` on the light one, `2px`, offset `2px`.
+- **Tokens:** only existing ones. The homepage now also defines the §2.0 tokens `--border-on-ink`, `--ring-ink` and `--z-header` (same values as `cases/shared/case.css`), which the shared button needs.
+- **Don't:** add it per page, show it over the footer contacts or the end block, or keep it focusable while hidden.
+
 ---
 
 ## 5. Effects rules

@@ -14,3 +14,19 @@
   .pill:hover .bd .r{transform:translateX(3px)}
   .pill:hover .bd .ur{transform:translate(2px,-2px)}
 }
+
+/* back to top (§4.20): a round icon button built on .pill (.pill.dark on light pages, .pill.light on dark case bodies).
+   shared/totop.js adds it, shows it after two screens (.is-on) and lifts it (--totop-lift) above the footer contacts / end block.
+   visibility:hidden while off, so it is neither seen, focusable nor announced. */
+.totop{position:fixed;right:max(1.25rem, env(safe-area-inset-right, 0px));bottom:max(1.25rem, env(safe-area-inset-bottom, 0px));z-index:var(--z-header);
+  width:2.75rem;height:2.75rem;padding:0;justify-content:center;font-size:1rem;
+  translate:0 calc(-1 * var(--totop-lift, 0px));opacity:0;visibility:hidden;
+  transition:opacity var(--dur-micro) var(--ease-hover),visibility 0s linear var(--dur-micro),translate .35s var(--ease-hover),transform .35s var(--ease-hover)}
+@media (min-width:640px){.totop{right:max(2rem, env(safe-area-inset-right, 0px));bottom:max(2rem, env(safe-area-inset-bottom, 0px))}}
+.totop.is-on{opacity:1;visibility:visible;transition:opacity var(--dur-micro) var(--ease-hover),translate .35s var(--ease-hover),transform .35s var(--ease-hover)}
+.totop .ico{transform:rotate(-90deg)}
+/* a 1px ring in the opposite tone keeps ≥3:1 where the button passes over a section of its own colour */
+.totop.dark{box-shadow:0 0 0 1px var(--border-on-ink)}
+.totop.light{box-shadow:0 0 0 1px var(--border-ctl)}
+.totop:focus-visible{outline:2px solid var(--ring-light);outline-offset:2px}
+.totop.light:focus-visible{outline-color:var(--ring-ink)}
