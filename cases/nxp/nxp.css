@@ -1,11 +1,9 @@
-/* NXP case theme (DESIGN.md §5.9): one continuous pure-black page over a fixed live cube layer, scoped to cases/nxp/ only.
-   Linked after ../shared/case.css.
-   Layering (≥1024): body #000 → .nx-cube (fixed, full viewport, --z-bg: cover image + cube.js canvas) → hero, main and end block
-   (transparent, --z-content). The hero shows the cube at full brightness behind a left-to-right black fade; once body text can
-   reach the viewport the layer is at --nx-cube-dim (cube.js sets the opacity from the scroll position).
-   Below 1024: no fixed layer; the cube is a static image at the bottom of the hero, under the text, never behind it.
-   The .cb-* components are themed by remapping the shell variables inside main.nxp. Shell overrides (hero/end transparent,
-   hero height, chip width) are a scoped exception to §4.17, documented in §5.9. */
+/* NXP case theme (DESIGN.md §5.9): pure-black case body over a fixed live cube layer, scoped to cases/nxp/ only.
+   Linked after ../shared/case.css. The shell (header, intro sheet, chips, end block) is untouched, as in every case.
+   Layering (≥1024): the cube layer (.nx-cube) lives inside main.nxp, which clips it (clip-path), so it can only show behind
+   the body, never over the intro or the end block. Body blocks sit above it (--z-content). cube.js fades it in from 0 to
+   --nx-cube-dim while the intro sheet scrolls out, then it stays there. Below 1024: no layer.
+   The .cb-* components are themed by remapping the shell variables inside main.nxp. */
 
 /* tokens: --nx-* (§5.9), used only on this page */
 .case-nxp{
@@ -20,38 +18,26 @@
   --nx-frame-line:rgba(44,207,191,.15);
   --nx-cube-x:72%;
   --nx-cube-dim:.18;
-  --nx-hero-fade:linear-gradient(90deg, #000 0, #000 max(48%, 44rem), rgba(0,0,0,0) calc(max(48%, 44rem) + 12rem));
-  --nx-header-fade:linear-gradient(180deg, #000 0, #000 5.5rem, rgba(0,0,0,0) 9.5rem);   /* header row (nav, clock chip) stays on black */
-  --nx-hero-img-h:20rem;
 }
 body.case-nxp{background:var(--nx-bg)}
 /* skip link: its ring sits on the black page, where the global --accent ring is 3.8:1 */
 body.case-nxp .skip:focus-visible{outline-color:var(--nx-accent)}
 
-/* shell sheets: transparent on the black page, so the page reads as one surface and the cube shows through */
-.case-nxp .ink{background:transparent}
-.case-nxp .case-hero,.case-nxp .case-end{border-radius:0}
-.case-nxp .case-hero,.case-nxp main,.case-nxp .case-end{position:relative;z-index:var(--z-content)}
-/* chips wrap within the text column (the same 40rem as summary and context), so no text reaches the cube */
-.case-nxp .intro .tags{max-width:40rem}
+/* the body clips the fixed cube layer to its own box; body blocks sit above the layer */
+main.nxp{position:relative;clip-path:inset(0)}
+main.nxp>:not(.nx-cube){position:relative;z-index:var(--z-content)}
 
 /* live cube layer (≥1024). The art box is the image's own ratio at full viewport height, centred on --nx-cube-x;
-   the image's black edges meet the black page, so the box needs no mask. cube.js moves it (parallax, breathing). */
+   the image's black edges meet the black page, so the box needs no mask. cube.js sets the opacity and moves the art
+   (parallax, breathing). Starts at 0, so nothing shows before the script runs. */
 .nx-cube{display:none}
 @media (min-width:1024px){
-  .nx-cube{display:block;position:fixed;inset:0;z-index:var(--z-bg);overflow:hidden;pointer-events:none}
+  .nx-cube{display:block;position:fixed;inset:0;z-index:var(--z-bg);overflow:hidden;pointer-events:none;opacity:0}
   .nx-cube-art{position:absolute;top:0;left:var(--nx-cube-x);height:100%;aspect-ratio:1472/840;transform:translateX(-50%);will-change:transform}
   .nx-cube-art img,.nx-cube-art canvas{position:absolute;inset:0;width:100%;height:100%}
-  .case-nxp .case-hero{min-height:100svh;background:var(--nx-header-fade),var(--nx-hero-fade)}
 }
 /* reduced motion: the static image only */
 @media (prefers-reduced-motion:reduce){.nx-cube canvas{display:none}}
-/* below 1024: the cube sits under the hero text at full brightness, faded in from the black above */
-@media (max-width:1023px){
-  .case-nxp .case-hero{background:linear-gradient(#000 0, #000 calc(100% - var(--nx-hero-img-h)), rgba(0,0,0,0) calc(100% - var(--nx-hero-img-h) + 6rem)),
-    url(assets/nxp-cover.webp) center bottom / auto var(--nx-hero-img-h) no-repeat}
-  .case-nxp .intro{padding-bottom:calc(5rem + var(--nx-hero-img-h))}
-}
 
 /* mapping: the shell variables the .cb-* components already use */
 main.nxp{

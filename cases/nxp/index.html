@@ -21,9 +21,6 @@
 </head>
 <body class="case-nxp">
 
-<!-- live cube layer (DESIGN.md §5.9): fixed behind the page at >=1024, driven by cube.js; decorative -->
-<div class="nx-cube" aria-hidden="true"><div class="nx-cube-art"><img src="assets/nxp-cover.webp" alt="" width="1472" height="840" decoding="async" fetchpriority="high"><canvas></canvas></div></div>
-
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-logo" viewBox="0 0 48 48"><path fill="currentColor" d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z"/></symbol>
   <symbol id="i-r" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
@@ -72,6 +69,9 @@
        Delete every [Todo] placeholder and .cb-todo before the case is frozen. -->
 
 
+  <!-- live cube layer (DESIGN.md §5.9): fixed behind the body at >=1024, clipped to main, driven by cube.js; decorative -->
+  <div class="nx-cube" aria-hidden="true"><div class="nx-cube-art"><img src="assets/nxp-cover.webp" alt="" width="1472" height="840" loading="lazy" decoding="async"><canvas></canvas></div></div>
+
   <section class="shell cb-summary" aria-label="Summary">
     <dl>
       <div><dt class="t-mono">Problem</dt><dd class="t-body">Use cases sat in a spreadsheet. To find one, you had to already know its exact name.</dd></div>
@@ -119,7 +119,6 @@
       <div class="cb-prose t-body">
         <p>In the workshop we mapped how use cases are built: shared components form a reference implementation, and a reference implementation is adapted into an industry use case. That nesting shaped both the navigation and the visual language.</p>
       </div>
-      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><img src="assets/nxp-concept.webp" alt="Nesting concept: a component sits inside a reference implementation, which sits inside an industry use case." width="294" height="521" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Nesting concept: component → reference implementation → use case.</figcaption></figure>
     </div>
   </section>
 

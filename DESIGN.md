@@ -950,18 +950,16 @@ The GAAPT case (`cases/gaapt/`, added 2026-11-12) has a dark body to match the p
 **Rules.** Fonts unchanged (Onest + Geist Mono), so the case still belongs to the portfolio. No colours beyond this table. Text never below `--gp-text-3`.
 
 ### 5.9 NXP case theme
-The NXP case (`cases/nxp/`, added 2026-11-13; v2 2026-11-13: black page, live cube) is one continuous pure-black page with the product's key visual, a dark cube lit by teal edges, as a live full-screen background. Scope: `body.case-nxp` and `main.nxp`, styles in `cases/nxp/nxp.css`, the animation in `cases/nxp/cube.js`, both linked only from `cases/nxp/index.html` (CSS after `../shared/case.css`, JS after `../shared/case.js`). `cases/shared/` and the template are unchanged.
+The NXP case (`cases/nxp/`, added 2026-11-13; v3 2026-11-13: shell restored, cube behind the body only) has a pure-black body with the product's key visual, a dark cube lit by teal edges, as a live full-screen background behind it. Scope: `body.case-nxp` and `main.nxp`, styles in `cases/nxp/nxp.css`, the animation in `cases/nxp/cube.js`, both linked only from `cases/nxp/index.html` (CSS after `../shared/case.css`, JS after `../shared/case.js`). `cases/shared/` and the template are unchanged; header, intro sheet, chips and end block are the usual §4.17 shell, identical to every other case.
 
 **How it differs from GAAPT (§5.8).** GAAPT is a lighter teal-graphite body with near-black screenshots on mats and every block in a panel. NXP is pure black with the cube living behind the whole page; screenshots sit straight on the black inside a teal hairline, and the summary and outcomes stay on plain rules.
 
-**Layering** (≥1024, bottom to top):
-1. `body.case-nxp`: `--nx-bg` `#000`.
-2. `.nx-cube`: fixed, full viewport, `--z-bg`, `aria-hidden`. Holds `.nx-cube-art`: the cover image (`nxp-cover.webp`, 1472 × 840) at full viewport height in its own ratio, centred on `--nx-cube-x`, with the `cube.js` canvas on top. The image's black edges meet the black page, so the box needs no mask.
-3. Header + intro (the hero), `main`, end block: transparent, `position:relative`, `--z-content`.
+**Layering** (≥1024, top to bottom of the page):
+1. Header + intro: the unchanged `.ink` sheet with rounded bottom corners. No cube behind it.
+2. `main.nxp`: transparent on `body.case-nxp` (`--nx-bg` `#000`). It holds the cube layer `.nx-cube` as its first child: fixed, full viewport, `--z-bg`, `aria-hidden`, with `.nx-cube-art` inside (the cover image `nxp-cover.webp`, 1472 × 840, at full viewport height in its own ratio, centred on `--nx-cube-x`, and the `cube.js` canvas on top; the image's black edges meet the black page, so the box needs no mask). `main.nxp` has `clip-path: inset(0)`, which clips its fixed descendants too, so the layer only ever shows inside the body's box, never over the intro or the end block. Every other child of `main` sits above the layer (`position:relative`, `--z-content`).
+3. End block: the unchanged `.ink` sheet.
 
-Below 1024 there is no fixed layer: the cube is a static image at the bottom of the hero, under the text (never behind it), faded in from the black above.
-
-**Scoped exception to §4.17** (this page only). §4.17 says the shell is never restyled per case. NXP needs the cube to show through, so inside `.case-nxp`: the `.ink` sheets (intro and end block) are transparent and square-cornered; the hero is at least one viewport tall (`100svh`) at ≥1024 and carries the two black fades; below 1024 the intro's bottom padding grows by `--nx-hero-img-h` to hold the image; the fact chips wrap at `40rem` (the width of the summary and context lines) so no text reaches the cube. Header, nav, chips and end-block content are unchanged.
+Below 1024 there is no cube: the layer is `display:none` and its image is `loading="lazy"`, so it is never requested.
 
 **Tokens** (on `.case-nxp`, used only on this page). Contrast ratios: see the table below.
 
@@ -976,17 +974,14 @@ Below 1024 there is no fixed layer: the cube is a static image at the bottom of 
 | `--nx-line` | `rgba(255,255,255,.08)` | Summary and outcome rules, card borders |
 | `--nx-accent` | `#2CCFBF` | The cube's teal: links, focus ring (in `main` and on the skip link), canvas glow and particles. One teal only |
 | `--nx-frame-line` | `rgba(44,207,191,.15)` | 1px figure frame. Frames are transparent, no mat: screenshots sit on the black page |
-| `--nx-cube-x` | `72%` | Horizontal centre of the cube art box: the cube sits on the right half, clear of the 40rem text column at 1440 |
+| `--nx-cube-x` | `72%` | Horizontal centre of the cube art box: the cube sits on the right half of the body |
 | `--nx-cube-dim` | `.18` | Layer opacity behind body text. Chosen so the brightest possible layer pixel (white) is `#2E2E2E` and `--nx-text-3` keeps 4.71:1; `.20` would give 4.39 |
-| `--nx-hero-fade` | `linear-gradient(90deg, #000 0, #000 max(48%, 44rem), transparent +12rem)` | Hero, ≥1024: solid black under the text column (gutter + 40rem), fading out over 12rem into the cube |
-| `--nx-header-fade` | `linear-gradient(180deg, #000 0, #000 5.5rem, transparent 9.5rem)` | Hero, ≥1024: the header row (nav, clock chip) stays on black where the cube's top edge reaches it |
-| `--nx-hero-img-h` | `20rem` | Below 1024: height of the static cube image at the bottom of the hero, and the extra intro padding that holds it |
 
-**Z-index.** `.nx-cube` uses `--z-bg`; the hero, `main` and the end block use `--z-content`. No new z values.
+**Z-index.** `.nx-cube` uses `--z-bg`; the other children of `main.nxp` use `--z-content`. Both are inside `main`'s own stacking context (from `clip-path`). No new z values.
 
-**Mapping** inside `main.nxp` (as §5.8): `--background` → `--nx-bg`; `--surface` → `--nx-surface`; `--surface-2` → `--nx-surface-2`; `--surface-soft` → `rgba(19,29,28,.6)`; `--foreground` / `--text` → `--nx-text`; `--text-2` → `--nx-text-2`; `--text-3` → `--nx-text-3`; `--line` → `--nx-line`; `--border-ctl` → `rgba(255,255,255,.3)` (the dashed Todo border, decorative); `--accent` and `--ring-light` → `--nx-accent`. `main.nxp` also sets `color:var(--text)` and `color-scheme:dark`; it has no background, so the layer shows through.
+**Mapping** inside `main.nxp` (as §5.8): `--background` → `--nx-bg`; `--surface` → `--nx-surface`; `--surface-2` → `--nx-surface-2`; `--surface-soft` → `rgba(19,29,28,.6)`; `--foreground` / `--text` → `--nx-text`; `--text-2` → `--nx-text-2`; `--text-3` → `--nx-text-3`; `--line` → `--nx-line`; `--border-ctl` → `rgba(255,255,255,.3)` (the dashed Todo border, decorative); `--accent` and `--ring-light` → `--nx-accent`. `main.nxp` also sets `color:var(--text)`, `color-scheme:dark`, `position:relative` and `clip-path:inset(0)`; it has no background, so the layer shows through.
 
-**Selectors overridden beyond variables:** `.cb-frame` (transparent, `1px --nx-frame-line`); `.cb-card` (`--nx-surface` fill); `body.case-nxp .skip:focus-visible` (ring `--nx-accent`); the shell overrides listed under the scoped exception.
+**Selectors overridden beyond variables:** `.cb-frame` (transparent, `1px --nx-frame-line`); `.cb-card` (`--nx-surface` fill); `main.nxp>:not(.nx-cube)` (above the layer); `body.case-nxp .skip:focus-visible` (ring `--nx-accent`). No shell selector is overridden.
 
 **Scoped exception: accent.** The global `--accent` `#4f5bd5` is 3.8:1 on `#000` and fails for links, so inside this case it is `--nx-accent` (10.78:1). D1/D7 still hold for the portfolio shell.
 
@@ -1002,12 +997,13 @@ Below 1024 there is no fixed layer: the cube is a static image at the bottom of 
 | `parallax` | max `12px`, eased at `.06` per frame | Follows a mouse pointer only (`pointerType === 'mouse'`) |
 | `breathe` | scale `1.00`–`1.03`, period `16000ms` | On the art box (`transform`, composited) |
 | `dpr` | `1.5` max | Canvas resolution cap: sharp enough at the glow sizes, half the fill cost of 2× (≈0.14ms per frame measured at 1440) |
+| `fadeIn` | `200` px of scroll | Length of the layer's fade-in at the end of the intro |
 
-- **Scroll fade:** layer opacity is `1` at the top and `--nx-cube-dim` by the time the first body text (the summary list) can reach the viewport bottom, linear in between (≈112px of scroll at 1440 × 900). It runs on `scroll` through one `requestAnimationFrame`, with or without motion, and only changes `opacity` on the fixed layer (composited, no layout).
+- **Scroll fade-in:** layer opacity is `0` (also in CSS, before the script runs) until the intro sheet's bottom edge is `fadeIn` px from the viewport top, then rises linearly to `--nx-cube-dim` as the intro scrolls out, and stays there behind the rest of the body. The cube is never brighter than `--nx-cube-dim`. It runs on `scroll` through one `requestAnimationFrame`, with or without motion, and only changes `opacity` on the fixed layer (composited, no layout).
 - **Pauses:** the canvas loop stops while the tab is hidden (`visibilitychange`) and while the layer is off (<1024, `matchMedia` change).
 - **Reduced motion:** static image only; `cube.js` never starts the loop and the canvas is hidden. The scroll-linked opacity stays (it is not an animation), so body text keeps its contrast.
 
-**Contrast** (WCAG 2.x). Hero numbers are measured in the browser per element at 1440 × 900 and 1024 × 768: the brightest image pixel under the element, plus the canvas glow at full strength (worst case), behind both fades, with the text colour (alpha included) composited over it. Body numbers use the worst case anywhere in the viewport: a white layer pixel at `--nx-cube-dim` = `#2E2E2E`.
+**Contrast** (WCAG 2.x). Body numbers use the worst case anywhere in the viewport: a white layer pixel at `--nx-cube-dim` = `#2E2E2E` (the glow is additive, so it cannot exceed white). The intro and end block are the unchanged `.ink` sheets: §2.1 ratios apply, nothing sits behind them.
 
 | Text | `#000` | Layer peak at `.18` | `--nx-surface` | `--nx-surface-2` |
 |---|---|---|---|---|
@@ -1015,17 +1011,8 @@ Below 1024 there is no fixed layer: the cube is a static image at the bottom of 
 | `--nx-text-2` | 9.87 | 6.38 | 8.09 | 7.33 |
 | `--nx-text-3` | 7.29 | 4.71 | 5.97 | 5.41 |
 | `--nx-accent` | 10.78 | 6.97 | 8.84 | 8.00 |
-| `--on-ink` (end block) | 21.00 | 13.58 | | |
-| `--on-ink-2` (end block) | 9.96 | 7.49 | | |
 
-| Hero element (worst case) | 1440 × 900 | 1024 × 768 |
-|---|---|---|
-| Logo, nav, clock chip | ≥ 9.96 (on black under `--nx-header-fade`) | ≥ 9.96 |
-| Back link, eyebrow, summary, context, chip values | 9.96 | 9.96 |
-| Title (`h1`, large text) | 8.77 | 12.59 |
-| Chip labels (`--on-ink-3`) | 5.28 | 5.28 |
-
-All pass 4.5:1. Below 1024 every hero text sits on solid black (the image starts below the context paragraph). Non-text: the frame hairline is decorative (teal at `.15` on black).
+All pass 4.5:1. Non-text: the frame hairline is decorative (teal at `.15` on black).
 
 **Rules.** Fonts unchanged (Onest + Geist Mono). No colours beyond this table. Text in `main` never below `--nx-text-3`; never raise `--nx-cube-dim` above `.18` without re-checking `--nx-text-3`. No `--nx-*` outside `cases/nxp/`. The cube layer is decorative: no alt text, no focus, no pointer events.
 

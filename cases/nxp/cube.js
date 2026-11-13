@@ -1,5 +1,6 @@
-/* NXP live cube (DESIGN.md §5.9). Drives the fixed .nx-cube layer at ≥1024:
-   - opacity from the scroll position: 1 at the top, --nx-cube-dim once body text can reach the viewport (with or without motion);
+/* NXP live cube (DESIGN.md §5.9). Drives the fixed .nx-cube layer inside main.nxp at ≥1024:
+   - opacity from the scroll position: 0 over the intro, fading in to --nx-cube-dim over the last FX.fadeIn px before the
+     intro sheet has scrolled out, then constant (with or without motion);
    - a canvas over the cover image: pulsing teal points on the cube edges, drifting particles, pointer parallax, slow breathing.
    Reduced motion: static image, no canvas loop. The loop pauses while the tab is hidden or the layer is off (<1024). */
 (() => {
@@ -7,8 +8,7 @@
   if (!layer) return;
   const art = layer.querySelector('.nx-cube-art');
   const canvas = layer.querySelector('canvas');
-  // first body text on the page: the layer must be dim by the time it can enter the viewport
-  const summary = document.querySelector('main .cb-summary dl') || document.querySelector('main');
+  const hero = document.querySelector('.case-hero');
 
   // effect constants (§5.9). Points: glow centres measured from nxp-cover.webp, as fractions of the image.
   const FX = {
@@ -20,19 +20,20 @@
     parallax: 12, ease: .06,
     breathe: { min: 1, max: 1.03, period: 16000 },
     dpr: 1.5,
+    fadeIn: 200,                                                                // px of scroll
   };
   const TEAL = '44,207,191';
   const desk = matchMedia('(min-width:1024px)');
   const still = matchMedia('(prefers-reduced-motion: reduce)');
   const dim = parseFloat(getComputedStyle(layer).getPropertyValue('--nx-cube-dim')) || .18;
 
-  // scroll fade: full at scrollY 0, dim by the time the summary's top reaches the viewport bottom
+  // scroll fade-in: 0 until the intro sheet is FX.fadeIn px from leaving the viewport, --nx-cube-dim once it has left
   let fadeQueued = false;
   const fade = () => {
     fadeQueued = false;
-    const end = Math.max(1, summary.getBoundingClientRect().top + scrollY - innerHeight);
-    const t = Math.min(1, Math.max(0, scrollY / end));
-    layer.style.opacity = (1 - (1 - dim) * t).toFixed(3);
+    const end = hero ? hero.getBoundingClientRect().bottom + scrollY : 0;
+    const t = Math.min(1, Math.max(0, (scrollY - (end - FX.fadeIn)) / FX.fadeIn));
+    layer.style.opacity = (dim * t).toFixed(3);
   };
   const queueFade = () => { if (!fadeQueued) { fadeQueued = true; requestAnimationFrame(fade); } };
   addEventListener('scroll', queueFade, { passive: true });
