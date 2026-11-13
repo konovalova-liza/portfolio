@@ -439,6 +439,7 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
   | Active | `scale(.98)` on `.menu-btn` |
 
 - **`aria-current`:** updates to the section in view and on nav click (T10).
+- **Items (2026-11-13):** Home · Work · About · Contact, on the homepage, every case page and the About page. Approach and Numbers are no longer nav items (their homepage sections stay). Home and Work scroll the homepage (`data-go` there, `#home` / `#works` links elsewhere); **About is a link to `about/index.html`**; Contact opens the contact modal (§4.9), via `prototype/index.html#contact` from other pages. On the homepage the About `a` takes the `.pnav` button styles.
 
 ### 4.8 Band "Research / Design / → / Ship"
 - **Status:** Placeholder words (D5). The first word changed from "I" to "Research" on 2026-11-04.
@@ -518,6 +519,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
   - `.xbtn`: `--border-on-ink`
   - Bottom bar `--on-ink-2`, divider `--line-on-ink`
   - Type: links `.t-h1` with the index `small` in `.t-body`; `.xbtn`, the bottom bar and its button `.t-mono`
+  - Items (2026-11-13): 01 Home · 02 Work · 03 About (a link to `about/index.html`) · 04 Contact, as in §4.7
 - **Motion:** Fade `--dur-overlay`. Links enter over `--dur-overlay` with `--ease-spring`, staggered `--stagger-list`.
 - **Focus:** Per §6.
 
@@ -623,7 +625,7 @@ Every case page shares one shell. (v1, 2026-11-05)
   - Load order: case stylesheet(s), then `shared/type.css`, then `shared/components.css`, then `case.css`, then the page's own `<style>`.
   - **Case fonts (2026-11-05).** A case body may use its project's own font plus at most one more font proposed in that case's chat: **two own fonts per case at most**. They are used only inside `<main>` under the case scope class (like `.digest`), never in the shell. The case's own sizes go into a short case token scale under its prefix (like `--dg-*`), documented in its §5.x section. **Minimum 12px for any text, 14px for reading text** (paragraphs, list items, answers).
 - **Header** (`header.top` inside `.ink.case-hero`, §4.7 single on-ink variant):
-  - Logo → `../../prototype/index.html`; `.pnav` Home / Work (`aria-current="page"`) / Approach / About / Numbers → homepage anchors; `.chip` Kyiv clock (`data-time`, `data-date`, filled by `case.js`). No menu button on case pages.
+  - Logo → `../../prototype/index.html`; `.pnav` Home / Work (`aria-current="page"`) → homepage anchors, About → `../../about/index.html`, Contact → `../../prototype/index.html#contact` (2026-11-13, §4.7 items); `.chip` Kyiv clock (`data-time`, `data-date`, filled by `case.js`). No menu button on case pages.
   - `.shell` row, `justify-content:space-between`, gap `1.5rem`, padding-block `1.25rem` → `1.5rem` (640). `.pnav` from 1024, `.chip` from 768.
   - States per §4.7: logo `scale(1.04)`; pnav `translateY(-2px)` + `--on-ink`; ring `--ring-ink`.
 - **Dark intro block** (`section.shell.intro`, same `.ink` sheet as the header; sheet corners `0 0 var(--r-card) var(--r-card)`):
@@ -714,6 +716,9 @@ Every case page shares one shell. (v1, 2026-11-05)
       - *Purpose:* marks a missing fact while a case is being written: `span.t-mono` "Todo" + `p.t-body-sm` (`--text-2`).
       - *Spec:* `1px dashed --border-ctl` (the one exception to "always solid", T4, so it can't be mistaken for content), `--r-card-sm`, `--surface-soft`, padding `1.5rem`, `max-width:--cb-col`.
       - **A frozen case contains zero Todo blocks.** Check with `grep -c cb-todo cases/<slug>/index.html` before freezing.
+
+### 4.18 About page
+`about/index.html` (2026-11-13) is built from the case shell (`cases/_template/`, §4.17) with paths for its folder: header (nav `aria-current` on About), dark intro sheet (eyebrow, title, lead, fact chips, context), light body, end block. The body uses only `.cb-*` components, no case theme: **01 Experience** one Feature row per role (sticky text: company in `.t-body-sm`, role `h3.t-h4`, dates; media column: a Prose bullet list); **02 Skills** `ul.cb-outcomes`, one row per group, label `.t-mono` + value; **03 Education** one Prose line, then the contact links as shared `.pill.light.arrow` buttons (§4.1) in `.ab-links` (page style: `flex-wrap`, gap `.75rem`). End block: left `.cend-next` "Selected work →" to `prototype/index.html#works`, right the standard contact button. Copy: `~/Documents/nxp_screens/about-copy.md`, from the CV. No phone number on the site.
 
 ---
 

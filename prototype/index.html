@@ -89,9 +89,9 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .logo .ico{font-size:1.25rem;color:var(--accent)}
 @media (hover:hover){.logo:hover{transform:scale(1.04)}}
 .pnav{display:none;gap:2rem}
-.pnav button{opacity:.8;transition:transform .3s var(--ease-hover),opacity .3s}
-.pnav button[aria-current]{opacity:1}
-@media (hover:hover){.pnav button:hover{transform:translateY(-2px);opacity:1}}
+.pnav button,.pnav a{opacity:.8;transition:transform .3s var(--ease-hover),opacity .3s}
+.pnav button[aria-current],.pnav a[aria-current]{opacity:1}
+@media (hover:hover){.pnav button:hover,.pnav a:hover{transform:translateY(-2px);opacity:1}}
 @media (min-width:1024px){.pnav{display:flex}}
 .hr{display:flex;align-items:center;gap:.75rem}
 .chip{display:none;align-items:center;gap:.75rem;border:1px solid rgba(230,229,226,.8);background:rgba(255,255,255,.4);border-radius:var(--r-ctl);padding:.5rem .75rem;color:rgba(17,17,17,.7)}
@@ -314,11 +314,11 @@ footer .shell{position:relative;z-index:10;padding-top:5rem;padding-bottom:2.5re
 .xbtn:hover{border-color:rgba(255,255,255,.4);color:#fff}
 #nav .nl{flex:1;display:flex;flex-direction:column;justify-content:center}
 #nav .nl ul{display:flex;flex-direction:column;gap:.25rem}
-#nav .nl button{display:flex;align-items:baseline;gap:1rem;padding-block:.5rem;text-align:left;transform:translateY(1rem);opacity:0;transition:all .5s ease-out}
-#nav.open .nl button{transform:none;opacity:1}
+#nav .nl button,#nav .nl a{display:flex;align-items:baseline;gap:1rem;padding-block:.5rem;text-align:left;transform:translateY(1rem);opacity:0;transition:all .5s ease-out}
+#nav.open .nl button,#nav.open .nl a{transform:none;opacity:1}
 #nav .nl small{color:rgba(255,255,255,.3);transition:color .3s}
 #nav .nl span{color:rgba(255,255,255,.7);transition:color .3s}
-#nav .nl button:hover small{color:var(--holo-1)}#nav .nl button:hover span{color:#fff}
+#nav .nl button:hover small,#nav .nl a:hover small{color:var(--holo-1)}#nav .nl button:hover span,#nav .nl a:hover span{color:#fff}
 #nav .bb{display:flex;flex-direction:column;gap:.75rem;border-top:1px solid rgba(255,255,255,.1);padding-block:1.5rem;color:rgba(255,255,255,.45)}
 @media (min-width:640px){#nav .bb{flex-direction:row;justify-content:space-between}}
 #nav .bb button{color:rgba(255,255,255,.7)}
@@ -414,9 +414,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
     <nav aria-label="Primary"><ul class="pnav t-label">
       <li><button data-go="home" aria-current="page">Home</button></li>
       <li><button data-go="works">Work</button></li>
-      <li><button data-go="services">Approach</button></li>
-      <li><button data-go="about">About</button></li>
-      <li><button data-go="stats">Numbers</button></li>
+      <li><a href="../about/index.html">About</a></li>
       <li><button data-contact>Contact</button></li>
     </ul></nav>
     <div class="hr">
@@ -441,7 +439,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
         <h1 class="t-h1 lines" data-hero style="--d:250ms">
           <span class="ln"><span style="--d:250ms">Clear interfaces</span></span>
           <span class="ln"><span style="--d:370ms">for complicated</span></span>
-          <span class="ln"><span style="--d:490ms">things.</span></span>
+          <span class="ln"><span style="--d:490ms">things</span></span>
         </h1>
         <div class="rating t-label rv" data-hero style="--d:650ms">
           <span class="stars"><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg></span>
@@ -482,7 +480,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
         <div class="note t-body-sm rv"><svg class="ico"><use href="#i-globe"/></svg><span>Based in Kyiv, working with teams across time zones.</span></div>
       </div>
       <div class="stmt">
-        <h2 class="t-h4 words" data-words>I design enterprise B2B products where data is complex and decisions are expensive. <span class="g">From discovery and usability tests to design systems and prototypes that run in code.</span></h2>
+        <h2 class="t-h4 words" data-words>My name is Liza. I design enterprise B2B products where data is complex and decisions are expensive. <span class="g">From discovery and usability tests to design systems and prototypes that run in code.</span></h2>
         <div class="toolkit rv">
           <p class="t-mono">Toolkit</p>
           <ul class="t-body-sm">
@@ -502,7 +500,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
               <a class="soc t-label" href="https://t.me/nvrfrgtlz" aria-label="Telegram" data-holo="md"><span>tg</span></a>
             </div>
           </div>
-          <a class="pill outline arrow" href="#about" data-holo="md">About me<span class="bd"><svg class="ico r"><use href="#i-r"/></svg></span></a>
+          <a class="pill outline arrow" href="../about/index.html" data-holo="md">About me<span class="bd"><svg class="ico r"><use href="#i-r"/></svg></span></a>
         </div>
       </div>
     </div>
@@ -592,8 +590,8 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
         <ul class="sg">
           <li class="rv" style="--d:0ms"><div class="n t-stat" data-count="5" data-suf="+">0</div><p class="t-body-sm">Years in UI/UX design</p></li>
           <li class="rv" style="--d:90ms"><div class="n t-stat" data-count="10" data-suf="+">0</div><p class="t-body-sm">Products designed</p></li>
-          <li class="rv" style="--d:180ms"><div class="n t-stat" data-count="12">0</div><p class="t-body-sm">Usability sessions run</p></li>
-          <li class="rv" style="--d:270ms"><div class="n t-stat" data-count="8" data-suf="×">0</div><p class="t-body-sm">Faster concept to prototype</p></li>
+          <li class="rv" style="--d:180ms"><div class="n t-stat" data-count="20" data-suf="+">0</div><p class="t-body-sm">Usability tests run</p></li>
+          <li class="rv" style="--d:270ms"><div class="n t-stat" data-count="4" data-suf="×">0</div><p class="t-body-sm">Faster concept to prototype</p></li>
         </ul>
       </div>
     </div>
@@ -621,10 +619,8 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
   <nav class="shell nl"><ul>
     <li><button data-go="home" class="t-h1" style="transition-delay:80ms"><small class="t-body">01</small><span>Home</span></button></li>
     <li><button data-go="works" class="t-h1" style="transition-delay:125ms"><small class="t-body">02</small><span>Work</span></button></li>
-    <li><button data-go="services" class="t-h1" style="transition-delay:170ms"><small class="t-body">03</small><span>Approach</span></button></li>
-    <li><button data-go="about" class="t-h1" style="transition-delay:215ms"><small class="t-body">04</small><span>About</span></button></li>
-    <li><button data-go="stats" class="t-h1" style="transition-delay:260ms"><small class="t-body">05</small><span>Numbers</span></button></li>
-    <li><button data-contact class="t-h1" style="transition-delay:305ms"><small class="t-body">06</small><span>Contact</span></button></li>
+    <li><a href="../about/index.html" class="t-h1" style="transition-delay:170ms"><small class="t-body">03</small><span>About</span></a></li>
+    <li><button data-contact class="t-h1" style="transition-delay:215ms"><small class="t-body">04</small><span>Contact</span></button></li>
   </ul></nav>
   <div class="shell bb t-mono"><span>Kyiv time — <span data-time>9:41am</span></span><button class="t-mono" data-contact>Start a conversation →</button></div>
 </div>
