@@ -10,9 +10,10 @@
 <meta property="og:url" content="https://konovalova.store/">
 <meta property="og:title" content="Liza Konovalova — Middle+ UX/UI Designer">
 <meta property="og:description" content="Middle+ UX/UI designer and UI design engineer for enterprise B2B products. Based in Kyiv.">
-<meta property="og:image" content="https://konovalova.store/prototype/assets/hero-color-1280.webp">
-<meta property="og:image:width" content="1280">
-<meta property="og:image:height" content="859">
+<meta property="og:image" content="https://konovalova.store/prototype/assets/og-image.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Portrait of Liza Konovalova">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -253,12 +254,14 @@ header.top.dark .menu-btn{color:#fff}
 /* not built yet (Portfolio 2.0): no link, no lift, a "Soon" badge beside the title (DESIGN.md §4.15) */
 .pc[aria-disabled]{cursor:default}
 .pc-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
-.pc-soon{flex:none;border:1px solid var(--line-on-ink);border-radius:var(--r-pill);padding:.25rem .75rem;color:var(--on-ink-2)}
-/* in-progress notice above Other projects (DESIGN.md §4.19): a thin light strip, the eyebrow dot pulses in --accent */
-.wip{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.5rem;margin-bottom:2rem;border-radius:var(--r-ctl);background:var(--surface);padding:.75rem 1.25rem}
-.wip .eyebrow{color:var(--text)}
-.wip .eyebrow::before{background:var(--accent);animation:wip-pulse var(--dur-pulse) var(--ease-hover) infinite}
-.wip p{color:var(--text-2)}
+.pc-soon{flex:none;border:1px solid transparent;border-radius:var(--r-pill);padding:.25rem .75rem;color:var(--ink);
+  background:linear-gradient(135deg,var(--holo-1),var(--holo-2) 55%,var(--holo-3)) border-box} /* the "Design" pill's gradient (.bt.h); transparent border keeps the old size */
+/* in-progress notice under the Other projects heading (DESIGN.md §4.19): a strip in the "Design" pill's gradient (same
+   declaration as .bt.h); text, eyebrow and pulsing dot in --ink (--accent is 2.65:1 on the gradient's lavender) */
+.wip{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.5rem;margin-bottom:1.5rem;border-radius:var(--r-ctl);padding:1.5rem 1.25rem;color:var(--ink);
+  background:linear-gradient(135deg,var(--holo-1),var(--holo-2) 55%,var(--holo-3))}
+.wip .eyebrow{color:var(--ink)}
+.wip .eyebrow::before{background:var(--ink);animation:wip-pulse var(--dur-pulse) var(--ease-hover) infinite}
 @keyframes wip-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 
 /* services */
@@ -561,11 +564,11 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
         </a></li>
       </ul>
       <div class="op">
+        <h3 class="t-h4 rv">Other projects</h3>
         <aside class="wip rv" role="note" aria-label="Portfolio in progress">
           <span class="eyebrow t-mono">In progress</span>
-          <p class="t-body-sm">Portfolio 2.0 is in progress. These projects are being rebuilt as full case studies and will be added very soon.</p>
+          <p class="t-body-sm">These projects are being rebuilt as case studies and will be added very soon&nbsp;c:</p>
         </aside>
-        <h3 class="t-h4 rv">Other projects</h3>
         <ul class="pcards">
         <li class="rv" style="--d:0ms"><a class="pc" role="link" aria-disabled="true"><div class="pc-hd"><h4 class="t-h5">TAX Pulse</h4><span class="pc-soon t-mono">Soon</span></div><p class="t-body-sm">Enterprise tax platform: dashboards, flows and a design system, taken through to client presentation.</p><div class="tags t-body-sm"><span>Enterprise dashboard</span></div></a></li>
         <li class="rv" style="--d:80ms"><a class="pc" role="link" aria-disabled="true"><div class="pc-hd"><h4 class="t-h5">DataOps Performance Suite</h4><span class="pc-soon t-mono">Soon</span></div><p class="t-body-sm">UX audit and dashboard redesign for a data operations suite, within tight system constraints.</p><div class="tags t-body-sm"><span>Dashboard redesign</span></div></a></li>

@@ -586,7 +586,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 - **Droplet:** `data-holo="lg"` (radius 72, magnet), same as case cards.
 - **Motion:** `.rv` entrance, `--y:24px`, stagger `--stagger-list` (0–400ms).
 - **Placeholders:** unknown copy is written as "Description TBD" / "Tag" and marked `<!-- TBD -->` in the markup (Appmatrix, 2026-11-04).
-- **Not built yet (2026-11-13, Portfolio 2.0):** all six cards are `<a class="pc" role="link" aria-disabled="true">` with no `href` (not focusable, not a link target) and no `data-holo`. `cursor:default`; the hover/focus/active lift applies only to `.pc:not([aria-disabled])`. The title sits in `.pc-hd` (flex, `space-between`, gap `.75rem`) with a **"Soon" badge** `.pc-soon.t-mono`: `1px --line-on-ink` outline, `--r-pill`, padding `.25rem .75rem` (the §4.17 tag padding), `--on-ink-2`. Remove the badge and restore the `href` when a case ships.
+- **Not built yet (2026-11-13, Portfolio 2.0):** all six cards are `<a class="pc" role="link" aria-disabled="true">` with no `href` (not focusable, not a link target) and no `data-holo`. `cursor:default`; the hover/focus/active lift applies only to `.pc:not([aria-disabled])`. The title sits in `.pc-hd` (flex, `space-between`, gap `.75rem`) with a **"Soon" badge** `.pc-soon.t-mono`: the "Design" pill's gradient (same declaration as `.bt.h`, §4.19), `--ink` text (9.46:1 at the gradient's darkest point, 13.15:1 at its lightest), no visible border (a `1px` transparent border with `background-origin:border-box` keeps the v1 size), `--r-pill`, padding `.25rem .75rem` (the §4.17 tag padding). Remove the badge and restore the `href` when a case ships.
 
 ### 4.16 Accordion row `.acc` / `.srow`
 "What I do best" list. Replaces the link rows of §4.5: each row is a disclosure button. (v1, 2026-11-04)
@@ -723,11 +723,19 @@ Every case page shares one shell. (v1, 2026-11-05)
 `about/index.html` (2026-11-13) is built from the case shell (`cases/_template/`, §4.17) with paths for its folder: header (nav `aria-current` on About), dark intro sheet (eyebrow, title, lead, fact chips, context), light body, end block. The body uses only `.cb-*` components, no case theme: **01 Experience** one Feature row per role (sticky text: company in `.t-body-sm`, role `h3.t-h4`, dates; media column: a Prose bullet list); **02 Skills** `ul.cb-outcomes`, one row per group, label `.t-mono` + value; **03 Education** one Prose line, then the contact links as shared `.pill.light.arrow` buttons (§4.1) in `.ab-links` (page style: `flex-wrap`, gap `.75rem`). End block: left `.cend-next` "Selected work →" to `index.html#works`, right the standard contact button. Copy: `~/Documents/nxp_screens/about-copy.md`, from the CV. No phone number on the site.
 
 ### 4.19 In-progress notice `.wip`
-Homepage, `#works`, directly above "Other projects" (2026-11-13). Tells visitors that the small project cards are being rebuilt as full case studies.
+Homepage, `#works`, directly under the "Other projects" heading and above the cards (2026-11-13; v2 same day: moved under the heading, holo gradient, new copy). Tells visitors that the small project cards are being rebuilt as full case studies.
 
-- **Markup:** `aside.wip.rv` (`role="note"`, `aria-label="Portfolio in progress"`) with `span.eyebrow.t-mono` "In progress" (caps via `.t-mono`) and `p.t-body-sm` "Portfolio 2.0 is in progress. These projects are being rebuilt as full case studies and will be added very soon."
-- **Spec:** full content width (inside `.shell`), a thin strip: `--surface` background, `--r-ctl`, padding `.75rem 1.25rem`, flex wrap, `align-items:center`, gap `.5rem 1.5rem`, `margin-bottom:2rem` (the heading gap of §4.15). Eyebrow text `--text`; body `--text-2` (6.66:1 on `--surface`; eyebrow `--text` 16.58:1).
-- **Pulse:** the eyebrow's own dot (§4.2) in `--accent`, animated by `wip-pulse`: opacity `1 → .35 → 1` and scale `1 → .7 → 1`, `--ease-hover`, infinite.
+- **Markup:** `aside.wip.rv` (`role="note"`, `aria-label="Portfolio in progress"`) with `span.eyebrow.t-mono` "In progress" (caps via `.t-mono`) and `p.t-body-sm` "These projects are being rebuilt as case studies and will be added very soon c:" (a `&nbsp;` keeps "c:" on the line of "soon").
+- **Spec:** full content width (inside `.shell`), `--r-ctl`, padding `1.5rem 1.25rem` (1.5× the v1 height: 45 → 69px at 1440), flex wrap, `align-items:center`, gap `.5rem 1.5rem`, `margin-bottom:1.5rem` (the `.pcards` gap, so the strip reads as the first row of the grid).
+- **Background:** the "Design" pill's gradient, the same declaration as `.bt.h` (§4.8): `linear-gradient(135deg, var(--holo-1), var(--holo-2) 55%, var(--holo-3))`. Holo as a background is allowed by D1. Note: the §2.0 token `--holo-gradient` (even stops) is not defined on the homepage yet (backlog #7) and differs from the pill's 55% stop, so the pill's own declaration is reused.
+- **Colour on the gradient:** eyebrow, text and dot all `--ink`. `--accent` is not used here: it is 2.65:1 on the gradient's darkest point and fails 3:1 for the dot.
+
+  | On the gradient | Darkest point `#b9a7ff` (lavender stop) | Lightest point `#ffc7a3` (peach end) |
+  |---|---|---|
+  | `--ink` text / eyebrow / dot | 9.46:1 | 13.15:1 |
+  | `--accent` (not used) | 2.65:1 | 3.68:1 |
+
+- **Pulse:** the eyebrow's own dot (§4.2) in `--ink`, animated by `wip-pulse`: opacity `1 → .35 → 1` and scale `1 → .7 → 1`, `--ease-hover`, infinite.
 
   | New value | Value | Where / why |
   |---|---|---|
@@ -735,7 +743,7 @@ Homepage, `#works`, directly above "Other projects" (2026-11-13). Tells visitors
   | `wip-pulse` low point | opacity `.35`, scale `.7` | The dot fades and shrinks without disappearing, so the strip never looks broken |
 
 - **Reduced motion:** static dot (the global reduced-motion rule sets `animation:none`).
-- **Don't:** use it as a banner at the top of the page, make it dismissible or colour the text with `--accent` (D1: accent is links, focus and the band word only; here only the dot).
+- **Don't:** use it as a banner at the top of the page, make it dismissible, or put `--accent` or holo colours on its text (D1).
 
 ---
 
