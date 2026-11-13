@@ -229,7 +229,8 @@ header.top.dark .menu-btn{color:#fff}
 .wc .meta{display:flex;justify-content:space-between;align-items:flex-start;color:rgba(255,255,255,.45)}
 .wc .badge{width:2.75rem;height:2.75rem;display:grid;place-items:center;border-radius:9999px;background:rgba(255,255,255,.1);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.15);font-size:1rem;transition:transform .4s var(--ease-hover)}
 .wc .mark{position:absolute;inset:0 0 42% 0;display:grid;place-items:center;pointer-events:none}
-.wc .mark span{background:linear-gradient(135deg,var(--holo-1),var(--holo-2),var(--holo-3));-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9}
+.wc .mark span{background:linear-gradient(135deg,var(--holo-1),var(--holo-2),var(--holo-3));-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9;
+  padding-bottom:.15em;margin-bottom:-.15em} /* line-height 1 cuts descenders (g, p) out of the clipped background; the padding extends it, the margin keeps the position */
 .wc .bot{position:absolute;inset-inline:1.5rem;bottom:1.5rem}
 @media (min-width:640px){.wc .bot{inset-inline:2rem;bottom:2rem}}
 .wc p{margin-top:.5rem;max-width:28rem;color:rgba(255,255,255,.55)}
@@ -327,6 +328,8 @@ footer .shell{position:relative;z-index:10;padding-top:5rem;padding-bottom:2.5re
 /* nav overlay */
 #nav{position:fixed;inset:0;z-index:115;display:flex;flex-direction:column;background:var(--ink);color:#fff;opacity:0;visibility:hidden;transition:opacity .45s var(--ease-spring),visibility 0s .45s}
 #nav.open{opacity:1;visibility:visible;transition:opacity .45s var(--ease-spring)}
+/* rows span the full width: .shell's auto margins would otherwise shrink each flex-column row to its content (DESIGN.md §4.10) */
+#nav>.shell{width:100%}
 #nav .tb{display:flex;align-items:center;justify-content:space-between;padding-block:1.25rem}
 #nav .tb .b{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600;letter-spacing:-.01em}
 #nav .tb .b .ico{font-size:1.25rem;color:var(--holo-2)}
@@ -339,10 +342,9 @@ footer .shell{position:relative;z-index:10;padding-top:5rem;padding-bottom:2.5re
 #nav .nl small{color:rgba(255,255,255,.3);transition:color .3s}
 #nav .nl span{color:rgba(255,255,255,.7);transition:color .3s}
 #nav .nl button:hover small,#nav .nl a:hover small{color:var(--holo-1)}#nav .nl button:hover span,#nav .nl a:hover span{color:#fff}
-#nav .bb{display:flex;flex-direction:column;gap:.75rem;border-top:1px solid rgba(255,255,255,.1);padding-block:1.5rem;color:rgba(255,255,255,.45)}
-@media (min-width:640px){#nav .bb{flex-direction:row;justify-content:space-between}}
-#nav .bb button{color:rgba(255,255,255,.7)}
-#nav .bb button:hover{color:#fff;text-decoration:underline}
+/* bottom row: Kyiv time left, the homepage's white contact pill right; wraps only when both can't fit */
+#nav .bb{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1rem;border-top:1px solid rgba(255,255,255,.1);padding-block:1.5rem;color:rgba(255,255,255,.45)}
+#nav .bb .pill{margin-left:auto} /* stays on the right when it wraps below the clock */
 
 /* contact modal (DESIGN.md §4.9) */
 #modal{position:fixed;inset:0;z-index:110;display:flex;align-items:flex-end;justify-content:center;padding:1rem;background:rgba(17,17,17,.3);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;visibility:hidden;transition:opacity var(--dur-overlay) var(--ease-spring),visibility 0s var(--dur-overlay)}
@@ -631,7 +633,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
     <div class="fcols">
       <div><div class="b"><svg class="ico"><use href="#i-logo"/></svg>Konovalova</div><p class="tg t-body-sm">Middle+ UX/UI designer and UI design engineer for enterprise B2B products.</p></div>
       <div><h4 class="t-mono">Work</h4><ul class="t-body-sm"><li><a class="al" href="cases/romper/index.html"><span>Romper</span></a></li><li><a class="al" href="cases/gaapt/index.html"><span>GAAPT</span></a></li><li><a class="al" href="cases/nxp/index.html"><span>Next Experience</span></a></li><li><a class="al" href="cases/design-digest/index.html"><span>Design Digest</span></a></li></ul></div>
-      <div><h4 class="t-mono">Contact</h4><ul class="t-body-sm"><li><a class="al" href="https://www.linkedin.com/in/liza-konovalova-35927a20b"><span>LinkedIn</span></a></li><li><a class="al" href="https://t.me/nvrfrgtlz"><span>Telegram @nvrfrgtlz</span></a></li><li><a class="al" href="https://konovalova.store"><span>konovalova.store</span></a></li></ul></div>
+      <div><h4 class="t-mono">Contact</h4><ul class="t-body-sm"><li><a class="al" href="https://www.linkedin.com/in/liza-konovalova-35927a20b" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Liza Konovalova (opens in a new tab)"><span>LinkedIn</span></a></li><li><a class="al" href="https://t.me/nvrfrgtlz" target="_blank" rel="noopener noreferrer" aria-label="Telegram @nvrfrgtlz (opens in a new tab)"><span>Telegram</span></a></li><li><a class="al" href="mailto:bet.konovalova@gmail.com" aria-label="Email bet.konovalova@gmail.com"><span>Email</span></a></li></ul></div>
     </div>
     <div class="legal t-caption"><span>© 2026 Liza Konovalova. Demo build.</span><span>Kyiv, Ukraine</span></div>
   </div>
@@ -646,7 +648,7 @@ form input:disabled,form textarea:disabled{opacity:.6;cursor:not-allowed}
     <li><a href="about/index.html" class="t-h1" style="transition-delay:170ms"><small class="t-body">03</small><span>About</span></a></li>
     <li><button data-contact class="t-h1" style="transition-delay:215ms"><small class="t-body">04</small><span>Contact</span></button></li>
   </ul></nav>
-  <div class="shell bb t-mono"><span>Kyiv time — <span data-time>9:41am</span></span><button class="t-mono" data-contact>Start a conversation →</button></div>
+  <div class="shell bb"><span class="t-mono">Kyiv time — <span data-time>9:41am</span></span><button class="pill light arrow" data-contact data-holo="md">Start a conversation<span class="bd"><svg class="ico ur"><use href="#i-ur"/></svg></span></button></div>
 </div>
 
 <div id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">

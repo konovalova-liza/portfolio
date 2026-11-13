@@ -80,6 +80,13 @@ header.top .shell{display:flex;align-items:center;justify-content:space-between;
 .back:focus-visible{color:var(--on-ink);transform:translateX(-4px)}
 .intro .eyebrow{margin-top:3rem}
 .intro h1{margin-top:1.25rem;max-width:18ch}
+/* display title in --holo-gradient (D1 amended 2026-11-13: holo as text fill for display titles only). Solid --on-ink first,
+   the gradient only where background-clip:text works; padding/margin give descenders room inside the clipped background */
+.intro h1{color:var(--on-ink)}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .intro h1{width:fit-content;background:var(--holo-gradient);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.12em;margin-bottom:-.12em} /* fit-content: the gradient spans the words, not the 18ch box */
+}
+@media (forced-colors:active){.intro h1{background:none;color:CanvasText}}
 .intro h1:focus{outline:none}
 .intro h1:focus-visible{outline:2px solid var(--ring-ink)}
 .intro .sum{margin-top:1.5rem;max-width:40rem;color:var(--on-ink-2)}

@@ -18,7 +18,7 @@ How to read the doc:
 
 | # | Area | Decision | Applied in |
 |---|---|---|---|
-| D1 | Accent | `--accent:#4f5bd5` stays the **only** spot accent. Uses: links, focus ring on light backgrounds, last word of the band. Holo colors (`#6fe3e1`, `#b9a7ff`, `#ffc7a3`) are **never** a text color, only backgrounds, gradients and effects. | [§2.1](#21-colors), [§4.8](#48-band-research--design----ship) |
+| D1 | Accent | `--accent:#4f5bd5` stays the **only** spot accent. Uses: links, focus ring on light backgrounds, last word of the band. Holo colors (`#6fe3e1`, `#b9a7ff`, `#ffc7a3`) are **never** a text color, only backgrounds, gradients and effects. **Amended 2026-11-13:** `--holo-gradient` may fill **display titles** as background-clip text (case-card wordmarks §4.4, case intro `h1` §4.17), never body, labels or small text, and never a flat holo `color:`. | [§2.1](#21-colors), [§4.8](#48-band-research--design----ship) |
 | D2 | Fonts | **Onest** is the primary family. **Geist Mono** (kept after the live check, 2026-11-05; Q1 closed) is for every small uppercase label (the `mono` style: eyebrow, header clock, case meta, form labels) and the stats digits (`stat`). Mono is never larger than 12px, except for the stats digits. Digits must not change width during count-up. | [§2.2](#22-typography) |
 | D3 | Effects | Every effect stays. **LiquidReveal** in the hero (B/W → color). The **glass holo droplet cursor** works on every page, including the hero and case pages. In the hero the droplet sits **above** the brush, its diameter is **smaller than brushRadius 143**, and the revealed color shows through the glass. On touch / `pointer:coarse` and with `prefers-reduced-motion` there is no droplet and no brush; the hero shows a static B/W photo. | [§5](#5-effects-rules) |
 | D4 | Loader | The `000→100` loader stays. **Note:** it was not visible during the review; find the cause in Stage 3. | [§4.12](#412-loader), backlog #27 |
@@ -163,6 +163,7 @@ Retired in v1: `--muted` (replaced by `--text-2`/`--text-3`), `--hero-to` (the h
 
   Any other existing accent use (`.soc.a` background, `.mh .k` dot) is an open question ([§7 Q2](#71-open-questions)). The accent is never text on `--ink` (3.57:1); links on ink use `--on-ink-2` → `--on-ink` on hover/focus.
 - **Holo (D1):** only `--holo-gradient`, holo backgrounds and effects (droplet, LiquidReveal). Never `color:` on text. Holo-tinted icons are an open question ([§7 Q3](#71-open-questions)).
+- **Holo as text fill (2026-11-13):** allowed only for display titles, the case-card wordmark (§4.4) and the case intro `h1` (§4.17), as `--holo-gradient` with `background-clip:text`, on `--ink`. Never for body, labels or anything below `t-h1`. Every such title: a solid `--on-ink` fallback where `background-clip:text` is unsupported, `CanvasText` under `forced-colors`, and bottom padding (`.12`–`.15em`, cancelled by an equal negative margin) so descenders stay inside the clipped background. Contrast on `--ink` at the darkest stop (`--holo-2` `#b9a7ff`): 9.46:1; `--holo-1` 12.96:1, `--holo-3` 13.15:1 (minimum along the whole gradient: 9.46:1).
 - **Glass:** `--glass-rest` / `--glass-hover` only on ink or the dark hero. There is no light glass in v1, because the light header was removed (D6).
 
 #### Contrast of v1 color tokens
@@ -392,7 +393,8 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
 - **Spec:**
   - `--ink`, `--r-card`, ring `--line-on-ink`
   - Meta row `.t-mono`, `--on-ink-2`. Mark `.t-display`, title `.t-h4`, description `.t-body-sm`. Content: role, dates, platform (D2)
-  - Wordmark uses `--holo-gradient` as background-clip text. That is a gradient fill, allowed by D1
+  - Wordmark uses `--holo-gradient` as background-clip text. That is a gradient fill, allowed by D1 (display title, see the 2026-11-13 amendment)
+  - Descenders (2026-11-13): `.t-display` has line-height `1`, which cut the "g" of "Digest" out of the clipped background. The wordmark has `padding-bottom:.15em; margin-bottom:-.15em`: the background reaches the descender, the text does not move
   - Description in `--on-ink-2`
 - **States:**
 
@@ -521,6 +523,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
   - Bottom bar `--on-ink-2`, divider `--line-on-ink`
   - Type: links `.t-h1` with the index `small` in `.t-body`; `.xbtn`, the bottom bar and its button `.t-mono`
   - Items (2026-11-13): 01 Home · 02 Work · 03 About (a link to `about/index.html`) · 04 Contact, as in §4.7
+  - Rows (2026-11-13): every row is a `.shell` at `width:100%` (in the overlay's flex column, `.shell`'s auto margins otherwise shrink a row to its content and centre it). **Top row:** logo "Konovalova" left, `.xbtn` Close right, `space-between`, the page's side gutter. **Bottom row:** "Kyiv time — <clock>" (`.t-mono`, `--on-ink-2`) left and the homepage's white contact pill (`.pill.light.arrow` "Start a conversation" with the `↗` badge, §4.1; opens the contact modal) right, `space-between`, `flex-wrap` with gap `.75rem 1rem`, so the pill drops below the clock only when both don't fit (≈ 390px and narrower; they need ≈ 363px), and `margin-left:auto` keeps it on the right when it does
 - **Motion:** Fade `--dur-overlay`. Links enter over `--dur-overlay` with `--ease-spring`, staggered `--stagger-list`.
 - **Focus:** Per §6.
 
@@ -531,6 +534,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
   - Tagline and links `--on-ink-2` → `--on-ink` on hover/focus
   - Column `h4` and legal in `--on-ink-2`
   - Dividers `--line-on-ink`
+  - **Contact column (2026-11-13):** LinkedIn · Telegram · Email, the same labels, targets and `aria-label`s as the About page contact buttons (§4.18): LinkedIn and Telegram open in a new tab, Email is `mailto:`. The `konovalova.store` link is removed
   - **Watermark `KONOVALOVA`** (`.fwm`). Color `rgba(255,255,255,.05)` is decorative and kept (v0); size in rem only (T7). The hero has its own watermark (§4.13)
 
 ### 4.12 Loader
@@ -632,7 +636,7 @@ Every case page shares one shell. (v1, 2026-11-05)
   - States per §4.7: logo `scale(1.04)`; pnav `translateY(-2px)` + `--on-ink`; ring `--ring-ink`.
 - **Dark intro block** (`section.shell.intro`, same `.ink` sheet as the header; sheet corners `0 0 var(--r-card) var(--r-card)`):
   - Padding `2.5rem 0 5rem`, `3rem 0 7rem` at ≥1024.
-  - In order: `.back` "← All work" (→ `../../index.html#works`; `.t-label`, `--on-ink-2` → `--on-ink`, hover/focus `translateX(-4px)`, `--dur-micro` `--ease-hover`); `.eyebrow.t-mono` "Case study" (on ink, `margin-top:3rem`); `h1#intro-title` (`tabindex="-1"` so scripts can focus it; `.t-h1`, `max-width:18ch`; no ring on programmatic focus, `--ring-ink` on keyboard focus); `.sum` (`.t-body`, `--on-ink-2`, `max-width:40rem`, `margin-top:1.5rem`); `ul.tags` fact chips (`li` = `<b>` label + value: `1px --line-on-ink`, `--r-pill`, `.5rem 1rem`, `.t-body-sm` on the `ul`, `--on-ink-2`; label `<b class="t-mono">` `--on-ink-3`; gap `.5rem`, `margin-top:2rem`); `.ctx` context paragraph (`.t-body`, case text, `--on-ink-2`, `max-width:40rem`, `margin-top:3rem`).
+  - In order: `.back` "← All work" (→ `../../index.html#works`; `.t-label`, `--on-ink-2` → `--on-ink`, hover/focus `translateX(-4px)`, `--dur-micro` `--ease-hover`); `.eyebrow.t-mono` "Case study" (on ink, `margin-top:3rem`); `h1#intro-title` (`tabindex="-1"` so scripts can focus it; `.t-h1`, `max-width:18ch`; **text fill `--holo-gradient`** via `background-clip:text` (2026-11-13, D1 amendment; solid `--on-ink` fallback, `CanvasText` in forced colors, `padding-bottom:.12em; margin-bottom:-.12em` for descenders, `width:fit-content` so the gradient spans the words rather than the 18ch box; set once in `cases/shared/case.css`, so it applies to every page on the shell, the About page included); no ring on programmatic focus, `--ring-ink` on keyboard focus); `.sum` (`.t-body`, `--on-ink-2`, `max-width:40rem`, `margin-top:1.5rem`); `ul.tags` fact chips (`li` = `<b>` label + value: `1px --line-on-ink`, `--r-pill`, `.5rem 1rem`, `.t-body-sm` on the `ul`, `--on-ink-2`; label `<b class="t-mono">` `--on-ink-3`; gap `.5rem`, `margin-top:2rem`); `.ctx` context paragraph (`.t-body`, case text, `--on-ink-2`, `max-width:40rem`, `margin-top:3rem`).
 - **End block** (`section.ink.case-end#case-end`, `aria-label="Next"`; the board's "Skip the board" link targets `#case-end`):
   - Full-bleed `--ink` sheet across the whole viewport, top corners `var(--r-card) var(--r-card) 0 0` (mirrors the intro sheet). Content sits in `.shell`, so it uses the standard side gutter (§2.3).
   - **Compact (2026-11-05):** padding-block `2.5rem`, `3rem` at ≥1024 (half the earlier `5rem` / `6rem`). At 1440: 242 → 144px.
