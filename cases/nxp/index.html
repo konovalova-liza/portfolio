@@ -64,12 +64,13 @@
 <main id="main" class="nxp">
   <!-- NXP case body (DESIGN.md §4.17 "Case body components"). Facts: cases/nxp/BRIEF.md; copy: ~/Documents/nxp_screens/nxp-copy.md (v1).
        Theme: nxp.css (scope .nxp, tokens --nx-*, §5.9).
-       Images: each .cb-ph gray box stands for an <img src alt width height loading="lazy">; the cover is the first image and drops loading="lazy".
+       Images: cases/nxp/assets/*.webp (neutral names, one use each), loading="lazy" except the cover. Product name on screens: NEX only;
+       the client logo, the old product name and avatar photos are masked in the sources (avatars as flat #3a3a3a squares).
        Delete every [Todo] placeholder and .cb-todo before the case is frozen. -->
 
   <div class="shell cb-section cb-flow">
-    <!-- cover: first image on the page, eager (no loading="lazy"). Placeholder for a live animated cover later. -->
-    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x9 t-mono" role="img" aria-label="[Todo: cover: key visual and home screen]">[Todo: cover: key visual and home screen · 16:9]</div></div></div></figure>
+    <!-- cover: first image on the page, no loading="lazy". A live animated cover may replace it later (2400 px master stays outside git). -->
+    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/nxp-cover.webp" alt="Key visual: a dark cube built from blocks, lit by teal edges and points, on a black background with circuit lines." width="1472" height="840" decoding="async"></div></div></figure>
   </div>
 
   <section class="shell cb-summary" aria-label="Summary">
@@ -119,7 +120,7 @@
       <div class="cb-prose t-body">
         <p>In the workshop we mapped how use cases are built: shared components form a reference implementation, and a reference implementation is adapted into an industry use case. That nesting shaped both the navigation and the visual language.</p>
       </div>
-      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: concept]">[Todo: concept · 16:10]</div></div></div><figcaption class="t-body-sm">Nesting concept: component → reference implementation → use case.</figcaption></figure>
+      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><img src="assets/nxp-concept.webp" alt="Nesting concept: a component sits inside a reference implementation, which sits inside an industry use case." width="294" height="521" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Nesting concept: component → reference implementation → use case.</figcaption></figure>
     </div>
   </section>
 
@@ -132,7 +133,7 @@
       <div class="cb-prose t-body">
         <p>The visual direction grows from one key visual I made: a dark cube assembled from blocks, lit by teal edges and points. It stands for the platform itself, separate parts that form a whole. The UI follows it: near-black surfaces, one teal accent for selection and actions, and a cut corner taken from the cube's blocks that repeats on cards, diagram blocks and the assistant button.</p>
       </div>
-      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x9 t-mono" role="img" aria-label="[Todo: login]">[Todo: login · 16:9]</div></div></div><figcaption class="t-body-sm">Login is the first place the key visual appears: a short form on the left, the cube on the rest of the screen.</figcaption></figure>
+      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/nxp-login.webp" alt="Login screen: email and password fields on the left, the cube key visual on the rest of the screen." width="2400" height="1468" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Login is the first place the key visual appears: a short form on the left, the cube on the rest of the screen.</figcaption></figure>
     </div>
   </section>
 
@@ -144,7 +145,7 @@
     <div class="cb-feature">
       <div class="cb-ftext"><h3 class="t-h4">Pick an industry, then a subsector, or just ask</h3><p class="t-body">Home has two ways in. Most users know their industry and subsector, so two linked lists narrow the catalog in two clicks, and the choice stays visible as a teal row. Users who already know what they need type into the assistant field on top. The assistant is an AI search over the catalog; the prototype covers its entry point, not the conversation.</p></div>
       <div class="cb-fmedia">
-        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: home]">[Todo: home · 16:10]</div></div></div><figcaption class="t-body-sm">Home: industry and subsector selection under the assistant field.</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/nxp-home.webp" alt="Home: assistant field on top, industries on the left with Consumer selected, subsectors on the right, Search button below." width="2400" height="1737" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Home: industry and subsector selection under the assistant field.</figcaption></figure>
       </div>
     </div>
   </section>
@@ -157,7 +158,7 @@
     <div class="cb-feature cb-feature--flip">
       <div class="cb-ftext"><h3 class="t-h4">Use cases grouped by business goal</h3><p class="t-body">Results group use cases by the goal they serve, such as customer value and loyalty or store operations, because a developer usually starts from a business problem, not a component name. Ready use cases carry a teal header; ones still in progress stay grey, so nobody opens an empty page. The selection panel stays above the results, so switching subsector does not mean going back.</p></div>
       <div class="cb-fmedia">
-        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: results]">[Todo: results · 16:10]</div></div></div><figcaption class="t-body-sm">Results for one subsector, grouped by business goal.</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/nxp-results.webp" alt="Results for the Retail subsector: use-case cards grouped by business goal, one card in hover state." width="2400" height="2313" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Results for one subsector, grouped by business goal.</figcaption></figure>
       </div>
     </div>
   </section>
@@ -173,8 +174,8 @@
       </div>
       <figure class="cb-figure">
         <div class="cb-pair">
-          <div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: use-case description]">[Todo: use-case description · 16:10]</div></div></div>
-          <div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: use-case diagram]">[Todo: use-case diagram · 16:10]</div></div></div>
+          <div class="cb-frame"><div class="cb-media"><img src="assets/nxp-usecase-description.webp" alt="Use-case page, Description tab: what the reference implementation covers and its three components." width="2400" height="1707" loading="lazy" decoding="async"></div></div>
+          <div class="cb-frame"><div class="cb-media"><img src="assets/nxp-usecase-diagram.webp" alt="Use-case page, Architecture tab: block diagram with highlighted blocks and a side panel with a block description." width="2400" height="1767" loading="lazy" decoding="async"></div></div>
         </div>
         <figcaption class="t-body-sm">Use-case page, designed by a teammate.</figcaption>
       </figure>
@@ -190,7 +191,7 @@
       <div class="cb-prose t-body">
         <p>We built a component library for the project, with short usage notes for designers who would continue the work. My part: use-case cards in three states (ready, hover, in progress), list rows (default, hover, selected) and the type scale, Open Sans in eight styles from 36 Light titles to 12 Regular helper text.</p>
       </div>
-      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: component library]">[Todo: component library · 16:10]</div></div></div><figcaption class="t-body-sm">Card and list states, type scale.</figcaption></figure>
+      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><img src="assets/nxp-library.webp" alt="Component states: use-case cards ready, in progress and hover; list rows default, hover and selected; Open Sans type scale." width="2400" height="1537" loading="lazy" decoding="async"></div></div><figcaption class="t-body-sm">Card and list states, type scale.</figcaption></figure>
     </div>
   </section>
 
