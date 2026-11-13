@@ -66,6 +66,7 @@
        Theme: nxp.css (scope .nxp, tokens --nx-*, §5.9).
        Images: cases/nxp/assets/*.webp (neutral names, one use each), all loading="lazy" (the cube is the background layer). Product name on screens: NEX only;
        the client logo, the old product name and avatar photos are masked in the sources (avatars as flat #3a3a3a squares).
+       Section 03 diagrams: HTML/CSS in nxp.css (.nx-dg), scroll reveal in diagrams.js.
        Delete every [Todo] placeholder and .cb-todo before the case is frozen. -->
 
 
@@ -109,16 +110,62 @@
       <p class="cb-lead t-h5">Three weeks, Lean UX, one iteration a week. Each week ended with client alignment.</p>
     </div>
     <div class="cb-flow">
-      <aside class="cb-todo" aria-label="Todo">
-        <span class="t-mono">Todo</span>
-        <p class="t-body-sm">Process diagram (HTML/SVG), three steps:</p>
-        <p class="t-body-sm">Week 1 · Discover: client workshop, information gathering, use-case maps → alignment</p>
-        <p class="t-body-sm">Week 2 · Design: prototype and UI → alignment</p>
-        <p class="t-body-sm">Week 3 · Deliver: iteration on feedback, handoff of the prototype</p>
-      </aside>
+      <figure class="nx-dg nx-process" aria-label="Lean UX process: three one-week iterations">
+        <ol class="nx-sr">
+          <li>Week 1, Discover: client workshop, information gathering, use-case maps. Within the week: build, review, adjust. Then client alignment.</li>
+          <li>Week 2, Design: prototype and UI. Within the week: build, review, adjust. Then client alignment.</li>
+          <li>Week 3, Deliver: iteration on feedback, handoff of the prototype. Within the week: build, review, adjust.</li>
+        </ol>
+        <div class="nx-p" aria-hidden="true">
+        <div class="nx-p-line"></div>
+        <div class="nx-p-col nx-p-c1" style="--i:0">
+          <div class="nx-p-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4.5h-4.5"/></svg><span class="t-mono">Build · Review · Adjust</span></div>
+          <div class="nx-cut nx-p-block"><span class="t-mono">Week 1 · Discover</span><ul class="t-body-sm"><li>Client workshop</li><li>Information gathering</li><li>Use-case maps</li></ul></div>
+        </div>
+        <div class="nx-p-mark nx-p-m1" style="--i:1"><i></i><span class="t-mono">Client alignment</span></div>
+        <div class="nx-p-col nx-p-c2" style="--i:1">
+          <div class="nx-p-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4.5h-4.5"/></svg><span class="t-mono">Build · Review · Adjust</span></div>
+          <div class="nx-cut nx-p-block"><span class="t-mono">Week 2 · Design</span><ul class="t-body-sm"><li>Prototype and UI</li></ul></div>
+        </div>
+        <div class="nx-p-mark nx-p-m2" style="--i:2"><i></i><span class="t-mono">Client alignment</span></div>
+        <div class="nx-p-col nx-p-c3" style="--i:2">
+          <div class="nx-p-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4.5h-4.5"/></svg><span class="t-mono">Build · Review · Adjust</span></div>
+          <div class="nx-cut nx-p-block"><span class="t-mono">Week 3 · Deliver</span><ul class="t-body-sm"><li>Iteration on feedback</li><li>Handoff of the prototype</li></ul></div>
+        </div>
+        </div>
+      </figure>
       <div class="cb-prose t-body">
         <p>In the workshop we mapped how use cases are built: shared components form a reference implementation, and a reference implementation is adapted into an industry use case. That nesting shaped both the navigation and the visual language.</p>
       </div>
+      <figure class="cb-figure nx-dg nx-build">
+        <ul class="nx-sr">
+          <li>Three shared components: Customer returns persona, Return propensity, Policy compliance manager.</li>
+          <li>The use case Intelligent returns holds a reference implementation for Retail, built from Customer returns persona and Return propensity.</li>
+          <li>Its apparel implementation reuses the same two components and adds Policy compliance manager.</li>
+        </ul>
+        <div class="nx-b" aria-hidden="true">
+          <div class="nx-b-parts">
+            <span class="t-mono">Shared components</span>
+            <div class="nx-cut nx-b-tile t-body-sm">Customer returns persona</div>
+            <div class="nx-cut nx-b-tile t-body-sm">Return propensity</div>
+            <div class="nx-cut nx-b-tile t-body-sm">Policy compliance manager</div>
+          </div>
+          <div class="nx-b-arrow"><svg viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid meet"><path d="M2 12h42M36 5l8 7-8 7"/></svg></div>
+          <div class="nx-cut nx-b-case">
+            <span class="t-mono">Use case · Intelligent returns</span>
+            <div class="nx-cut nx-b-impl">
+              <span class="t-mono">Reference implementation · Retail</span>
+              <div class="nx-b-slots"><div class="nx-cut nx-b-tile t-body-sm" style="--i:0">Customer returns persona</div><div class="nx-cut nx-b-tile t-body-sm" style="--i:1">Return propensity</div></div>
+            </div>
+            <div class="nx-b-link"></div>
+            <div class="nx-cut nx-b-impl">
+              <span class="t-mono">Apparel implementation</span>
+              <div class="nx-b-slots"><div class="nx-cut nx-b-tile t-body-sm" style="--i:2"><span class="t-mono">Reused</span>Customer returns persona</div><div class="nx-cut nx-b-tile t-body-sm" style="--i:3"><span class="t-mono">Reused</span>Return propensity</div><div class="nx-cut nx-b-tile nx-b-add t-body-sm" style="--i:4"><span class="t-mono">Added</span>Policy compliance manager</div></div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="t-body-sm">How a use case is built: shared components form a reference implementation, which is adapted per subsector.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -241,5 +288,6 @@
 
 <script src="../shared/case.js"></script>
 <script src="cube.js"></script>
+<script src="diagrams.js"></script>
 </body>
 </html>

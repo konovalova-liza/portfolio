@@ -950,16 +950,16 @@ The GAAPT case (`cases/gaapt/`, added 2026-11-12) has a dark body to match the p
 **Rules.** Fonts unchanged (Onest + Geist Mono), so the case still belongs to the portfolio. No colours beyond this table. Text never below `--gp-text-3`.
 
 ### 5.9 NXP case theme
-The NXP case (`cases/nxp/`, added 2026-11-13; v3 2026-11-13: shell restored, cube behind the body only) has a pure-black body with the product's key visual, a dark cube lit by teal edges, as a live full-screen background behind it. Scope: `body.case-nxp` and `main.nxp`, styles in `cases/nxp/nxp.css`, the animation in `cases/nxp/cube.js`, both linked only from `cases/nxp/index.html` (CSS after `../shared/case.css`, JS after `../shared/case.js`). `cases/shared/` and the template are unchanged; header, intro sheet, chips and end block are the usual §4.17 shell, identical to every other case.
+The NXP case (`cases/nxp/`, added 2026-11-13; v3 2026-11-13: shell restored, cube behind the body only; v4: cube from the first pixel of the body, section 03 diagrams) has a pure-black body with the product's key visual, a dark cube lit by teal edges, as a live full-screen background behind it. Scope: `body.case-nxp` and `main.nxp`, styles in `cases/nxp/nxp.css`, the animation in `cases/nxp/cube.js`, both linked only from `cases/nxp/index.html` (CSS after `../shared/case.css`, JS after `../shared/case.js`). `cases/shared/` and the template are unchanged; header, intro sheet, chips and end block are the usual §4.17 shell, identical to every other case.
 
 **How it differs from GAAPT (§5.8).** GAAPT is a lighter teal-graphite body with near-black screenshots on mats and every block in a panel. NXP is pure black with the cube living behind the whole page; screenshots sit straight on the black inside a teal hairline, and the summary and outcomes stay on plain rules.
 
 **Layering** (≥1024, top to bottom of the page):
 1. Header + intro: the unchanged `.ink` sheet with rounded bottom corners. No cube behind it.
-2. `main.nxp`: transparent on `body.case-nxp` (`--nx-bg` `#000`). It holds the cube layer `.nx-cube` as its first child: fixed, full viewport, `--z-bg`, `aria-hidden`, with `.nx-cube-art` inside (the cover image `nxp-cover.webp`, 1472 × 840, at full viewport height in its own ratio, centred on `--nx-cube-x`, and the `cube.js` canvas on top; the image's black edges meet the black page, so the box needs no mask). `main.nxp` has `clip-path: inset(0)`, which clips its fixed descendants too, so the layer only ever shows inside the body's box, never over the intro or the end block. Every other child of `main` sits above the layer (`position:relative`, `--z-content`).
+2. `main.nxp`: transparent on `body.case-nxp` (`--nx-bg` `#000`). It holds the cube layer `.nx-cube` as its first child, always at `--nx-cube-dim` (no scroll fade), so the cube already shows in the gap right under the intro sheet: fixed, full viewport, `--z-bg`, `aria-hidden`, with `.nx-cube-art` inside (the cover image `nxp-cover.webp`, 1472 × 840, at full viewport height in its own ratio, centred on `--nx-cube-x`, and the `cube.js` canvas on top; the image's black edges meet the black page, so the box needs no mask). `main.nxp` has `clip-path: inset(0)`, which clips its fixed descendants too, so the layer only ever shows inside the body's box, never over the intro or the end block. Every other child of `main` sits above the layer (`position:relative`, `--z-content`).
 3. End block: the unchanged `.ink` sheet.
 
-Below 1024 there is no cube: the layer is `display:none` and its image is `loading="lazy"`, so it is never requested.
+Below 1024 the same layer is a static image at the top of the body (`position:absolute`, `--nx-cube-h-sm` tall, centred, `--nx-cube-dim`), behind the summary; no canvas, and `cube.js` does not run its loop.
 
 **Tokens** (on `.case-nxp`, used only on this page). Contrast ratios: see the table below.
 
@@ -975,7 +975,14 @@ Below 1024 there is no cube: the layer is `display:none` and its image is `loadi
 | `--nx-accent` | `#2CCFBF` | The cube's teal: links, focus ring (in `main` and on the skip link), canvas glow and particles. One teal only |
 | `--nx-frame-line` | `rgba(44,207,191,.15)` | 1px figure frame. Frames are transparent, no mat: screenshots sit on the black page |
 | `--nx-cube-x` | `72%` | Horizontal centre of the cube art box: the cube sits on the right half of the body |
+| `--nx-cube-h-sm` | `28rem` | Below 1024: height of the static cube at the top of the body (behind the summary) |
 | `--nx-cube-dim` | `.18` | Layer opacity behind body text. Chosen so the brightest possible layer pixel (white) is `#2E2E2E` and `--nx-text-3` keeps 4.71:1; `.20` would give 4.39 |
+| `--nx-cut` | `.875rem` | The UI's cut corner (top right, from the cube's blocks), on diagram blocks, tiles and frames |
+| `--nx-dg-frame` | `rgba(44,207,191,.45)` | Diagram block and tile outlines |
+| `--nx-dg-fill` | `#061312` | Diagram block and tile fill: opaque, so diagram text never depends on the cube behind |
+| `--nx-dg-fill-2` | `#0A2522` | The "added" tile in diagram B (with an `--nx-accent` outline) |
+| `--nx-dg-draw` | `1200ms` | Diagram A: the timeline line draws left to right (`--ease-line`) |
+| `--nx-dg-step` | `400ms` | Diagram A: one week of the line (`--nx-dg-draw` / 3); each week and marker appears as the line reaches it. Diagram B: tiles slide in at half this step |
 
 **Z-index.** `.nx-cube` uses `--z-bg`; the other children of `main.nxp` use `--z-content`. Both are inside `main`'s own stacking context (from `clip-path`). No new z values.
 
@@ -997,11 +1004,17 @@ Below 1024 there is no cube: the layer is `display:none` and its image is `loadi
 | `parallax` | max `12px`, eased at `.06` per frame | Follows a mouse pointer only (`pointerType === 'mouse'`) |
 | `breathe` | scale `1.00`–`1.03`, period `16000ms` | On the art box (`transform`, composited) |
 | `dpr` | `1.5` max | Canvas resolution cap: sharp enough at the glow sizes, half the fill cost of 2× (≈0.14ms per frame measured at 1440) |
-| `fadeIn` | `200` px of scroll | Length of the layer's fade-in at the end of the intro |
 
-- **Scroll fade-in:** layer opacity is `0` (also in CSS, before the script runs) until the intro sheet's bottom edge is `fadeIn` px from the viewport top, then rises linearly to `--nx-cube-dim` as the intro scrolls out, and stays there behind the rest of the body. The cube is never brighter than `--nx-cube-dim`. It runs on `scroll` through one `requestAnimationFrame`, with or without motion, and only changes `opacity` on the fixed layer (composited, no layout).
+- **Opacity:** constant `--nx-cube-dim`, set in CSS. No scroll fade. The cube is never brighter than `--nx-cube-dim`.
 - **Pauses:** the canvas loop stops while the tab is hidden (`visibilitychange`) and while the layer is off (<1024, `matchMedia` change).
-- **Reduced motion:** static image only; `cube.js` never starts the loop and the canvas is hidden. The scroll-linked opacity stays (it is not an animation), so body text keeps its contrast.
+- **Reduced motion:** static image only; `cube.js` never starts the loop and the canvas is hidden.
+
+**Section 03 diagrams** (HTML/CSS, no raster images; styles in `nxp.css` under `.nx-dg`, reveal in `cases/nxp/diagrams.js`):
+- **Language:** black, teal lines (`--nx-accent`), opaque cut-corner blocks (`.nx-cut`: a `--nx-dg-frame` outline under a `--nx-dg-fill` fill, both clipped to the cut shape), Geist Mono caps for labels (`.t-mono`, in `--nx-accent`), Onest for text (`.t-body-sm`, `--nx-text`).
+- **A · Lean UX process** (`.nx-process`, replaces the Todo box): full bleed (edge to edge), content inside `90rem` with the shell gutter. Three equal week columns, each a block (week label + activities from the copy) under a loop icon labelled BUILD · REVIEW · ADJUST; one teal line under the columns, edge to edge, with a tick from each block; a diamond marker labelled CLIENT ALIGNMENT on the line between weeks 1–2 and 2–3. Below 768: a vertical timeline (line on the left in the gutter, diamonds on it between the blocks).
+- **B · How a use case is built** (`.nx-build`, after the workshop paragraph): shared components (three tiles) → arrow → frame USE CASE · INTELLIGENT RETURNS (`--nx-accent` outline on `#000`) holding REFERENCE IMPLEMENTATION · RETAIL (two tiles) and, on a short teal branch below, APPAREL IMPLEMENTATION (the same two tiles tagged REUSED, plus the ADDED tile on `--nx-dg-fill-2`). Caption as a §4.17 figcaption. Below 768: stacked, arrow turned down.
+- **Motion:** `diagrams.js` adds `.nx-anim` (hidden start state) and `.is-in` once a diagram is 30% in view (IntersectionObserver, once). A: the line scales from `0` (left origin; top origin when vertical) over `--nx-dg-draw`, weeks and markers fade up `.75rem` with `--dur-item` `--ease-spring`, delayed `--i × --nx-dg-step`. B: the five implementation tiles slide in from `-1.5rem` with `--dur-item` `--ease-spring`, delayed `--i × --nx-dg-step / 2`. Reduced motion or no IntersectionObserver: no classes, the diagrams are static.
+- **Text alternative:** each diagram's art is `aria-hidden`; a visually hidden list (`.nx-sr`) carries the same content (A: one item per week with its activities, the loop and the alignment; B: components, reference implementation, apparel branch). Figure A has an `aria-label`; B keeps its visible caption.
 
 **Contrast** (WCAG 2.x). Body numbers use the worst case anywhere in the viewport: a white layer pixel at `--nx-cube-dim` = `#2E2E2E` (the glow is additive, so it cannot exceed white). The intro and end block are the unchanged `.ink` sheets: §2.1 ratios apply, nothing sits behind them.
 
@@ -1012,7 +1025,14 @@ Below 1024 there is no cube: the layer is `display:none` and its image is `loadi
 | `--nx-text-3` | 7.29 | 4.71 | 5.97 | 5.41 |
 | `--nx-accent` | 10.78 | 6.97 | 8.84 | 8.00 |
 
-All pass 4.5:1. Non-text: the frame hairline is decorative (teal at `.15` on black).
+| Diagram text | Background | Ratio |
+|---|---|---|
+| `--nx-text` (activities, tile names) | `--nx-dg-fill` / `--nx-dg-fill-2` | 15.87 / 13.54 |
+| `--nx-accent` labels inside blocks and tiles | `--nx-dg-fill` / `--nx-dg-fill-2` | 9.72 / 8.29 |
+| `--nx-accent` labels over the cube layer (loop, CLIENT ALIGNMENT, SHARED COMPONENTS) | layer peak `#2E2E2E` | 6.97 |
+| `--nx-accent` frame labels | `#000` (frame fill) | 10.78 |
+
+All pass 4.5:1. Non-text: the screenshot frame hairline and the diagram outlines (`--nx-dg-frame`, 2.87:1 on the fill) are decorative; the meaningful lines (timeline, markers, arrow, branch, the ADDED outline) are `--nx-accent`, 6.97:1 even over the layer peak.
 
 **Rules.** Fonts unchanged (Onest + Geist Mono). No colours beyond this table. Text in `main` never below `--nx-text-3`; never raise `--nx-cube-dim` above `.18` without re-checking `--nx-text-3`. No `--nx-*` outside `cases/nxp/`. The cube layer is decorative: no alt text, no focus, no pointer events.
 

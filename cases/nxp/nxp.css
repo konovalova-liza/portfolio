@@ -1,9 +1,11 @@
 /* NXP case theme (DESIGN.md §5.9): pure-black case body over a fixed live cube layer, scoped to cases/nxp/ only.
    Linked after ../shared/case.css. The shell (header, intro sheet, chips, end block) is untouched, as in every case.
    Layering (≥1024): the cube layer (.nx-cube) lives inside main.nxp, which clips it (clip-path), so it can only show behind
-   the body, never over the intro or the end block. Body blocks sit above it (--z-content). cube.js fades it in from 0 to
-   --nx-cube-dim while the intro sheet scrolls out, then it stays there. Below 1024: no layer.
-   The .cb-* components are themed by remapping the shell variables inside main.nxp. */
+   the body, never over the intro or the end block. Body blocks sit above it (--z-content). It is at --nx-cube-dim from the
+   first pixel of the body, so it already shows in the gap under the intro sheet. Below 1024: a static image at the top of
+   the body, behind the summary, no canvas.
+   The .cb-* components are themed by remapping the shell variables inside main.nxp.
+   Section 03 holds two CSS/HTML diagrams (.nx-dg): the Lean UX timeline (.nx-process) and the use-case build (.nx-build). */
 
 /* tokens: --nx-* (§5.9), used only on this page */
 .case-nxp{
@@ -18,6 +20,14 @@
   --nx-frame-line:rgba(44,207,191,.15);
   --nx-cube-x:72%;
   --nx-cube-dim:.18;
+  --nx-cube-h-sm:28rem;                      /* <1024: height of the static cube at the top of the body */
+  /* diagrams (§5.9) */
+  --nx-cut:.875rem;                          /* the UI's cut corner (top right), on blocks, tiles and frames */
+  --nx-dg-frame:rgba(44,207,191,.45);        /* block, tile and frame outlines */
+  --nx-dg-fill:#061312;                      /* block and tile fill, opaque so text never depends on the cube behind */
+  --nx-dg-fill-2:#0A2522;                    /* the "added" tile */
+  --nx-dg-draw:1200ms;                       /* timeline line draw */
+  --nx-dg-step:400ms;                        /* one week of the line: blocks and markers appear as the line reaches them */
 }
 body.case-nxp{background:var(--nx-bg)}
 /* skip link: its ring sits on the black page, where the global --accent ring is 3.8:1 */
@@ -27,14 +37,17 @@ body.case-nxp .skip:focus-visible{outline-color:var(--nx-accent)}
 main.nxp{position:relative;clip-path:inset(0)}
 main.nxp>:not(.nx-cube){position:relative;z-index:var(--z-content)}
 
-/* live cube layer (≥1024). The art box is the image's own ratio at full viewport height, centred on --nx-cube-x;
-   the image's black edges meet the black page, so the box needs no mask. cube.js sets the opacity and moves the art
-   (parallax, breathing). Starts at 0, so nothing shows before the script runs. */
-.nx-cube{display:none}
+/* cube layer, always at --nx-cube-dim. The art box is the image's own ratio, centred; the image's black edges meet the
+   black page, so the box needs no mask. ≥1024: fixed, full viewport height, on --nx-cube-x; cube.js moves the art
+   (parallax, breathing). <1024: a static image at the top of the body, behind the summary, no canvas. */
+.nx-cube{position:absolute;inset:0 0 auto 0;height:var(--nx-cube-h-sm);z-index:var(--z-bg);overflow:hidden;pointer-events:none;opacity:var(--nx-cube-dim)}
+.nx-cube-art{position:absolute;top:0;left:50%;height:100%;aspect-ratio:1472/840;transform:translateX(-50%)}
+.nx-cube-art img,.nx-cube-art canvas{position:absolute;inset:0;width:100%;height:100%}
+.nx-cube canvas{display:none}
 @media (min-width:1024px){
-  .nx-cube{display:block;position:fixed;inset:0;z-index:var(--z-bg);overflow:hidden;pointer-events:none;opacity:0}
-  .nx-cube-art{position:absolute;top:0;left:var(--nx-cube-x);height:100%;aspect-ratio:1472/840;transform:translateX(-50%);will-change:transform}
-  .nx-cube-art img,.nx-cube-art canvas{position:absolute;inset:0;width:100%;height:100%}
+  .nx-cube{position:fixed;inset:0;height:auto}
+  .nx-cube-art{left:var(--nx-cube-x);will-change:transform}
+  .nx-cube canvas{display:block}
 }
 /* reduced motion: the static image only */
 @media (prefers-reduced-motion:reduce){.nx-cube canvas{display:none}}
@@ -53,3 +66,69 @@ main.nxp{
 .nxp .cb-frame{background:transparent;border:1px solid var(--nx-frame-line)}
 /* cards: filled one step lighter (the light look is outline only) */
 .nxp .cb-card{background:var(--nx-surface)}
+
+/* ---- diagrams (§5.9): black, teal lines, the UI's cut-corner shape, Geist Mono caps labels, Onest text ---- */
+/* text alternative: each diagram's art is aria-hidden and carries a visually hidden list */
+.nx-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* cut-corner box: a teal outline (::before) under an opaque fill (::after), both clipped to the cut shape */
+.nx-cut{--cut:var(--nx-cut);--bd:var(--nx-dg-frame);--bg:var(--nx-dg-fill);position:relative;isolation:isolate}
+.nx-cut::before,.nx-cut::after{content:"";position:absolute;z-index:-1}
+.nx-cut::before{inset:0;background:var(--bd);clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+.nx-cut::after{inset:1px;background:var(--bg);clip-path:polygon(0 0,calc(100% - var(--cut) + .4px) 0,100% calc(var(--cut) - .4px),100% 100%,0 100%)}
+.nx-dg .t-mono{color:var(--nx-accent)}
+
+/* A · Lean UX timeline: full bleed (edge to edge), content inside 90rem. Desktop: three week columns over one teal line,
+   client-alignment diamonds on the line between weeks. Below 768: a vertical timeline. */
+.nx-process{margin-inline:calc(50% - 50vw)}
+.nx-p{position:relative;display:grid;grid-template-columns:1fr 0 1fr 0 1fr;column-gap:1.25rem;max-width:90rem;margin-inline:auto;padding-inline:max(1.25rem, env(safe-area-inset-left, 0px))}
+@media (min-width:640px){.nx-p{padding-inline:2rem}}
+.nx-p-col{grid-row:1;display:flex;flex-direction:column;gap:1rem}
+.nx-p-c1{grid-column:1}.nx-p-c2{grid-column:3}.nx-p-c3{grid-column:5}
+.nx-p-loop{display:flex;align-items:center;gap:.5rem}
+.nx-p-loop svg{width:1.25rem;height:1.25rem;flex:none;color:var(--nx-accent)}
+.nx-p-block{flex:1;padding:1.5rem}
+.nx-p-block ul{margin-top:1rem;display:grid;gap:.5rem;color:var(--nx-text)}
+/* a tick from each block down to the line */
+.nx-p-col::after{content:"";align-self:center;width:1px;height:1.5rem;margin-top:-1rem;background:var(--nx-dg-frame)}
+.nx-p-line{grid-row:2;grid-column:1/-1;margin-inline:calc(50% - 50vw);height:1px;background:var(--nx-accent);transform-origin:left center}
+.nx-p-mark{grid-row:2;justify-self:center;display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:-.375rem;white-space:nowrap}
+.nx-p-m1{grid-column:2}.nx-p-m2{grid-column:4}
+.nx-p-mark i{display:block;width:.75rem;height:.75rem;background:var(--nx-accent);transform:rotate(45deg)}
+@media (max-width:767px){
+  .nx-p{grid-template-columns:1fr;padding-left:calc(max(1.25rem, env(safe-area-inset-left, 0px)) + 2rem)}
+  .nx-p-col,.nx-p-mark{grid-row:auto;grid-column:1}
+  /* auto placement, so the absolute line is positioned against the padding box, not inside the column */
+  .nx-p .nx-p-line{grid-row:auto;grid-column:auto}
+  .nx-p-col::after{display:none}
+  .nx-p-line{position:absolute;top:0;bottom:0;left:calc(max(1.25rem, env(safe-area-inset-left, 0px)) + .5rem);width:1px;height:auto;margin:0;transform-origin:center top}
+  .nx-p-mark{flex-direction:row;justify-self:start;gap:1rem;margin:0;padding-block:1.5rem;margin-left:calc(-1.5rem - .375rem)}
+}
+
+/* B · how a use case is built: components → reference implementation (Retail) inside the use case, apparel branch below */
+.nx-b{display:grid;grid-template-columns:minmax(12rem,15rem) 3rem 1fr;align-items:center;gap:1.5rem}
+.nx-b-parts{display:flex;flex-direction:column;gap:.75rem}
+.nx-b-arrow{color:var(--nx-accent)}
+.nx-b-arrow svg{display:block;width:100%;height:1.5rem}
+.nx-b-case{--bd:var(--nx-accent);--bg:var(--nx-bg);padding:1.5rem}
+.nx-b-impl{padding:1.25rem;margin-top:1rem}
+.nx-b-slots{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1rem}
+.nx-b-tile{padding:.75rem 1rem;min-width:10rem;color:var(--nx-text)}
+.nx-b-tile .t-mono{display:block;margin-bottom:.25rem}
+.nx-b-add{--bd:var(--nx-accent);--bg:var(--nx-dg-fill-2)}
+/* the branch: a short teal line from the reference implementation down to the apparel one */
+.nx-b-link{width:1px;height:1.25rem;margin-left:2.5rem;background:var(--nx-accent)}
+.nx-b-link+.nx-b-impl{margin-top:0}
+@media (max-width:767px){
+  .nx-b{grid-template-columns:1fr}
+  .nx-b-arrow svg{width:3rem;margin-inline:auto;transform:rotate(90deg)}
+}
+
+/* scroll animation (diagrams.js adds .nx-anim, then .is-in once the diagram is in view; never under reduced motion,
+   where case.css also drops every transition) */
+.nx-anim .nx-p-line{transform:scaleX(0)}
+.nx-anim .nx-p-col,.nx-anim .nx-p-mark{opacity:0;transform:translateY(.75rem)}
+.nx-anim.is-in .nx-p-line{transform:none;transition:transform var(--nx-dg-draw) var(--ease-line)}
+.nx-anim.is-in .nx-p-col,.nx-anim.is-in .nx-p-mark{opacity:1;transform:none;transition:opacity var(--dur-item) var(--ease-spring),transform var(--dur-item) var(--ease-spring);transition-delay:calc(var(--i) * var(--nx-dg-step))}
+@media (max-width:767px){.nx-anim .nx-p-line{transform:scaleY(0)}}
+.nx-anim .nx-b-slots .nx-b-tile{opacity:0;transform:translateX(-1.5rem)}
+.nx-anim.is-in .nx-b-slots .nx-b-tile{opacity:1;transform:none;transition:opacity var(--dur-item) var(--ease-spring),transform var(--dur-item) var(--ease-spring);transition-delay:calc(var(--i) * var(--nx-dg-step) / 2)}
