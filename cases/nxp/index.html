@@ -21,6 +21,9 @@
 </head>
 <body class="case-nxp">
 
+<!-- live cube layer (DESIGN.md §5.9): fixed behind the page at >=1024, driven by cube.js; decorative -->
+<div class="nx-cube" aria-hidden="true"><div class="nx-cube-art"><img src="assets/nxp-cover.webp" alt="" width="1472" height="840" decoding="async" fetchpriority="high"><canvas></canvas></div></div>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-logo" viewBox="0 0 48 48"><path fill="currentColor" d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z"/></symbol>
   <symbol id="i-r" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
@@ -64,14 +67,10 @@
 <main id="main" class="nxp">
   <!-- NXP case body (DESIGN.md §4.17 "Case body components"). Facts: cases/nxp/BRIEF.md; copy: ~/Documents/nxp_screens/nxp-copy.md (v1).
        Theme: nxp.css (scope .nxp, tokens --nx-*, §5.9).
-       Images: cases/nxp/assets/*.webp (neutral names, one use each), loading="lazy" except the cover. Product name on screens: NEX only;
+       Images: cases/nxp/assets/*.webp (neutral names, one use each), all loading="lazy" (the cube is the background layer). Product name on screens: NEX only;
        the client logo, the old product name and avatar photos are masked in the sources (avatars as flat #3a3a3a squares).
        Delete every [Todo] placeholder and .cb-todo before the case is frozen. -->
 
-  <div class="shell cb-section cb-flow">
-    <!-- cover: first image on the page, no loading="lazy". A live animated cover may replace it later (2400 px master stays outside git). -->
-    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><img src="assets/nxp-cover.webp" alt="Key visual: a dark cube built from blocks, lit by teal edges and points, on a black background with circuit lines." width="1472" height="840" decoding="async"></div></div></figure>
-  </div>
 
   <section class="shell cb-summary" aria-label="Summary">
     <dl>
@@ -242,5 +241,6 @@
 </section>
 
 <script src="../shared/case.js"></script>
+<script src="cube.js"></script>
 </body>
 </html>

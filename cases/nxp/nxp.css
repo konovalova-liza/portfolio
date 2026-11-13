@@ -1,11 +1,15 @@
-/* NXP case theme (DESIGN.md §5.9): dark case body, scoped to cases/nxp/ only. Linked after ../shared/case.css.
-   Layering: ink intro/end sheets (#0a0a0a, unchanged) → green-black body (--nx-bg) with two static teal glows → figures and cards
-   one step lighter (--nx-surface). The .cb-* components are themed by remapping the shell variables inside main.nxp; a selector
-   is overridden only where a component's light look isn't a variable (frame border, cards, skip-link ring, glows). */
+/* NXP case theme (DESIGN.md §5.9): one continuous pure-black page over a fixed live cube layer, scoped to cases/nxp/ only.
+   Linked after ../shared/case.css.
+   Layering (≥1024): body #000 → .nx-cube (fixed, full viewport, --z-bg: cover image + cube.js canvas) → hero, main and end block
+   (transparent, --z-content). The hero shows the cube at full brightness behind a left-to-right black fade; once body text can
+   reach the viewport the layer is at --nx-cube-dim (cube.js sets the opacity from the scroll position).
+   Below 1024: no fixed layer; the cube is a static image at the bottom of the hero, under the text, never behind it.
+   The .cb-* components are themed by remapping the shell variables inside main.nxp. Shell overrides (hero/end transparent,
+   hero height, chip width) are a scoped exception to §4.17, documented in §5.9. */
 
 /* tokens: --nx-* (§5.9), used only on this page */
 .case-nxp{
-  --nx-bg:#0B1312;
+  --nx-bg:#000000;
   --nx-surface:#131D1C;
   --nx-surface-2:#1A2625;
   --nx-text:#E4EDEB;
@@ -13,13 +17,41 @@
   --nx-text-3:#8A9C98;
   --nx-line:rgba(255,255,255,.08);
   --nx-accent:#2CCFBF;
-  --nx-glow-top:radial-gradient(1100px 560px at 18% 0, rgba(44,207,191,.10), transparent 70%);
-  --nx-glow-04:radial-gradient(55% 60% at 78% 55%, rgba(44,207,191,.07), transparent 70%);
+  --nx-frame-line:rgba(44,207,191,.15);
+  --nx-cube-x:72%;
+  --nx-cube-dim:.18;
+  --nx-hero-fade:linear-gradient(90deg, #000 0, #000 max(48%, 44rem), rgba(0,0,0,0) calc(max(48%, 44rem) + 12rem));
+  --nx-header-fade:linear-gradient(180deg, #000 0, #000 5.5rem, rgba(0,0,0,0) 9.5rem);   /* header row (nav, clock chip) stays on black */
+  --nx-hero-img-h:20rem;
 }
-/* the area behind the intro's and end block's rounded corners is the body colour, not white */
 body.case-nxp{background:var(--nx-bg)}
-/* skip link: its ring sits on the dark body, where the global --accent ring is 3.4:1 */
+/* skip link: its ring sits on the black page, where the global --accent ring is 3.8:1 */
 body.case-nxp .skip:focus-visible{outline-color:var(--nx-accent)}
+
+/* shell sheets: transparent on the black page, so the page reads as one surface and the cube shows through */
+.case-nxp .ink{background:transparent}
+.case-nxp .case-hero,.case-nxp .case-end{border-radius:0}
+.case-nxp .case-hero,.case-nxp main,.case-nxp .case-end{position:relative;z-index:var(--z-content)}
+/* chips wrap within the text column (the same 40rem as summary and context), so no text reaches the cube */
+.case-nxp .intro .tags{max-width:40rem}
+
+/* live cube layer (≥1024). The art box is the image's own ratio at full viewport height, centred on --nx-cube-x;
+   the image's black edges meet the black page, so the box needs no mask. cube.js moves it (parallax, breathing). */
+.nx-cube{display:none}
+@media (min-width:1024px){
+  .nx-cube{display:block;position:fixed;inset:0;z-index:var(--z-bg);overflow:hidden;pointer-events:none}
+  .nx-cube-art{position:absolute;top:0;left:var(--nx-cube-x);height:100%;aspect-ratio:1472/840;transform:translateX(-50%);will-change:transform}
+  .nx-cube-art img,.nx-cube-art canvas{position:absolute;inset:0;width:100%;height:100%}
+  .case-nxp .case-hero{min-height:100svh;background:var(--nx-header-fade),var(--nx-hero-fade)}
+}
+/* reduced motion: the static image only */
+@media (prefers-reduced-motion:reduce){.nx-cube canvas{display:none}}
+/* below 1024: the cube sits under the hero text at full brightness, faded in from the black above */
+@media (max-width:1023px){
+  .case-nxp .case-hero{background:linear-gradient(#000 0, #000 calc(100% - var(--nx-hero-img-h)), rgba(0,0,0,0) calc(100% - var(--nx-hero-img-h) + 6rem)),
+    url(assets/nxp-cover.webp) center bottom / auto var(--nx-hero-img-h) no-repeat}
+  .case-nxp .intro{padding-bottom:calc(5rem + var(--nx-hero-img-h))}
+}
 
 /* mapping: the shell variables the .cb-* components already use */
 main.nxp{
@@ -29,12 +61,9 @@ main.nxp{
   --line:var(--nx-line); --border-ctl:rgba(255,255,255,.3);
   --accent:var(--nx-accent); --ring-light:var(--nx-accent);
   color:var(--text);                 /* body sets its colour from the light :root, so main re-applies it */
-  background:var(--nx-glow-top);     /* glow 1: behind the top of the body, over the body's --nx-bg */
 }
-/* glow 2: behind section 04 (visual direction), the cube's section; percentages keep it inside the section box */
-.nxp #visual{background:var(--nx-glow-04)}
 
-/* figures: a hairline on the frame, since --nx-surface alone is only one step off the body */
-.nxp .cb-frame{border:1px solid var(--nx-line)}
+/* figures: no mat, a transparent frame with a teal hairline, so screenshots sit straight on the black page */
+.nxp .cb-frame{background:transparent;border:1px solid var(--nx-frame-line)}
 /* cards: filled one step lighter (the light look is outline only) */
 .nxp .cb-card{background:var(--nx-surface)}
