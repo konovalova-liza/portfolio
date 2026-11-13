@@ -1,0 +1,233 @@
+<!doctype html>
+<!-- Copy to cases/<slug>/index.html. Do not restyle the shell; change it only in cases/shared/case.css.
+     Shell spec: DESIGN.md §4.17. Replace every [placeholder]. The case's own styles go inside <main> under its own
+     scope class and token prefix (like .digest / --dg-*), documented as a DESIGN.md §5.x section.
+     The droplet cursor (#drop, #lens) is added to this template after backlog #25. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Next Experience Platform — Konovalova</title>
+<meta name="description" content="[Todo: one-sentence summary of the case.]">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%230a0a0a' d='M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Geist+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../../shared/type.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../shared/case.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 48 48"><path fill="currentColor" d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z"/></symbol>
+  <symbol id="i-r" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-l" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-ur" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
+</svg>
+
+<a class="skip t-label" href="#main">Skip to content</a>
+
+<div class="ink case-hero">
+  <header class="top" id="hdr">
+    <div class="shell">
+      <a class="logo" href="../../prototype/index.html" aria-label="Liza Konovalova, home" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg>Konovalova</a>
+      <nav aria-label="Primary"><ul class="pnav t-label">
+        <li><a href="../../prototype/index.html#home">Home</a></li>
+        <li><a href="../../prototype/index.html#works" aria-current="page">Work</a></li>
+        <li><a href="../../prototype/index.html#services">Approach</a></li>
+        <li><a href="../../prototype/index.html#about">About</a></li>
+        <li><a href="../../prototype/index.html#stats">Numbers</a></li>
+      </ul></nav>
+      <div class="chip t-caption"><span class="lbl">Kyiv time</span><span class="t t-mono" data-time>9:41am</span><span class="sep">•</span><span class="dt t-mono" data-date>5 November, 2026</span></div>
+    </div>
+  </header>
+
+  <section class="shell intro" id="intro" aria-labelledby="intro-title">
+    <a class="back t-label" href="../../prototype/index.html#works" data-holo="md"><svg class="ico" aria-hidden="true"><use href="#i-l"/></svg>All work</a>
+    <div><span class="eyebrow t-mono">Case study · Developer platform</span></div>
+    <h1 class="t-h1" id="intro-title" tabindex="-1">Next Experience Platform</h1>
+    <p class="sum t-body">[Todo: one-sentence summary: what the product is and what changed.]</p>
+    <ul class="tags t-body-sm" aria-label="Project facts">
+      <li><b class="t-mono">Role</b>UI/UX designer</li>
+      <li><b class="t-mono">Team</b>Design lead, 2 designers, client</li>
+      <li><b class="t-mono">Year</b>2024</li>
+      <li><b class="t-mono">Platform</b>Web (desktop)</li>
+      <li><b class="t-mono">Status</b>Clickable prototype, internal demo</li>
+    </ul>
+    <p class="ctx t-body">[Todo: context paragraph: the product, the problem and my part in it.]</p>
+  </section>
+</div>
+
+<main id="main">
+  <!-- NXP case body (DESIGN.md §4.17 "Case body components"). Facts: cases/nxp/BRIEF.md. Theme later: scope .nxp, tokens --nx-*, §5.9.
+       Images: each .cb-ph gray box stands for an <img src alt width height loading="lazy">; the cover is the first image and drops loading="lazy".
+       Delete every [Todo] and .cb-todo before the case is frozen. -->
+
+  <div class="shell cb-section cb-flow">
+    <!-- cover: first image on the page, eager (no loading="lazy"). Placeholder for a live animated cover later. -->
+    <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x9 t-mono" role="img" aria-label="[Todo: cover: key visual and home screen]">[Todo: cover: key visual and home screen · 16:9]</div></div></div><figcaption class="t-body-sm">[Todo: cover caption.]</figcaption></figure>
+  </div>
+
+  <section class="shell cb-summary" aria-label="Summary">
+    <dl>
+      <div><dt class="t-mono">Problem</dt><dd class="t-body">[Todo: problem, one or two lines.]</dd></div>
+      <div><dt class="t-mono">What I did</dt><dd class="t-body">[Todo: what I did, one or two lines.]</dd></div>
+      <div><dt class="t-mono">Outcome</dt><dd class="t-body">[Todo: outcome, one or two lines.]</dd></div>
+    </dl>
+  </section>
+
+  <section class="shell cb-section" id="context" aria-labelledby="context-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">01</span>Context &amp; role</span>
+      <h2 class="t-h2" id="context-h">[Todo: context and role heading]</h2>
+    </div>
+    <div class="cb-prose t-body">
+      <p>[Todo: context and role paragraph.]</p>
+      <p>[Todo: context and role paragraph.]</p>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="problem" aria-labelledby="problem-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">02</span>Problem &amp; users</span>
+      <h2 class="t-h2" id="problem-h">[Todo: problem and users heading]</h2>
+      <p class="cb-lead t-h5">[Todo: lead in one sentence.]</p>
+    </div>
+    <div class="cb-prose t-body">
+      <p>[Todo: problem and users paragraph.]</p>
+      <p>[Todo: problem and users paragraph.]</p>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="process" aria-labelledby="process-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">03</span>Process: Lean UX in three weeks</span>
+      <h2 class="t-h2" id="process-h">[Todo: process: lean ux in three weeks heading]</h2>
+    </div>
+    <div class="cb-flow">
+    <div class="cb-prose t-body">
+      <p>[Todo: process paragraph.]</p>
+      <p>[Todo: process paragraph.]</p>
+    </div>
+      <aside class="cb-todo" aria-label="Todo">
+        <span class="t-mono">Todo</span>
+        <p class="t-body-sm">Process diagram (3 weekly iterations).</p>
+      </aside>
+      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: concept]">[Todo: concept · 16:10]</div></div></div><figcaption class="t-body-sm">[Todo: caption: concept.]</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="visual" aria-labelledby="visual-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">04</span>Visual direction</span>
+      <h2 class="t-h2" id="visual-h">[Todo: visual direction heading]</h2>
+    </div>
+    <div class="cb-flow">
+    <div class="cb-prose t-body">
+      <p>[Todo: visual direction paragraph.]</p>
+      <p>[Todo: visual direction paragraph.]</p>
+    </div>
+      <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x9 t-mono" role="img" aria-label="[Todo: login]">[Todo: login · 16:9]</div></div></div><figcaption class="t-body-sm">[Todo: caption: login.]</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="home" aria-labelledby="home-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">05</span>Home: sector → segment</span>
+      <h2 class="t-h2" id="home-h">[Todo: home: sector → segment heading]</h2>
+    </div>
+    <div class="cb-feature">
+      <div class="cb-ftext"><h3 class="t-h4">[Todo: home feature heading]</h3><p class="t-body">[Todo: what it does and why it matters, two or three lines.]</p></div>
+      <div class="cb-fmedia cb-stack">
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: home screen A]">[Todo: home screen A · 16:10]</div></div></div></figure>
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: home screen B]">[Todo: home screen B · 16:10]</div></div></div></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="results" aria-labelledby="results-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">06</span>Use-case results</span>
+      <h2 class="t-h2" id="results-h">[Todo: use-case results heading]</h2>
+    </div>
+    <div class="cb-feature cb-feature--flip">
+      <div class="cb-ftext"><h3 class="t-h4">[Todo: results feature heading]</h3><p class="t-body">[Todo: what it does and why it matters, two or three lines.]</p></div>
+      <div class="cb-fmedia cb-stack">
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: use-case results screen A]">[Todo: use-case results screen A · 16:10]</div></div></div></figure>
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: use-case results screen B]">[Todo: use-case results screen B · 16:10]</div></div></div></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="use-case" aria-labelledby="use-case-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">07</span>Use-case page (by a teammate)</span>
+      <h2 class="t-h2" id="use-case-h">[Todo: use-case page (by a teammate) heading]</h2>
+    </div>
+    <div class="cb-flow">
+      <div class="cb-prose t-body">
+        <p>[Todo: two sentences of context; the page was designed by a teammate.]</p>
+      </div>
+      <div class="cb-pair">
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: use-case page A]">[Todo: use-case page A · 16:10]</div></div></div><figcaption class="t-body-sm">[Todo: caption: use-case page A.]</figcaption></figure>
+        <figure class="cb-figure"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: use-case page B]">[Todo: use-case page B · 16:10]</div></div></div><figcaption class="t-body-sm">[Todo: caption: use-case page B.]</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="library" aria-labelledby="library-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">08</span>Component library</span>
+      <h2 class="t-h2" id="library-h">[Todo: component library heading]</h2>
+    </div>
+    <div class="cb-flow">
+    <div class="cb-prose t-body">
+      <p>[Todo: component library paragraph.]</p>
+      <p>[Todo: component library paragraph.]</p>
+    </div>
+      <figure class="cb-figure cb-figure--inset"><div class="cb-frame"><div class="cb-media"><div class="cb-ph cb-ph--16x10 t-mono" role="img" aria-label="[Todo: component library]">[Todo: component library · 16:10]</div></div></div><figcaption class="t-body-sm">[Todo: caption: component library.]</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="outcome" aria-labelledby="outcome-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">09</span>Outcome</span>
+      <h2 class="t-h2" id="outcome-h">[Todo: outcome heading]</h2>
+    </div>
+    <div>
+      <ul class="cb-outcomes t-body">
+        <li>[Todo: qualitative outcome 1]</li>
+        <li>[Todo: qualitative outcome 2]</li>
+        <li>[Todo: qualitative outcome 3]</li>
+      </ul>
+      <p class="cb-note t-caption">[Todo: note, e.g. metrics weren't tracked.]</p>
+    </div>
+  </section>
+
+  <section class="shell cb-section" id="retro" aria-labelledby="retro-h">
+    <div class="cb-head">
+      <span class="eyebrow t-mono"><span class="cb-num">10</span>What I'd do differently</span>
+      <h2 class="t-h2" id="retro-h">[Todo: what i'd do differently heading]</h2>
+    </div>
+    <div class="cb-prose t-body">
+      <p>[Todo: lesson.]</p>
+      <p>[Todo: lesson.]</p>
+    </div>
+  </section>
+</main>
+
+<!-- End block (DESIGN.md §4.17). With a next case, replace the left link with:
+  <a class="cend-next" href="../[next-slug]/index.html" data-holo="md"><span class="k t-mono">Next case<svg class="ico r" aria-hidden="true"><use href="#i-r"/></svg></span><span class="t t-h4">[Next case title]</span></a>
+-->
+<section class="ink case-end" id="case-end" aria-label="Next">
+  <div class="shell">
+    <a class="cend-next" href="../../prototype/index.html#works" data-holo="md"><span class="t t-h4"><svg class="ico l" aria-hidden="true"><use href="#i-l"/></svg>All work</span></a>
+    <a class="pill light arrow" href="../../prototype/index.html#contact" data-holo="md">Start a conversation<span class="bd"><svg class="ico ur" aria-hidden="true"><use href="#i-ur"/></svg></span></a>
+  </div>
+</section>
+
+<script src="../shared/case.js"></script>
+</body>
+</html>
