@@ -21,3 +21,9 @@ The design system lives in [DESIGN.md](DESIGN.md) (currently v1, extracted from 
 - Retire a worktree: status clean → branch pushed and merged → back up untracked/ignored files with a `shasum` check → `git worktree remove` (no `--force`) → `git worktree prune`, on this Mac only.
 - One local server, started from the session's own folder; report its port and branch.
 - Git diagnostics only from Claude Code on this Mac; remote/cloud tools see different paths and report false "prunable".
+
+## Releases
+
+- `main` is the live site (GitHub Pages, konovalova.store). Release by fast-forwarding `main` to `portfolio-2` (`git merge --ff-only`); never force-push.
+- **Bump `?v=` on every release to main:** every local CSS and JS reference (`<link rel="stylesheet">`, `<script src>`) in `index.html`, `about/`, `cases/*/` and `cases/_template/` carries `?v=YYYYMMDD` (current: `20261113`). Not images, fonts or external URLs.
+- Backup of the pre-2.0 live site: tag `site-v1` (= `5c01b3a`). Rollback only if Liza asks: `git push origin site-v1:main --force`.
