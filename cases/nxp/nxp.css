@@ -1,0 +1,40 @@
+/* NXP case theme (DESIGN.md §5.9): dark case body, scoped to cases/nxp/ only. Linked after ../shared/case.css.
+   Layering: ink intro/end sheets (#0a0a0a, unchanged) → green-black body (--nx-bg) with two static teal glows → figures and cards
+   one step lighter (--nx-surface). The .cb-* components are themed by remapping the shell variables inside main.nxp; a selector
+   is overridden only where a component's light look isn't a variable (frame border, cards, skip-link ring, glows). */
+
+/* tokens: --nx-* (§5.9), used only on this page */
+.case-nxp{
+  --nx-bg:#0B1312;
+  --nx-surface:#131D1C;
+  --nx-surface-2:#1A2625;
+  --nx-text:#E4EDEB;
+  --nx-text-2:#A6B5B2;
+  --nx-text-3:#8A9C98;
+  --nx-line:rgba(255,255,255,.08);
+  --nx-accent:#2CCFBF;
+  --nx-glow-top:radial-gradient(1100px 560px at 18% 0, rgba(44,207,191,.10), transparent 70%);
+  --nx-glow-04:radial-gradient(55% 60% at 78% 55%, rgba(44,207,191,.07), transparent 70%);
+}
+/* the area behind the intro's and end block's rounded corners is the body colour, not white */
+body.case-nxp{background:var(--nx-bg)}
+/* skip link: its ring sits on the dark body, where the global --accent ring is 3.4:1 */
+body.case-nxp .skip:focus-visible{outline-color:var(--nx-accent)}
+
+/* mapping: the shell variables the .cb-* components already use */
+main.nxp{
+  color-scheme:dark;
+  --background:var(--nx-bg); --surface:var(--nx-surface); --surface-2:var(--nx-surface-2); --surface-soft:rgba(19,29,28,.6);
+  --foreground:var(--nx-text); --text:var(--nx-text); --text-2:var(--nx-text-2); --text-3:var(--nx-text-3);
+  --line:var(--nx-line); --border-ctl:rgba(255,255,255,.3);
+  --accent:var(--nx-accent); --ring-light:var(--nx-accent);
+  color:var(--text);                 /* body sets its colour from the light :root, so main re-applies it */
+  background:var(--nx-glow-top);     /* glow 1: behind the top of the body, over the body's --nx-bg */
+}
+/* glow 2: behind section 04 (visual direction), the cube's section; percentages keep it inside the section box */
+.nxp #visual{background:var(--nx-glow-04)}
+
+/* figures: a hairline on the frame, since --nx-surface alone is only one step off the body */
+.nxp .cb-frame{border:1px solid var(--nx-line)}
+/* cards: filled one step lighter (the light look is outline only) */
+.nxp .cb-card{background:var(--nx-surface)}

@@ -949,6 +949,63 @@ The GAAPT case (`cases/gaapt/`, added 2026-11-12) has a dark body to match the p
 
 **Rules.** Fonts unchanged (Onest + Geist Mono), so the case still belongs to the portfolio. No colours beyond this table. Text never below `--gp-text-3`.
 
+### 5.9 NXP case theme
+The NXP case (`cases/nxp/`, added 2026-11-13) has a dark body taken from the product's key visual: a dark cube lit by teal edges. Scope: `body.case-nxp` and `main.nxp`, styles in `cases/nxp/nxp.css`, linked only from `cases/nxp/index.html` after `../shared/case.css`. The shell (`cases/shared/`) and the template are unchanged; header, intro and end block are the usual `.ink` sheets.
+
+**How it differs from GAAPT (§5.8).** GAAPT is a lighter teal-graphite body with near-black screenshots on mats and every block in a panel. NXP is darker and greener, almost black, with figures and cards **one step lighter** than the body, the summary and outcomes on plain rules (no panels), and the teal used as light (two glows), not as surfaces.
+
+**Layering** (top to bottom):
+1. Header + intro: the unchanged `.ink` sheet (`--ink` `#0a0a0a`) with rounded bottom corners. `--nx-bg` is only 1.05:1 against it, so the top glow (below) is what makes the sheet's lower edge and corners read. Don't remove glow 1 without lifting `--nx-bg`.
+2. Case body: green-black `--nx-bg`, cooler and greener than `--ink`, not navy. `body.case-nxp` takes this colour too, so the area behind the corners is not white.
+3. Figures and cards: `--nx-surface`, one step lighter, with a `--nx-line` hairline on the frame.
+4. End block: the unchanged `.ink` sheet.
+
+**Tokens** (on `.case-nxp`, used only on this page).
+
+| Token | Value | Where / why |
+|---|---|---|
+| `--nx-bg` | `#0B1312` | Body background: near-black with a green-teal cast, from the product's dark surfaces |
+| `--nx-surface` | `#131D1C` | One step lighter: figure frames, cards |
+| `--nx-surface-2` | `#1A2625` | Image placeholder boxes (`.cb-ph`) inside the frames |
+| `--nx-text` | `#E4EDEB` | Primary text: headings, body copy (off-white, slightly green) |
+| `--nx-text-2` | `#A6B5B2` | Secondary text: leads, captions, labels, card bodies |
+| `--nx-text-3` | `#8A9C98` | Tertiary text, mapped for completeness; the minimum for any text on this page |
+| `--nx-line` | `rgba(255,255,255,.08)` | Hairlines: summary and outcome rules, card borders, figure frame border |
+| `--nx-accent` | `#2CCFBF` | The cube's teal. Links, focus ring (inside `main` and on the skip link) and the glow colour. One teal only, no second accent |
+| `--nx-glow-top` | `radial-gradient(1100px 560px at 18% 0, rgba(44,207,191,.10), transparent 70%)` | Glow 1, on `main.nxp`: behind the top of the body, under the intro sheet |
+| `--nx-glow-04` | `radial-gradient(55% 60% at 78% 55%, rgba(44,207,191,.07), transparent 70%)` | Glow 2, on `.nxp #visual`: behind section 04 (visual direction), the cube's own section |
+
+**Mapping** inside `main.nxp` (same pattern as §5.8, so no component CSS is rewritten): `--background` → `--nx-bg`; `--surface` → `--nx-surface`; `--surface-2` → `--nx-surface-2`; `--surface-soft` → `rgba(19,29,28,.6)`; `--foreground` / `--text` → `--nx-text`; `--text-2` → `--nx-text-2`; `--text-3` → `--nx-text-3`; `--line` → `--nx-line`; `--border-ctl` → `rgba(255,255,255,.3)` (the dashed Todo border, decorative); `--accent` and `--ring-light` → `--nx-accent`. `main.nxp` also sets `color:var(--text)`, `color-scheme:dark` and glow 1.
+
+**Selectors overridden beyond variables:**
+- `.cb-frame`: `1px solid --nx-line`, because `--nx-surface` alone is only 1.09:1 against the body.
+- `.cb-card`: `--nx-surface` fill (the light card is outline only).
+- `body.case-nxp .skip:focus-visible`: ring `--nx-accent`; the skip link sits outside `main`.
+- `.nxp #visual`: glow 2.
+
+**Scoped exception** (this page only):
+- **Accent.** The global `--accent` `#4f5bd5` is 3.4:1 on `--nx-bg` and fails for links, so inside this case it is replaced by `--nx-accent` (9.66:1), which is also the focus ring. D1/D7 still hold for the portfolio shell.
+
+**Tags.** Neutral §4.17 style through the remapped variables: no teal, no colour difference.
+
+**Glow rule.**
+- Two glows, both static (no animation, no scroll or pointer link), both `--nx-accent` at low alpha: `.10` at the top, `.07` behind section 04. No other glows on the page.
+- Each fades to transparent at 70% of its ellipse. Glow 2 is sized in percent of the section box, so it never shows a hard edge.
+- Text over a glow must keep 4.5:1 at the glow's brightest point (the centre colour below). A new or stronger glow is checked against `--nx-text-3` first.
+
+**Contrast** (WCAG 2.x). "Glow 1 / Glow 2 peak" = `--nx-bg` with the glow's centre alpha of `--nx-accent` over it: `#0E2623` and `#0D201E`.
+
+| Text | `--nx-bg` | Glow 1 peak | Glow 2 peak | `--nx-surface` | `--nx-surface-2` | `--surface-soft` (on bg) |
+|---|---|---|---|---|---|---|
+| `--nx-text` | 15.78 | 13.34 | 14.18 | 14.43 | 13.07 | 15.00 |
+| `--nx-text-2` | 8.85 | 7.48 | 7.95 | 8.09 | 7.33 | 8.41 |
+| `--nx-text-3` | 6.53 | 5.52 | 5.87 | 5.97 | 5.41 | 6.21 |
+| `--nx-accent` | 9.66 | 8.17 | 8.68 | 8.84 | 8.00 | 9.18 |
+
+All pairs pass 4.5:1, so large text (3:1) passes too. Lowest: `--nx-text-3` on `--nx-surface-2`, 5.41. Focus ring `--nx-accent` vs `--nx-surface` 8.84 (≥3:1). Non-text: `--nx-surface` vs `--nx-bg` 1.09 and `--nx-bg` vs `--ink` 1.05, which is why the frame hairline and glow 1 exist.
+
+**Rules.** Fonts unchanged (Onest + Geist Mono). No colours beyond this table. Text never below `--nx-text-3`. No `--nx-*` outside `cases/nxp/`.
+
 ---
 
 ## 6. Accessibility rules
