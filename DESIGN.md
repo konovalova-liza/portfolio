@@ -10,6 +10,7 @@ How to read the doc:
 - **(v1)** means a value introduced or changed by the decisions of 2026-11-03.
 - **(proposed)** means a concrete value chosen to implement a decision. It is not an explicit decision and must be checked live in Stage 3.
 - `Lnnn` line references point to `prototype/index.html` at `320ad0d`.
+- **Homepage location (2026-11-13, launch prep):** the live homepage is the site root `index.html` (same content as the former `prototype/index.html`, paths for the root; hero images stay in `prototype/assets/`). `prototype/index.html` is now a redirect to `../` that keeps the URL hash. Mentions of `prototype/index.html` below refer to the homepage.
 
 ---
 
@@ -439,7 +440,7 @@ Tokens refer to §2. Where a component's v0 values are unchanged, the section do
   | Active | `scale(.98)` on `.menu-btn` |
 
 - **`aria-current`:** updates to the section in view and on nav click (T10).
-- **Items (2026-11-13):** Home · Work · About · Contact, on the homepage, every case page and the About page. Approach and Numbers are no longer nav items (their homepage sections stay). Home and Work scroll the homepage (`data-go` there, `#home` / `#works` links elsewhere); **About is a link to `about/index.html`**; Contact opens the contact modal (§4.9), via `prototype/index.html#contact` from other pages. On the homepage the About `a` takes the `.pnav` button styles.
+- **Items (2026-11-13):** Home · Work · About · Contact, on the homepage, every case page and the About page. Approach and Numbers are no longer nav items (their homepage sections stay). Home and Work scroll the homepage (`data-go` there, `#home` / `#works` links elsewhere); **About is a link to `about/index.html`**; Contact opens the contact modal (§4.9), via `index.html#contact` (site root) from other pages. On the homepage the About `a` takes the `.pnav` button styles.
 
 ### 4.8 Band "Research / Design / → / Ship"
 - **Status:** Placeholder words (D5). The first word changed from "I" to "Research" on 2026-11-04.
@@ -585,6 +586,7 @@ Opened by every `[data-contact]` trigger ("Let's talk", "Contact", "Start a conv
 - **Droplet:** `data-holo="lg"` (radius 72, magnet), same as case cards.
 - **Motion:** `.rv` entrance, `--y:24px`, stagger `--stagger-list` (0–400ms).
 - **Placeholders:** unknown copy is written as "Description TBD" / "Tag" and marked `<!-- TBD -->` in the markup (Appmatrix, 2026-11-04).
+- **Not built yet (2026-11-13, Portfolio 2.0):** all six cards are `<a class="pc" role="link" aria-disabled="true">` with no `href` (not focusable, not a link target) and no `data-holo`. `cursor:default`; the hover/focus/active lift applies only to `.pc:not([aria-disabled])`. The title sits in `.pc-hd` (flex, `space-between`, gap `.75rem`) with a **"Soon" badge** `.pc-soon.t-mono`: `1px --line-on-ink` outline, `--r-pill`, padding `.25rem .75rem` (the §4.17 tag padding), `--on-ink-2`. Remove the badge and restore the `href` when a case ships.
 
 ### 4.16 Accordion row `.acc` / `.srow`
 "What I do best" list. Replaces the link rows of §4.5: each row is a disclosure button. (v1, 2026-11-04)
@@ -625,19 +627,19 @@ Every case page shares one shell. (v1, 2026-11-05)
   - Load order: case stylesheet(s), then `shared/type.css`, then `shared/components.css`, then `case.css`, then the page's own `<style>`.
   - **Case fonts (2026-11-05).** A case body may use its project's own font plus at most one more font proposed in that case's chat: **two own fonts per case at most**. They are used only inside `<main>` under the case scope class (like `.digest`), never in the shell. The case's own sizes go into a short case token scale under its prefix (like `--dg-*`), documented in its §5.x section. **Minimum 12px for any text, 14px for reading text** (paragraphs, list items, answers).
 - **Header** (`header.top` inside `.ink.case-hero`, §4.7 single on-ink variant):
-  - Logo → `../../prototype/index.html`; `.pnav` Home / Work (`aria-current="page"`) → homepage anchors, About → `../../about/index.html`, Contact → `../../prototype/index.html#contact` (2026-11-13, §4.7 items); `.chip` Kyiv clock (`data-time`, `data-date`, filled by `case.js`). No menu button on case pages.
+  - Logo → `../../index.html`; `.pnav` Home / Work (`aria-current="page"`) → homepage anchors, About → `../../about/index.html`, Contact → `../../index.html#contact` (2026-11-13, §4.7 items); `.chip` Kyiv clock (`data-time`, `data-date`, filled by `case.js`). No menu button on case pages.
   - `.shell` row, `justify-content:space-between`, gap `1.5rem`, padding-block `1.25rem` → `1.5rem` (640). `.pnav` from 1024, `.chip` from 768.
   - States per §4.7: logo `scale(1.04)`; pnav `translateY(-2px)` + `--on-ink`; ring `--ring-ink`.
 - **Dark intro block** (`section.shell.intro`, same `.ink` sheet as the header; sheet corners `0 0 var(--r-card) var(--r-card)`):
   - Padding `2.5rem 0 5rem`, `3rem 0 7rem` at ≥1024.
-  - In order: `.back` "← All work" (→ `../../prototype/index.html#works`; `.t-label`, `--on-ink-2` → `--on-ink`, hover/focus `translateX(-4px)`, `--dur-micro` `--ease-hover`); `.eyebrow.t-mono` "Case study" (on ink, `margin-top:3rem`); `h1#intro-title` (`tabindex="-1"` so scripts can focus it; `.t-h1`, `max-width:18ch`; no ring on programmatic focus, `--ring-ink` on keyboard focus); `.sum` (`.t-body`, `--on-ink-2`, `max-width:40rem`, `margin-top:1.5rem`); `ul.tags` fact chips (`li` = `<b>` label + value: `1px --line-on-ink`, `--r-pill`, `.5rem 1rem`, `.t-body-sm` on the `ul`, `--on-ink-2`; label `<b class="t-mono">` `--on-ink-3`; gap `.5rem`, `margin-top:2rem`); `.ctx` context paragraph (`.t-body`, case text, `--on-ink-2`, `max-width:40rem`, `margin-top:3rem`).
+  - In order: `.back` "← All work" (→ `../../index.html#works`; `.t-label`, `--on-ink-2` → `--on-ink`, hover/focus `translateX(-4px)`, `--dur-micro` `--ease-hover`); `.eyebrow.t-mono` "Case study" (on ink, `margin-top:3rem`); `h1#intro-title` (`tabindex="-1"` so scripts can focus it; `.t-h1`, `max-width:18ch`; no ring on programmatic focus, `--ring-ink` on keyboard focus); `.sum` (`.t-body`, `--on-ink-2`, `max-width:40rem`, `margin-top:1.5rem`); `ul.tags` fact chips (`li` = `<b>` label + value: `1px --line-on-ink`, `--r-pill`, `.5rem 1rem`, `.t-body-sm` on the `ul`, `--on-ink-2`; label `<b class="t-mono">` `--on-ink-3`; gap `.5rem`, `margin-top:2rem`); `.ctx` context paragraph (`.t-body`, case text, `--on-ink-2`, `max-width:40rem`, `margin-top:3rem`).
 - **End block** (`section.ink.case-end#case-end`, `aria-label="Next"`; the board's "Skip the board" link targets `#case-end`):
   - Full-bleed `--ink` sheet across the whole viewport, top corners `var(--r-card) var(--r-card) 0 0` (mirrors the intro sheet). Content sits in `.shell`, so it uses the standard side gutter (§2.3).
   - **Compact (2026-11-05):** padding-block `2.5rem`, `3rem` at ≥1024 (half the earlier `5rem` / `6rem`). At 1440: 242 → 144px.
   - **Left: next case.** `a.cend-next` → `../<next-slug>/index.html`: `.k` "Next case →" (`.t-mono`, `--on-ink-2` → `--on-ink`) above `.t` the next case's title, gap `1rem`.
   - `.t` type: `.t-h4` (30px at ≥640, 24px below), `--on-ink`. The arrow icon is `1em`, so it scales with the text.
-  - **No next case yet (fallback, Digest today):** the same link with only `.t` "← All work" → `../../prototype/index.html#works`.
-  - **Right: contact button.** The shared `.pill.light.arrow` "Start a conversation" with the `↗` badge, the same component, text and size as the homepage footer CTA. It links to `../../prototype/index.html#contact`; the homepage opens the contact modal (§4.9) once the loader is done when the URL hash is `#contact`.
+  - **No next case yet (fallback, Digest today):** the same link with only `.t` "← All work" → `../../index.html#works`.
+  - **Right: contact button.** The shared `.pill.light.arrow` "Start a conversation" with the `↗` badge, the same component, text and size as the homepage footer CTA. It links to `../../index.html#contact`; the homepage opens the contact modal (§4.9) once the loader is done when the URL hash is `#contact`.
   - **Layout:** below 1024 stacked (column, gap `2rem`), both items full width; at ≥1024 one row, `align-items:center`, `justify-content:space-between` (the homepage `.fcta` breakpoint).
   - **States:** `.cend-next` hover/focus-visible: `.k` → `--on-ink`, the arrow nudges `translateX(4px)` (→) or `translateX(-4px)` (←), `--dur-micro` `--ease-hover`. The pill follows §4.1. Focus ring `--ring-ink` (2px, offset 2px) on both. Both are `data-holo="md"`.
   - The end block replaces any per-case "Back to all work" button: the left slot already covers it.
@@ -718,7 +720,22 @@ Every case page shares one shell. (v1, 2026-11-05)
       - **A frozen case contains zero Todo blocks.** Check with `grep -c cb-todo cases/<slug>/index.html` before freezing.
 
 ### 4.18 About page
-`about/index.html` (2026-11-13) is built from the case shell (`cases/_template/`, §4.17) with paths for its folder: header (nav `aria-current` on About), dark intro sheet (eyebrow, title, lead, fact chips, context), light body, end block. The body uses only `.cb-*` components, no case theme: **01 Experience** one Feature row per role (sticky text: company in `.t-body-sm`, role `h3.t-h4`, dates; media column: a Prose bullet list); **02 Skills** `ul.cb-outcomes`, one row per group, label `.t-mono` + value; **03 Education** one Prose line, then the contact links as shared `.pill.light.arrow` buttons (§4.1) in `.ab-links` (page style: `flex-wrap`, gap `.75rem`). End block: left `.cend-next` "Selected work →" to `prototype/index.html#works`, right the standard contact button. Copy: `~/Documents/nxp_screens/about-copy.md`, from the CV. No phone number on the site.
+`about/index.html` (2026-11-13) is built from the case shell (`cases/_template/`, §4.17) with paths for its folder: header (nav `aria-current` on About), dark intro sheet (eyebrow, title, lead, fact chips, context), light body, end block. The body uses only `.cb-*` components, no case theme: **01 Experience** one Feature row per role (sticky text: company in `.t-body-sm`, role `h3.t-h4`, dates; media column: a Prose bullet list); **02 Skills** `ul.cb-outcomes`, one row per group, label `.t-mono` + value; **03 Education** one Prose line, then the contact links as shared `.pill.light.arrow` buttons (§4.1) in `.ab-links` (page style: `flex-wrap`, gap `.75rem`). End block: left `.cend-next` "Selected work →" to `index.html#works`, right the standard contact button. Copy: `~/Documents/nxp_screens/about-copy.md`, from the CV. No phone number on the site.
+
+### 4.19 In-progress notice `.wip`
+Homepage, `#works`, directly above "Other projects" (2026-11-13). Tells visitors that the small project cards are being rebuilt as full case studies.
+
+- **Markup:** `aside.wip.rv` (`role="note"`, `aria-label="Portfolio in progress"`) with `span.eyebrow.t-mono` "In progress" (caps via `.t-mono`) and `p.t-body-sm` "Portfolio 2.0 is in progress. These projects are being rebuilt as full case studies and will be added very soon."
+- **Spec:** full content width (inside `.shell`), a thin strip: `--surface` background, `--r-ctl`, padding `.75rem 1.25rem`, flex wrap, `align-items:center`, gap `.5rem 1.5rem`, `margin-bottom:2rem` (the heading gap of §4.15). Eyebrow text `--text`; body `--text-2` (6.66:1 on `--surface`; eyebrow `--text` 16.58:1).
+- **Pulse:** the eyebrow's own dot (§4.2) in `--accent`, animated by `wip-pulse`: opacity `1 → .35 → 1` and scale `1 → .7 → 1`, `--ease-hover`, infinite.
+
+  | New value | Value | Where / why |
+  |---|---|---|
+  | `--dur-pulse` | `2000ms` | One breath of the in-progress dot: slow enough to read as "alive", not as an alert |
+  | `wip-pulse` low point | opacity `.35`, scale `.7` | The dot fades and shrinks without disappearing, so the strip never looks broken |
+
+- **Reduced motion:** static dot (the global reduced-motion rule sets `animation:none`).
+- **Don't:** use it as a banner at the top of the page, make it dismissible or colour the text with `--accent` (D1: accent is links, focus and the band word only; here only the dot).
 
 ---
 
